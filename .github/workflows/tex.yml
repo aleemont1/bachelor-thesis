@@ -34,7 +34,7 @@ jobs:
     name: Deploy
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}/tesi.pdf
+      url: ${{ steps.deployment.outputs.page_url }}tesi.pdf
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/main'
