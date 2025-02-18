@@ -46,14 +46,13 @@ jobs:
       - name: Prepare deployment artifact
         run: |
           mkdir site
-          # Copia il file HTML nella cartella site
+          # Copy files to the site folder
           cp tesi/tesi.html site/index.html
-          # Copia il file css nella cartella site
-          cp tesi/tesi.css site/
-          # Copia le immagini nella cartella site
+          cp tesi/tesi.css site/style.css
+          cp tesi/refs.bib site/
           cp -r tesi/img site/
-          # Aggiungi il css per le immagini
-          echo "img {max-width: 100%; height: auto;}" >> site/tesi.css
+          # Add CSS to make images responsive
+          echo "img {max-width: 100%; height: auto;}" >> site/style.css
 
       - name: Generate build artifact
         uses: actions/upload-artifact@main
