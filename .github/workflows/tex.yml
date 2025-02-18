@@ -43,9 +43,7 @@ jobs:
           run: |
             cd tesi
             make4ht tesi.tex
-      - name: List files (per debug)
-        run: ls -lR
-      - name: Prepara cartella per il deployment
+      - name: Prepare deployment artifact
         run: |
           mkdir site
           # Copia il file HTML nella cartella site
@@ -64,7 +62,7 @@ jobs:
           path: site
 
   deploy:
-    name: Deploy PDF e HTML
+    name: Deploy PDF and HTML
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -79,14 +77,14 @@ jobs:
         with:
           name: build-pdf
           path: site/pdf
-      - name: Download HTML artifact
+      - name: Download artifacts
         uses: actions/download-artifact@main
         with:
           name: build-html
           path: site/
       - name: Setup Pages
         uses: actions/configure-pages@main
-      - name: Upload artifact
+      - name: Upload artifacts
         uses: actions/upload-pages-artifact@main
         with:
           path: site
