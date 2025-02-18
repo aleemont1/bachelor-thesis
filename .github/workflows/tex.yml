@@ -14,9 +14,9 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  build-pdf:
     runs-on: ubuntu-latest
-    name: Build
+    name: Build PDF
     steps:
       - name: Checkout code
         uses: actions/checkout@main
@@ -28,24 +28,57 @@ jobs:
       - name: Generate build artifact
         uses: actions/upload-artifact@main
         with:
-          name: build
+          name: build-pdf
           path: tesi/tesi.pdf
+  build-html:
+    runs-on: ubuntu-latest
+    name: Build HTML
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Compile thesis
+        uses: xu-cheng/texlive-action@v2
+        with:
+          scheme: full
+          run: |
+            cd tesi
+            make4ht tesi.tex
+      - name: List files (per debug)
+        run: ls -lR
+      - name: Prepara cartella per il deployment
+        run: |
+          mkdir site
+          # Copia il file HTML nella cartella site
+          cp tesi/tesi.html site/index.html
+          cp tesi/tesi.css site/
+          cp -r tesi/img site/
+      - name: Generate build artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: build-html
+          path: site
+
   deploy:
-    name: Deploy
+    name: Deploy PDF e HTML
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}tesi.pdf
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build-pdf, build-html]
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@main
-      - name: Download static site artifact
+      - name: Download PDF artifact
         uses: actions/download-artifact@main
         with:
-          name: build
-          path: site
+          name: build-pdf
+          path: site/pdf
+      - name: Download HTML artifact
+        uses: actions/download-artifact@main
+        with:
+          name: build-html
+          path: site/
       - name: Setup Pages
         uses: actions/configure-pages@main
       - name: Upload artifact
