@@ -80,7 +80,9 @@
         \vspace{3mm}
         {\Large{\bf Architettura e Trasmissione Dati con Tecnologia LoRa\textsuperscript{\copyright}}}
     \end{center}
-
+    % Exclude this part if compiling to HTML
+    \ifdefined\HCode
+    \else
     \vspace{50mm}
 
     \begin{minipage}[t]{0.40\textwidth}
@@ -97,9 +99,6 @@
 
     \vspace{30mm}
 
-    % Exclude the line if compiling to HTML
-    \ifdefined\HCode
-    \else
     \rule[0.5cm]{\textwidth}{0.6mm}
     \fi
 
@@ -138,14 +137,17 @@
 % \end{tikzpicture}
 % \newpage
 
+\ifdefined\HCode
+\else
 \topmargin=5.5cm
 \begin{flushright}
     \emph{
-        \LARGE{La dedica}\\\vspace{2mm}
+        \LARGE{La dedica}\\\vspace{3mm}
         \LARGE{anche quella se vuoi}\\\vspace{3mm}
         \LARGE{su più righe}
     }
 \end{flushright}
+\fi
 \newpage~\newpage
 \pagenumbering{gobble}
 \chapter*{Abstract}
