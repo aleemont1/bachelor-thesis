@@ -42,14 +42,17 @@ jobs:
           scheme: full
           run: |
             cd tesi
+            # Compile in pdf for the bibliography
+            latexmk -pdf -interaction=nonstopmode tesi.tex 
+            # Compile in html
             make4ht tesi.tex
       - name: Prepare deployment artifact
         run: |
           mkdir site
           # Copy files to the site folder
           cp tesi/tesi.html site/index.html
-          cp tesi/tesi.css site/style.css
-          cp tesi/refs.bib site/
+          cp tesi/tesi.css site/tesi.css
+          cp tesi/refs.bib site/refs.bib
           cp -r tesi/img site/
           # Add CSS to make images responsive
           echo "img {max-width: 100%; height: auto;}" >> site/style.css
