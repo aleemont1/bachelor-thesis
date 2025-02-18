@@ -12,7 +12,8 @@
 \usepackage[italian]{babel}
 \usepackage{tikz}
 \usepackage{parskip}
-
+\usepackage{acronym}
+\usepackage{notes}
 \usepackage{graphicx}
 \usepackage{blindtext}
 \usepackage{chngcntr}
@@ -77,7 +78,7 @@
         % \vspace{3mm}
         % {\Huge{\bf  }}\\
         \vspace{3mm}
-        {\Large{\bf Architettura e Trasmissione Dati con Tecnologia LoRa}}
+        {\Large{\bf Architettura e Trasmissione Dati con Tecnologia LoRa\textsuperscript{\copyright}}}
     \end{center}
 
     \vspace{50mm}
@@ -105,6 +106,9 @@
 
 \end{titlepage}
 
+\acrodef{IMU}{Inertial Measurement Unit}
+\acrodef{IoT}{Internet of Things}
+\acrodef{LoRa}[LoRa\textsuperscript{\textcopyright}]{Long Range}
 \restoregeometry
 \newpage
 % \begin{center}
@@ -168,8 +172,9 @@ Borealis è il primo prototipo di razzo sperimentale sviluppato
 dall'associazione, progettato per raggiungere un'altitudine di 3Km.
 
 Il razzo è formato da una sezione propulsiva (\emph{Motor bay}), una fusoliera 
-in fibra di carbonio, divisa in \emph{Electronics bay} e \emph{Parachute tube}, 
-e un \emph{nose cone} per l'aerodinamica e l'espulsione del paracadute. \\
+in fibra di carbonio, divisa in \emph{Electronics bay}, \emph{Payload bay} e 
+\emph{Parachute tube}, e un \emph{nose cone} per l'aerodinamica 
+e l'espulsione del paracadute. \\
 \begin{figure}[H]
     \centering
     % Se metti solo una delle due dimensioni, l'altra scala in automatico
@@ -189,9 +194,11 @@ del volo da terra.
 I razzi sperimentali occupano un ruolo fondamentale nella ricerca e nello 
 sviluppo di tecnologie fin dalla fine del XIX secolo.
 
-Nati per scopi militari, finch\'e tra il 1926 e il 1929 il fisico americano 
-Robert H. Goddard, grazie agli studi di Hermann Oberth e Konstantin Tsiolkovsky, 
-realizz\`o il primo razzo a propellente liquido per scopi scientifici\cite{seibert2006history}.
+Originariamente usati per scopi militari fin dal XIII secolo, finch\'e tra il 
+1926 e il 1929 il fisico americano Robert H. Goddard, grazie agli studi di 
+Hermann Oberth e Konstantin Tsiolkovsky sulla velocità di fuga terrestre e la 
+propulsione a razzo, realizz\`o il primo razzo a propellente liquido per scopi 
+scientifici\cite{seibert2006history}.
 
 Da allora, i razzi sperimentali sono stati utilizzati per una vasta gamma di 
 applicazioni, tra cui:
@@ -215,7 +222,7 @@ In primo luogo, il monitoraggio del volo in tempo reale permette di avere un
 \emph{feedback} immediato sulle prestazioni del razzo, sulle condizioni 
 ambientali e sulle eventuali anomalie che possono verificarsi durante il volo.
 Inoltre, la raccolta di dati durante il volo \`e fondamentale per l’analisi 
-\emph{post-mission} e per l’ottimizzazione del design del razzo.
+post missione e per l’ottimizzazione del design del razzo.
 Infine, la telemetria \`e essenziale per poter analizzare il volo in caso di 
 problemi o incidenti, al fine d'identificare le cause se il sistema di 
 \emph{logging} a bordo dovesse andare perso.
@@ -233,7 +240,7 @@ Ciò pone delle sfide tecniche significative tra cui:
 
 \section{Obiettivi della tesi e contributo personale.}
 L'obiettivo di questa tesi è la descrizione delle fasi di progettazione, 
-sviluppo e ottimizzazione di un sistema di telemetria per il razzo Borealis di 
+sviluppo e ottimizzazione del sistema di telemetria per il razzo Borealis di 
 Aurora Rocketry, offrendo una panoramica dettagliata delle tecnologie utilizzate 
 e delle scelte progettuali effettuate, valutando le prestazioni del sistema e 
 identificando possibili miglioramenti futuri.
@@ -246,25 +253,53 @@ Il mio contributo personale al progetto ha riguardato tutte le fasi di sviluppo
 del computer di volo, dal design iniziale alla realizzazione del prototipo, fino 
 alla fase di test e ottimizzazione.
 Ho contribuito alla scelta delle tecnologie utilizzate, alla progettazione 
-dell'architettura del computer di volo e del sistema di telemetria, e alla 
-scrittura del software per la raccolta, la strutturazione e la gestione della 
-trasmissione dati.
+dell'architettura del computer di volo e del sistema di telemetria e alla 
+scrittura del software per la raccolta, la strutturazione e la trasmissione dati.
 Inoltre, ho partecipato attivamente alle prove sperimentali e all'analisi dei 
 dati raccolti, apportando modifiche e ottimizzazioni al sistema in base ai 
 risultati ottenuti.
 
 \chapter{Descrizione del Computer di Volo} \label{chap:flight-computer}
 
-\section{Architettura generale del computer di volo Borealis.}
+\section{Architettura del computer di volo Borealis.}
+Il computer di volo di Borealis è basato su un microcontrollore ESP32-S3, montato
+su una scheda di sviluppo Arduino Nano ESP32, un modulo di raccolta dati contenente
+i sensori e un modulo per la telemetria contenente la ricetrasmittente \ac{LoRa}
+e un modulo di attuatori per l'apertura del \emph{nose cone} tramite cariche
+pirotecniche e la conseguente apertura dei paracadute per il recupero del razzo.
+
+\subsection{Raccolta dati}
+I sensori utilizzati sono:
+\begin{itemize}
+    \item Una \ac{IMU} \emph{Bosch BNO055} (Giroscopio, Accelerometro e Magnetometro).
+    \item Due barometri \emph{Adafruit MPRLS} con presa statica.
+\end{itemize}
+
+\subsection{Telemetria}
+Per la telemetria è stato impiegato un modulo \ac{LoRa} \emph{EByte E220 LLCC68}
+a 868MHz, con un'antenna a dipolo e un amplificatore di potenza integrato ad
+alta efficienza. \\
+
 \section{Funzioni principali e componenti chiave.}
+Il computer di volo si occupa del monitoraggio del volo. Tramite algoritmi
+di \emph{sensor fusion} e \emph{data fusion} elabora i dati raccolti dai sensori
+per ottenere informazioni sulla posizione, l'orientamento e la velocità del razzo.
+In particolare fa uso di un Extended Kalman Filter per filtrare i dati rumorosi
+dell'\ac{IMU} e dei due barometri, ottenendo una stima dell'orientamento, velocità
+e altitudine del razzo.
+
+Un algoritmo di rilevamento dell'apogeo permette di identificare il punto di massima
+altezza raggiunto dal razzo, tenendo conto della variazione di altitudine, velocità
+e direzione dell'accelerazione, attivando la sequenza di recupero.
+
 \section{Integrazione e ruolo del sistema di telemetria.}
 
-\chapter{Tecnologia LoRa e la sua Applicazione} \label{chap:lora}
+\chapter{Tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}} e la sua Applicazione} \label{chap:lora}
 
-\section{Panoramica della tecnologia LoRa.}
+\section{Panoramica della tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}}.}
 \cite{Andrade2022}
 \section{Specifiche tecniche dei moduli utilizzati.}
-\section{Motivazioni della scelta di LoRa per il progetto.}
+\section{Motivazioni della scelta di \texorpdfstring{LoRa\textsuperscript{\textcopyright}} per il progetto.}
 
 \chapter{Implementazione del Sistema di Telemetria} \label{chap:telemetry}
 
@@ -281,7 +316,7 @@ risultati ottenuti.
 \chapter{Risultati e Analisi} \label{chap:results}
 
 \section{Analisi dei dati raccolti durante le prove sperimentali.}
-\section{Limiti identificati e possibili miglioramenti futuri.}
+\section{Limiti e possibili miglioramenti futuri.}
 \section{Implicazioni del sistema sviluppato per progetti simili.}
 
 \chapter{Conclusioni} \label{chap:conclusion}
