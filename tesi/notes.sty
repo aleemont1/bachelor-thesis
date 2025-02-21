@@ -7,10 +7,25 @@
 
 \providecommand{\theauthor}{Alessandro}
 % Syntax: \sidenote[Author][Color]{Note}
-\newcommandx{\sidenote}[3][1=\theauthor,2=green!50!white]{\reversemarginpar\todo[size=\tiny,color=#2]{\textbf{#1:} #3}}
+\newcommandx{\sidenote}[3][1=\theauthor,2=green!50!white]{%
+    \ifdefined\HCode
+    \else%
+        \reversemarginpar\todo[size=\tiny,color=#2]{\textbf{#1:} #3}
+    \fi%
+}
 
 % Syntax: \note[Author][Color]{Note}
-\newcommandx{\note}[3][1=\theauthor,2=green]{\todo[size=\scriptsize,color=#2,inline]{\textbf{#1:} #3}}
+\newcommandx{\note}[3][1=\theauthor,2=green]{%
+    \ifdefined\HCode
+    \else%
+        \todo[size=\scriptsize,color=#2,inline]{\textbf{#1:} #3}
+    \fi%
+}
 
 % Placeholder per citazioni mancanti
-\newcommand{\missingref}[1][something]{\sidenote{cite #1}}
+\newcommand{\missingref}[1][something]{%
+    \ifdefined\HCode
+    \else%
+        \sidenote{cite #1}
+    \fi%
+}
