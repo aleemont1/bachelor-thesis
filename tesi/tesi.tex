@@ -112,6 +112,9 @@
 \acrodef{IMU}{Inertial Measurement Unit}
 \acrodef{IoT}{Internet of Things}
 \acrodef{LoRa}[LoRa\textsuperscript{\textcopyright}]{Long Range}
+\acrodef{UART}{Universal Asynchronous Receiver-Transmitter}
+\acrodef{I2C}[I\textsuperscript{2}C]{Inter-Integrated Circuit}
+\acrodef{SPI}{Serial Peripheral Interface}
 \restoregeometry
 \newpage
 % \begin{center}
@@ -270,35 +273,53 @@ risultati ottenuti.
 \section{Architettura del computer di volo Borealis.}
 Il computer di volo di Borealis è basato su un microcontrollore ESP32-S3, montato
 su una scheda di sviluppo Arduino Nano ESP32, un modulo di raccolta dati contenente
-i sensori e un modulo per la telemetria contenente la ricetrasmittente \ac{LoRa}
-e un modulo di attuatori per l'apertura del \emph{nose cone} tramite cariche
-pirotecniche e la conseguente apertura dei paracadute per il recupero del razzo.
+i sensori, e un modulo di attuatori responsabile dell'attivazione di cariche 
+pirotecniche tramite un circuito di innesco controllato dal microcontrollore.
 
-\subsection{Raccolta dati}
 I sensori utilizzati sono:
 \begin{itemize}
     \item Una \ac{IMU} \emph{Bosch BNO055} (Giroscopio, Accelerometro e Magnetometro).
     \item Due barometri \emph{Adafruit MPRLS} con presa statica.
 \end{itemize}
 
-\subsection{Telemetria}
-Per la telemetria è stato impiegato un modulo \ac{LoRa} \emph{EByte E220 LLCC68}
-a 868MHz, con un'antenna a dipolo e un amplificatore di potenza integrato ad
-alta efficienza. \\
-
 \section{Funzioni principali e componenti chiave.}
-Il computer di volo si occupa del monitoraggio del volo. Tramite algoritmi
-di \emph{sensor fusion} e \emph{data fusion} elabora i dati raccolti dai sensori
-per ottenere informazioni sulla posizione, l'orientamento e la velocità del razzo.
-In particolare fa uso di un Extended Kalman Filter per filtrare i dati rumorosi
-dell'\ac{IMU} e dei due barometri, ottenendo una stima dell'orientamento, velocità
-e altitudine del razzo.
+Il computer di volo si occupa del monitoraggio del volo. Riceve i dati dal modulo
+dei sensori e, tramite algoritmi di \emph{sensor fusion} e \emph{data fusion} 
+li elabora e li trasmette alla \emph{ground station}.
+In particolare fa uso di un Extended Kalman Filter per filtrare e combinare i 
+dati rumorosi ottenuti dalla \ac{IMU} e dei due barometri, ottenendo una stima 
+affidabile dell'orientamento, velocità e altitudine.
+Il filtro mitiga gli errori dei sensori, corregge la deriva della IMU e riduce 
+le incertezze delle misurazioni barometriche, combinando i dati di accelerazione, 
+orientamento e pressione atmosferica.
 
-Un algoritmo di rilevamento dell'apogeo permette di identificare il punto di massima
-altezza raggiunto dal razzo, tenendo conto della variazione di altitudine, velocità
-e direzione dell'accelerazione, attivando la sequenza di recupero.
+L'algoritmo di rilevamento dell'apogeo monitora l'altitudine e la velocità verticale
+del razzo. 
+Quando la velocità verticale si annulla e il razzo inizia la discesa,  il 
+computer di volo identifica l'apogeo e attiva la sequenza di recupero, 
+espellendo il paracadute per garantire una discesa controllata.
 
 \section{Integrazione e ruolo del sistema di telemetria.}
+Per la telemetria è stato impiegato un modulo \ac{LoRa} \emph{EByte E220 LLCC68}
+a 868MHz, con un'antenna a dipolo omnidirezionale e un amplificatore di potenza 
+integrato ad alta efficienza che permette di raggiungere una potenza di 
+trasmissione fino a +22dBm, mantenendo un consumo energetico contenuto.
+
+Il modulo \ac{LoRa} comunica con il microcontrollore tramite un'interfaccia \ac{UART}
+trasmettendo in tempo reale i dati di volo alla ground station. 
+L'antenna omnidirezionale assicura una copertura stabile durante l'intera traiettoria.
+
+Il sistema di telemetria è stato integrato nel computer di volo per permettere il
+monitoraggio del volo in tempo reale e la raccolta dati durante la missione, 
+fornendo un'interfaccia di comunicazione tra il razzo e la \emph{ground station}.
+Il sistema di telemetria è stato progettato per garantire l'affidabilità della
+trasmissione dati, la precisione delle misurazioni e l'ottimizzazione del consumo
+energetico, mantenendo un'interfaccia semplice e intuitiva per l'utente.
+
+Il software di gestione della telemetria è stato sviluppato in C++ utilizzando
+una libreria open-source per la comunicazione \ac{LoRa} e un protocollo di
+comunicazione personalizzato \sidenote{Da descrivere!} 
+per la trasmissione e la ricezione dei dati.
 
 \chapter{Tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}} e la sua Applicazione} \label{chap:lora}
 
