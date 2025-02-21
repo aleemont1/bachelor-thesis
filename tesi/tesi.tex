@@ -83,23 +83,23 @@
     % Exclude this part if compiling to HTML
     \ifdefined\HCode
     \else
-    \vspace{50mm}
+        \vspace{50mm}
 
-    \begin{minipage}[t]{0.40\textwidth}
-        {\Large{\bf Relatore: \\ Chiar.mo Prof.\\ Andrea Piroddi}}
+        \begin{minipage}[t]{0.40\textwidth}
+            {\Large{\bf Relatore: \\ Chiar.mo Prof.\\ Andrea Piroddi}}
 
-        \vspace{3mm}
+            \vspace{3mm}
 
-        %{\Large{\bf Correlatore: \\ Chiar.mo Prof.\\ Nome Cognome}}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.40\textwidth}\raggedleft
-        {\Large{\bf Presentata da: \\ Alessandro Monticelli}}
-    \end{minipage}
+            %{\Large{\bf Correlatore: \\ Chiar.mo Prof.\\ Nome Cognome}}
+        \end{minipage}
+        \hfill
+        \begin{minipage}[t]{0.40\textwidth}\raggedleft
+            {\Large{\bf Presentata da: \\ Alessandro Monticelli}}
+        \end{minipage}
 
-    \vspace{30mm}
+        \vspace{30mm}
 
-    \rule[0.5cm]{\textwidth}{0.6mm}
+        \rule[0.5cm]{\textwidth}{0.6mm}
     \fi
 
     \begin{center}
@@ -142,14 +142,14 @@
 
 \ifdefined\HCode
 \else
-\topmargin=5.5cm
-\begin{flushright}
-    \emph{
-        \LARGE{La dedica}\\\vspace{3mm}
-        \LARGE{anche quella se vuoi}\\\vspace{3mm}
-        \LARGE{su più righe}
-    }
-\end{flushright}
+    \topmargin=5.5cm
+    \begin{flushright}
+        \emph{
+            \LARGE{La dedica}\\\vspace{3mm}
+            \LARGE{anche quella se vuoi}\\\vspace{3mm}
+            \LARGE{su più righe}
+        }
+    \end{flushright}
 \fi
 \newpage~\newpage
 \pagenumbering{gobble}
@@ -174,15 +174,15 @@ Abstract qui (ti consiglio di farlo alla fine)
 \setcounter{page}{1}
 
 \section{Presentazione del progetto Borealis di Aurora Rocketry.}
-Aurora Rocketry è un'associazione studentesca dell'Università di Bologna nata 
-nel 2024, che si occupa di progettare e costruire razzi sperimentali per 
+Aurora Rocketry è un'associazione studentesca dell'Università di Bologna nata
+nel 2024, che si occupa di progettare e costruire razzi sperimentali per
 partecipare a competizioni internazionali. \\
-Borealis è il primo prototipo di razzo sperimentale sviluppato 
+Borealis è il primo prototipo di razzo sperimentale sviluppato
 dall'associazione, progettato per raggiungere un'altitudine di 3Km.
 
-Il razzo è formato da una sezione propulsiva (\emph{Motor bay}), una fusoliera 
-in fibra di carbonio, divisa in \emph{Electronics bay}, \emph{Payload bay} e 
-\emph{Parachute tube}, e un \emph{nose cone} per l'aerodinamica 
+Il razzo è formato da una sezione propulsiva (\emph{Motor bay}), una fusoliera
+in fibra di carbonio, divisa in \emph{Electronics bay}, \emph{Payload bay} e
+\emph{Parachute tube}, e un \emph{nose cone} per l'aerodinamica
 e l'espulsione del paracadute. \\
 \begin{figure}[H]
     \centering
@@ -193,79 +193,79 @@ e l'espulsione del paracadute. \\
     \label{fig:borealis-schema}
 \end{figure}
 
-Nella \emph{Electronics bay} è presente il computer di volo, che si occupa di 
+Nella \emph{Electronics bay} è presente il computer di volo, che si occupa di
 gestire il lancio e il recupero del razzo e di raccogliere dati durante il volo. \\
-Il computer di volo è dotato di un sistema di telemetria che trasmette in tempo 
-reale i dati raccolti a una \emph{ground station}, permettendo il monitoraggio 
+Il computer di volo è dotato di un sistema di telemetria che trasmette in tempo
+reale i dati raccolti a una \emph{ground station}, permettendo il monitoraggio
 del volo da terra.
 
 \section{Contesto e importanza dei sistemi di telemetria nei razzi sperimentali.}
-I razzi sperimentali occupano un ruolo fondamentale nella ricerca e nello 
+I razzi sperimentali occupano un ruolo fondamentale nella ricerca e nello
 sviluppo di tecnologie fin dalla fine del XIX secolo.
 
-Originariamente usati per scopi militari fin dal XIII secolo, finch\'e tra il 
-1926 e il 1929 il fisico americano Robert H. Goddard, grazie agli studi di 
-Hermann Oberth e Konstantin Tsiolkovsky sulla velocità di fuga terrestre e la 
-propulsione a razzo, realizz\`o il primo razzo a propellente liquido per scopi 
+Originariamente usati per scopi militari fin dal XIII secolo, finch\'e tra il
+1926 e il 1929 il fisico americano Robert H. Goddard, grazie agli studi di
+Hermann Oberth e Konstantin Tsiolkovsky sulla velocità di fuga terrestre e la
+propulsione a razzo, realizz\`o il primo razzo a propellente liquido per scopi
 scientifici\cite{seibert2006history}.
 
-Da allora, i razzi sperimentali sono stati utilizzati per una vasta gamma di 
+Da allora, i razzi sperimentali sono stati utilizzati per una vasta gamma di
 applicazioni, tra cui:
 \begin{itemize}
-    \item La ricerca spaziale e l’esplorazione planetaria, con missioni come 
-    i razzi-sonda impiegati per esperimenti scientifici in microgravità.
-    \item Lo studio dell’atmosfera e dei fenomeni meteorologici, come i razzi 
-    impiegati per analizzare la composizione degli strati superiori 
-    dell’atmosfera terrestre.
+    \item La ricerca spaziale e l’esplorazione planetaria, con missioni come
+          i razzi-sonda impiegati per esperimenti scientifici in microgravità.
+    \item Lo studio dell’atmosfera e dei fenomeni meteorologici, come i razzi
+          impiegati per analizzare la composizione degli strati superiori
+          dell’atmosfera terrestre.
     \item Il test di nuove tecnologie aerospaziali, inclusi materiali innovativi
-     e sistemi di propulsione sperimentali.
-    \item Applicazioni educative e accademiche, che permettono a università e 
-    centri di ricerca di sviluppare esperimenti e formare studenti nel campo 
-    dell’ingegneria aerospaziale.
+          e sistemi di propulsione sperimentali.
+    \item Applicazioni educative e accademiche, che permettono a università e
+          centri di ricerca di sviluppare esperimenti e formare studenti nel campo
+          dell’ingegneria aerospaziale.
 \end{itemize}
 
-Le motivazioni per cui \`e importante sviluppare un sistema di telemetria per un 
+Le motivazioni per cui \`e importante sviluppare un sistema di telemetria per un
 razzo sperimentale sono molteplici.
 
-In primo luogo, il monitoraggio del volo in tempo reale permette di avere un 
-\emph{feedback} immediato sulle prestazioni del razzo, sulle condizioni 
+In primo luogo, il monitoraggio del volo in tempo reale permette di avere un
+\emph{feedback} immediato sulle prestazioni del razzo, sulle condizioni
 ambientali e sulle eventuali anomalie che possono verificarsi durante il volo.
-Inoltre, la raccolta di dati durante il volo \`e fondamentale per l’analisi 
+Inoltre, la raccolta di dati durante il volo \`e fondamentale per l’analisi
 post missione e per l’ottimizzazione del design del razzo.
-Infine, la telemetria \`e essenziale per poter analizzare il volo in caso di 
-problemi o incidenti, al fine d'identificare le cause se il sistema di 
+Infine, la telemetria \`e essenziale per poter analizzare il volo in caso di
+problemi o incidenti, al fine d'identificare le cause se il sistema di
 \emph{logging} a bordo dovesse andare perso.
 
 Ciò pone delle sfide tecniche significative tra cui:
 \begin{itemize}
-    \item L'affidabilità della trasmissione dati, che deve essere mantenuta 
-    nonostante le condizioni critiche a cui il sistema è soggetto, tra cui 
-    accelerazioni estreme, eventi atmosferici e interferenze elettromagnetiche.
+    \item L'affidabilità della trasmissione dati, che deve essere mantenuta
+          nonostante le condizioni critiche a cui il sistema è soggetto, tra cui
+          accelerazioni estreme, eventi atmosferici e interferenze elettromagnetiche.
     \item L'ottimizzazione della raccolta dati, che deve avvenire in tempo reale
-     e con una frequenza sufficiente per garantire la precisione delle misurazioni.
-    \item La gestione del consumo energetico, che deve essere minimizzato per 
-    garantire l'autonomia del sistema durante il volo.
+          e con una frequenza sufficiente per garantire la precisione delle misurazioni.
+    \item La gestione del consumo energetico, che deve essere minimizzato per
+          garantire l'autonomia del sistema durante il volo.
 \end{itemize}
 
 \section{Obiettivi della tesi e contributo personale.}
-L'obiettivo di questa tesi è la descrizione delle fasi di progettazione, 
-sviluppo e ottimizzazione del sistema di telemetria per il razzo Borealis di 
-Aurora Rocketry, offrendo una panoramica dettagliata delle tecnologie utilizzate 
-e delle scelte progettuali effettuate, valutando le prestazioni del sistema e 
+L'obiettivo di questa tesi è la descrizione delle fasi di progettazione,
+sviluppo e ottimizzazione del sistema di telemetria per il razzo Borealis di
+Aurora Rocketry, offrendo una panoramica dettagliata delle tecnologie utilizzate
+e delle scelte progettuali effettuate, valutando le prestazioni del sistema e
 identificando possibili miglioramenti futuri.
-Si vuole inoltre fornire un confronto tra le soluzioni adottate da Aurora 
-Rocketry e quelle utilizzate in progetti simili, al fine di valutare l'impatto 
-del sistema sviluppato nell'ambito della ricerca e dello sviluppo di razzi 
+Si vuole inoltre fornire un confronto tra le soluzioni adottate da Aurora
+Rocketry e quelle utilizzate in progetti simili, al fine di valutare l'impatto
+del sistema sviluppato nell'ambito della ricerca e dello sviluppo di razzi
 sperimentali.
 
-Il mio contributo personale al progetto ha riguardato tutte le fasi di sviluppo 
-del computer di volo, dal design iniziale alla realizzazione del prototipo, fino 
+Il mio contributo personale al progetto ha riguardato tutte le fasi di sviluppo
+del computer di volo, dal design iniziale alla realizzazione del prototipo, fino
 alla fase di test e ottimizzazione.
-Ho contribuito alla scelta delle tecnologie utilizzate, alla progettazione 
-dell'architettura del computer di volo e del sistema di telemetria e alla 
+Ho contribuito alla scelta delle tecnologie utilizzate, alla progettazione
+dell'architettura del computer di volo e del sistema di telemetria e alla
 scrittura del software per la raccolta, la strutturazione e la trasmissione dati.
-Inoltre, ho partecipato attivamente alle prove sperimentali e all'analisi dei 
-dati raccolti, apportando modifiche e ottimizzazioni al sistema in base ai 
+Inoltre, ho partecipato attivamente alle prove sperimentali e all'analisi dei
+dati raccolti, apportando modifiche e ottimizzazioni al sistema in base ai
 risultati ottenuti.
 
 \chapter{Descrizione del Computer di Volo} \label{chap:flight-computer}
@@ -273,7 +273,7 @@ risultati ottenuti.
 \section{Architettura del computer di volo Borealis.}
 Il computer di volo di Borealis è basato su un microcontrollore ESP32-S3, montato
 su una scheda di sviluppo Arduino Nano ESP32, un modulo di raccolta dati contenente
-i sensori, e un modulo di attuatori responsabile dell'attivazione di cariche 
+i sensori, e un modulo di attuatori responsabile dell'attivazione di cariche
 pirotecniche tramite un circuito di innesco controllato dal microcontrollore.
 
 I sensori utilizzati sono:
@@ -284,33 +284,33 @@ I sensori utilizzati sono:
 
 \section{Funzioni principali e componenti chiave.}
 Il computer di volo si occupa del monitoraggio del volo. Riceve i dati dal modulo
-dei sensori e, tramite algoritmi di \emph{sensor fusion} e \emph{data fusion} 
+dei sensori e, tramite algoritmi di \emph{sensor fusion} e \emph{data fusion}
 li elabora e li trasmette alla \emph{ground station}.
-In particolare fa uso di un Extended Kalman Filter per filtrare e combinare i 
-dati rumorosi ottenuti dalla \ac{IMU} e dei due barometri, ottenendo una stima 
+In particolare fa uso di un Extended Kalman Filter per filtrare e combinare i
+dati rumorosi ottenuti dalla \ac{IMU} e dei due barometri, ottenendo una stima
 affidabile dell'orientamento, velocità e altitudine.
-Il filtro mitiga gli errori dei sensori, corregge la deriva della IMU e riduce 
-le incertezze delle misurazioni barometriche, combinando i dati di accelerazione, 
+Il filtro mitiga gli errori dei sensori, corregge la deriva della IMU e riduce
+le incertezze delle misurazioni barometriche, combinando i dati di accelerazione,
 orientamento e pressione atmosferica.
 
 L'algoritmo di rilevamento dell'apogeo monitora l'altitudine e la velocità verticale
-del razzo. 
-Quando la velocità verticale si annulla e il razzo inizia la discesa,  il 
-computer di volo identifica l'apogeo e attiva la sequenza di recupero, 
+del razzo.
+Quando la velocità verticale si annulla e il razzo inizia la discesa,  il
+computer di volo identifica l'apogeo e attiva la sequenza di recupero,
 espellendo il paracadute per garantire una discesa controllata.
 
 \section{Integrazione e ruolo del sistema di telemetria.}
 Per la telemetria è stato impiegato un modulo \ac{LoRa} \emph{EByte E220 LLCC68}
-a 868MHz, con un'antenna a dipolo omnidirezionale e un amplificatore di potenza 
-integrato ad alta efficienza che permette di raggiungere una potenza di 
+a 868MHz, con un'antenna a dipolo omnidirezionale e un amplificatore di potenza
+integrato ad alta efficienza che permette di raggiungere una potenza di
 trasmissione fino a +22dBm, mantenendo un consumo energetico contenuto.
 
 Il modulo \ac{LoRa} comunica con il microcontrollore tramite un'interfaccia \ac{UART}
-trasmettendo in tempo reale i dati di volo alla ground station. 
+trasmettendo in tempo reale i dati di volo alla ground station.
 L'antenna omnidirezionale assicura una copertura stabile durante l'intera traiettoria.
 
 Il sistema di telemetria è stato integrato nel computer di volo per permettere il
-monitoraggio del volo in tempo reale e la raccolta dati durante la missione, 
+monitoraggio del volo in tempo reale e la raccolta dati durante la missione,
 fornendo un'interfaccia di comunicazione tra il razzo e la \emph{ground station}.
 Il sistema di telemetria è stato progettato per garantire l'affidabilità della
 trasmissione dati, la precisione delle misurazioni e l'ottimizzazione del consumo
@@ -318,7 +318,7 @@ energetico, mantenendo un'interfaccia semplice e intuitiva per l'utente.
 
 Il software di gestione della telemetria è stato sviluppato in C++ utilizzando
 una libreria open-source per la comunicazione \ac{LoRa} e un protocollo di
-comunicazione personalizzato \sidenote{Da descrivere!} 
+comunicazione personalizzato \sidenote{Da descrivere!}
 per la trasmissione e la ricezione dei dati.
 
 \chapter{Tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}} e la sua Applicazione} \label{chap:lora}
