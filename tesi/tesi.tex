@@ -193,7 +193,8 @@ e l'espulsione del paracadute. \\
     \label{fig:borealis-schema}
 \end{figure}
 
-Nella \emph{Electronics bay} è presente il computer di volo, che si occupa di
+Nella \emph{Electronics bay} \sidenote{Inserire immagine della Electronics Bay}
+è presente il computer di volo, che si occupa di
 gestire il lancio e il recupero del razzo e di raccogliere dati durante il volo. \\
 Il computer di volo è dotato di un sistema di telemetria che trasmette in tempo
 reale i dati raccolti a una \emph{ground station}, permettendo il monitoraggio
@@ -269,19 +270,19 @@ dati raccolti, apportando modifiche e ottimizzazioni al sistema in base ai
 risultati ottenuti.
 
 \chapter{Descrizione del Computer di Volo} \label{chap:flight-computer}
+\pagestyle{plain}
 
-\section{Architettura del computer di volo Borealis.}
 Il computer di volo di Borealis è basato su un microcontrollore ESP32-S3, montato
 su una scheda di sviluppo Arduino Nano ESP32, un modulo di raccolta dati contenente
 i sensori, e un modulo di attuatori responsabile dell'attivazione di cariche
 pirotecniche tramite un circuito di innesco controllato dal microcontrollore.
+\sidenote{Inserire schema dell'architettura del computer di volo.}
 
 I sensori utilizzati sono:
 \begin{itemize}
     \item Una \ac{IMU} \emph{Bosch BNO055} (Giroscopio, Accelerometro e Magnetometro).
     \item Due barometri \emph{Adafruit MPRLS} con presa statica.
 \end{itemize}
-
 \section{Funzioni principali e componenti chiave.}
 Il computer di volo si occupa del monitoraggio del volo. Riceve i dati dal modulo
 dei sensori e, tramite algoritmi di \emph{sensor fusion} e \emph{data fusion}
@@ -315,7 +316,7 @@ fornendo un'interfaccia di comunicazione tra il razzo e la \emph{ground station}
 Il sistema di telemetria è stato progettato per garantire l'affidabilità della
 trasmissione dati, la precisione delle misurazioni e l'ottimizzazione del consumo
 energetico, mantenendo un'interfaccia semplice e intuitiva per l'utente.
-
+\sidenote{Inserire schema della comunicazione tra il computer di volo e la ground station.}
 Il software di gestione della telemetria è stato sviluppato in C++ utilizzando
 una libreria open-source per la comunicazione \ac{LoRa} e un protocollo di
 comunicazione personalizzato \sidenote{Da descrivere!}
