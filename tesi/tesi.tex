@@ -40,7 +40,7 @@
 \setcitestyle{super, open={[}, close={]}}
 
 \newcommand{\rom}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
-
+\newcommand{\libref}[1]{\textsuperscript{(Libreria \ref{#1})}}
 \usepackage{pdfpages}
 
 \begin{document}
@@ -193,7 +193,7 @@ e l'espulsione del paracadute. \\
     \label{fig:borealis-schema}
 \end{figure}
 
-Nella \emph{Electronics bay} \sidenote{Inserire immagine della Electronics Bay}
+Nella \emph{Electronics bay}\sidenote{Inserire immagine della Electronics Bay}
 è presente il computer di volo, che si occupa di
 gestire il lancio e il recupero del razzo e di raccogliere dati durante il volo. \\
 Il computer di volo è dotato di un sistema di telemetria che trasmette in tempo
@@ -275,13 +275,14 @@ risultati ottenuti.
 Il computer di volo di Borealis è basato su un microcontrollore ESP32-S3, montato
 su una scheda di sviluppo Arduino Nano ESP32, un modulo di raccolta dati contenente
 i sensori, e un modulo di attuatori responsabile dell'attivazione di cariche
-pirotecniche tramite un circuito di innesco controllato dal microcontrollore.
+pirotecniche tramite un circuito di innesco controllato dal microcontrollore.%
 \sidenote{Inserire schema dell'architettura del computer di volo.}
 
 I sensori utilizzati sono:
 \begin{itemize}
-    \item Una \ac{IMU} \emph{Bosch BNO055} (Giroscopio, Accelerometro e Magnetometro).
-    \item Due barometri \emph{Adafruit MPRLS} con presa statica.
+    \item Una \ac{IMU} \emph{Bosch BNO055}\libref{lib:bno055}
+          (Giroscopio, Accelerometro e Magnetometro).
+    \item Due barometri \emph{Adafruit MPRLS} con presa statica \libref{lib:mprls}.
 \end{itemize}
 \section{Funzioni principali e componenti chiave.}
 Il computer di volo si occupa del monitoraggio del volo. Riceve i dati dal modulo
@@ -315,17 +316,17 @@ monitoraggio del volo in tempo reale e la raccolta dati durante la missione,
 fornendo un'interfaccia di comunicazione tra il razzo e la \emph{ground station}.
 Il sistema di telemetria è stato progettato per garantire l'affidabilità della
 trasmissione dati, la precisione delle misurazioni e l'ottimizzazione del consumo
-energetico, mantenendo un'interfaccia semplice e intuitiva per l'utente.
+energetico, mantenendo un'interfaccia semplice e intuitiva per l'utente.%
 \sidenote{Inserire schema della comunicazione tra il computer di volo e la ground station.}
 Il software di gestione della telemetria è stato sviluppato in C++17 utilizzando
-una libreria open-source\cite{loraE220Library} per la comunicazione \ac{LoRa} e 
-un protocollo di comunicazione personalizzato \sidenote{Da descrivere!} per la 
+una libreria open-source\libref{lib:lora} per la comunicazione \ac{LoRa} e
+un protocollo di comunicazione personalizzato\sidenote{Da descrivere!} per la
 trasmissione e la ricezione dei dati.
 
 \chapter{Tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}} e la sua Applicazione} \label{chap:lora}
 
 \section{Panoramica della tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}}.}
-\cite{Andrade2022}
+
 \section{Specifiche tecniche dei moduli utilizzati.}
 \section{Motivazioni della scelta di \texorpdfstring{LoRa\textsuperscript{\textcopyright}} per il progetto.}
 
@@ -358,11 +359,42 @@ trasmissione e la ricezione dei dati.
 % \csname @openrightfalse\endcsname
 \pagenumbering{gobble}
 \begin{appendices}
-    \chapter{Appendice A}
-    \label{Appendice:A}
-    Probabilmente ci sono un sacco di package non utilizzati ma così funziona tutto quindi non ho indagato oltre.
+    \renewcommand{\thechapter}{\Alph{chapter}} % Per avere "Appendice A, B, C..."
+    \chapter{Librerie} \label{Appendice:Librerie}
+    \section*{Librerie open-source utilizzate nel progetto.}
+    % \library{url}{name}{description}{label}
+    % or
+    % \library[url=...,name=...,description=...,label=...]
+    % 
+    % This command creates a hyperlink with a bold name and a description, and assigns a label for referencing.
+    % 
+    % Parameters:
+    %   #1: The URL to link to.
+    %   #2: The name to display in bold.
+    %   #3: The description to display after the name.
+    %   #4: The label for referencing.
+    \newcommandx{\library}[4]{\item \href{#1}{\textbf{#2}} - #3\label{#4}}
 
-    Inoltre su internet c'è un sacco di documentazione se ti servisse.
+    \begin{enumerate}
+        \library{https://github.com/xreef/EByte_LoRa_E220_Series_Library}%
+        {EByte LoRa E220 Series}%
+        {Per la gestione dei moduli \ac{LoRa} E220.}{lib:lora}
+        \library{https://github.com/adafruit/Adafruit_Sensor}%
+        {Adafruit Unified Sensor}%
+        {Per le API standard di gestione dei sensori.}{lib:uni-sensor}
+        \library{https://github.com/adafruit/Adafruit_BNO055}%
+        {Adafruit BNO055}%
+        {Per la gestione della \ac{IMU}.}{lib:bno055}
+        \library{https://github.com/adafruit/Adafruit_MPRLS}%
+        {Adafruit MPRLS}%
+        {Per la gestione dei barometri MPRLS.}{lib:mprls}
+        \library{https://github.com/greiman/SdFat}%
+        {Adafruit SDFat}%
+        {Per la gestione del logging su scheda SD.}{lib:sdfat}
+        \library{https://github.com/nlohmann/json}%
+        {nlohmann-json}%
+        {Per la gestione di oggetti JSON in C++.}{lib:json}
+    \end{enumerate}
     \chapter{Appendice B}
     \label{Appendice:B}
     Appendice B se serve
