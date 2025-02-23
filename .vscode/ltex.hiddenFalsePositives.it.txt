@@ -1,0 +1,11 @@
+{"rule":"MORFOLOGIK_RULE_IT_IT","sentence":"^\\Qmate-mati-ca recu-perare\\E$"}
+{"rule":"MORFOLOGIK_RULE_IT_IT","sentence":"^\\Qsuper, open=[, close=]\\E$"}
+{"rule":"MORFOLOGIK_RULE_IT_IT","sentence":"^\\QGoddard, grazie agli studi di Hermann Oberth e Konstantin Tsiolkovsky, realizzò il primo razzo a propellente liquido per scopi scientifici\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"MORFOLOGIK_RULE_IT_IT","sentence":"^\\QProbabilmente ci sono un sacco di package non utilizzati ma così funziona tutto quindi non ho indagato oltre.\\E$"}
+{"rule":"MORFOLOGIK_RULE_IT_IT","sentence":"^\\QEmbed di interi PDF.\\E$"}
+{"rule":"MORFOLOGIK_RULE_IT_IT","sentence":"^\\QSe ti serve puoi fare embed di PDF interi con pdfpage, scegliendo anche le pagine (o mettendo - se le vuoi tutte):\\E$"}
+{"rule":"MORFOLOGIK_RULE_IT_IT","sentence":"^\\QGoddard, grazie agli studi di Hermann Oberth e Konstantin Tsiolkovsky sulla velocità di fuga terrestre e la propulsione a razzo, realizzò il primo razzo a propellente liquido per scopi scientifici\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"MORFOLOGIK_RULE_IT_IT","sentence":"^\\QPer la telemetria è stato impiegato un modulo \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q EByte E220 LLCC68 a 868MHz, con un'antenna a dipolo e un amplificatore di potenza integrato ad alta efficienza.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qe la sua Applicazione.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qper il progetto.\\E$"}
+{"rule":"DOUBLE_PUNCTUATION","sentence":"^\\QPanoramica della tecnologia LoRa..\\E$"}
