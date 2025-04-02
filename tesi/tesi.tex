@@ -323,9 +323,9 @@ trasmissione dati, la precisione delle misurazioni e l'ottimizzazione del consum
 energetico.%
 \sidenote{Inserire schema della comunicazione tra il computer di volo e la ground station.}
 Il software di gestione della telemetria è stato sviluppato in C++17 utilizzando
-una libreria open-source\libref{lib:lora} per la comunicazione \ac{LoRa} e
-un protocollo di comunicazione personalizzato\sidenote{Da descrivere} per la
-trasmissione e la ricezione dei dati.
+una libreria open-source\libref{lib:lora} per l'interfaccia con il modulo \ac{LoRa} 
+e un protocollo di comunicazione personalizzato per la trasmissione e la 
+ricezione dei dati.
 
 \chapter{Tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}} e la sua Applicazione} \label{chap:lora}
 
@@ -351,9 +351,12 @@ un'infrastruttura \ac{LoRaWAN}, che consente la trasmissione di dati a lunga
 distanza tramite una rete di gateway interconnessi a server centralizzati.
 
 \section{Specifiche tecniche dei moduli utilizzati.}
-Il sistema di telemetria di Borealis impiega il modulo \ac{LoRa}
-\emph{EByte E220-900T22D}, il quale integra la ricetrasmittente \ac{LoRa}
-\emph{Smart Home LLCC68}. Questo modulo è progettato per operare nella banda
+Il sistema di telemetria di Borealis impiega due moduli \ac{LoRa} 
+\emph{EByte E220-900T22D}, uno in trasmissione a bordo del razzo e uno in 
+ricezione nella \emph{Ground Station}.
+
+Il modulo utilizzato integra la ricetrasmittente \ac{LoRa}
+\emph{Smart Home LLCC68} ed è progettato per operare nella banda
 di frequenza compresa tra 850.15 MHz e 930.15 MHz.
 Il modulo può trasmettere con una potenza massima di +22 dBm (160 mW). 
 La sensibilità del ricevitore raggiunge i -129 dBm, permettendo la ricezione di 
@@ -373,6 +376,26 @@ In condizioni ottimali di propagazione, il modulo può raggiungere una distanza
 di trasmissione fino a 10 km in campo aperto.
 
 \section{Motivazioni della scelta di \texorpdfstring{LoRa\textsuperscript{\textcopyright}} per il progetto.}
+Le ragioni che hanno portato alla scelta di \ac{LoRa} per il sistema di telemetria
+di Borealis sono molteplici.
+Lo scopo era individuare una tecnologia di trasmissione dati che garantisse 
+un'elevata affidabilità e copertura, mantenendo un consumo energetico contenuto,
+anche in un ambiente operativo complesso come quello di un razzo sperimentale.
+
+Le caratteristiche tecniche discusse nelle sezioni precedenti rendono \ac{LoRa} 
+una scelta ideale per il progetto.
+I test effettuati in laboratorio hanno ulteriormente confermato la capacità del 
+modulo E220 di soddisfare i requisiti di trasmissione dati del sistema di 
+telemetria.
+
+Inoltre, in letteratura sono presenti diversi esempi di applicazioni di \ac{LoRa} in
+sistemi di questo tipo\cite{Misbahuddin2022}\cite{Ma2024}\sidenote{Forse c'è un modo migliore per citare i casi visti in letteratura}, che hanno dimostrato
+l'efficacia di questa tecnologia in condizioni critiche e la sua capacità di 
+garantire una trasmissione dati stabile e affidabile.
+
+Infine, l'ampia diffusione dell'uso di \ac{LoRa} nell'\ac{IoT} e la conseguente
+vasta disponibilità di hardware a costi contenuti hanno reso questa tecnologia
+una scelta conveniente e accessibile per il progetto.
 
 \chapter{Implementazione del Sistema di Telemetria} \label{chap:telemetry}
 
