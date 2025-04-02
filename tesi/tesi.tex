@@ -105,7 +105,7 @@
 
     \begin{center}
         {\large{\bf Sessione luglio 2025 \\}}
-        {\large{\bf Anno Accademico 2024/2025\\}}
+        {\large{\bf Anno Accademico 2025/2026\\}}
     \end{center}
 
 \end{titlepage}
@@ -177,17 +177,13 @@ Abstract qui (ti consiglio di farlo alla fine)
 \pagestyle{plain}
 \setcounter{page}{1}
 
-\section{Presentazione del progetto Borealis di Aurora Rocketry.}
+\section{Presentazione del progetto Borealis di Aurora Rocketry}
 Aurora Rocketry è un'associazione studentesca dell'Università di Bologna nata
 nel 2024, che si occupa di progettare e costruire razzi sperimentali per
 partecipare a competizioni internazionali. \\
 Borealis è il primo prototipo di razzo sperimentale sviluppato
 dall'associazione, progettato per raggiungere un'altitudine di 3Km.
 
-Il razzo è formato da una sezione propulsiva (\emph{Motor bay}), una fusoliera
-in fibra di carbonio, divisa in \emph{Electronics bay}, \emph{Payload bay} e
-\emph{Parachute tube}, e un \emph{nose cone} per l'aerodinamica
-e l'espulsione del paracadute. \\
 \begin{figure}[H]
     \centering
     % Se metti solo una delle due dimensioni, l'altra scala in automatico
@@ -197,6 +193,15 @@ e l'espulsione del paracadute. \\
     \label{fig:borealis-schema}
 \end{figure}
 
+Il razzo è formato da una sezione propulsiva (\emph{Motor bay}), una fusoliera
+in alluminio divisa in tre \emph{bays}: 
+\begin{itemize}
+    \item \textbf{\emph{Electronics bay}}: contenente l'elettronica di bordo, 
+    \item \textbf{\emph{Payload bay}}: contenente un carico pagante,
+    \item \textbf{\emph{Parachute tube}}: contenente i due paracadute. 
+\end{itemize} 
+infine un \emph{nose cone} apribile per l'aerodinamica e l'espulsione del paracadute. \\
+
 Nella \emph{Electronics bay}\sidenote{Inserire immagine della Electronics Bay}
 è presente il computer di volo, che si occupa di
 gestire il lancio e il recupero del razzo e di raccogliere dati durante il volo. \\
@@ -204,11 +209,11 @@ Il computer di volo è dotato di un sistema di telemetria che trasmette in tempo
 reale i dati raccolti a una \emph{ground station}, permettendo il monitoraggio
 del volo da terra.
 
-\section{Contesto e importanza dei sistemi di telemetria nei razzi sperimentali.}
+\section{Contesto storico della creazione e dell'impiego di razzi sperimentali}
 I razzi sperimentali occupano un ruolo fondamentale nella ricerca e nello
 sviluppo di tecnologie fin dalla fine del XIX secolo.
 
-Originariamente usati per scopi militari fin dal XIII secolo, finch\'e tra il
+I razzi sono stati usati per scopi militari fin dal XIII secolo, finch\'e tra il
 1926 e il 1929 il fisico americano Robert H. Goddard, grazie agli studi di
 Hermann Oberth e Konstantin Tsiolkovsky sulla velocità di fuga terrestre e la
 propulsione a razzo, realizz\`o il primo razzo a propellente liquido per scopi
@@ -217,18 +222,20 @@ scientifici\cite{seibert2006history}.
 Da allora, i razzi sperimentali sono stati utilizzati per una vasta gamma di
 applicazioni, tra cui:
 \begin{itemize}
-    \item La ricerca spaziale e l’esplorazione planetaria, con missioni come
-          i razzi-sonda impiegati per esperimenti scientifici in microgravità.
+    \item La ricerca spaziale e l’esplorazione planetaria, come i razzi-sonda 
+          impiegati per esperimenti scientifici in microgravità.
     \item Lo studio dell’atmosfera e dei fenomeni meteorologici, come i razzi
           impiegati per analizzare la composizione degli strati superiori
           dell’atmosfera terrestre.
-    \item Il test di nuove tecnologie aerospaziali, inclusi materiali innovativi
-          e sistemi di propulsione sperimentali.
+    \item I test di nuove tecnologie aerospaziali, inclusi materiali innovativi, 
+          sistemi di propulsione sperimentali, sistemi di navigazione autonoma e 
+          nuove tecnologie di telecomunicazione.
     \item Applicazioni educative e accademiche, che permettono a università e
           centri di ricerca di sviluppare esperimenti e formare studenti nel campo
           dell’ingegneria aerospaziale.
 \end{itemize}
 
+\section{Contesto e importanza dei sistemi di telemetria nei razzi sperimentali}
 Le motivazioni per cui \`e importante sviluppare un sistema di telemetria per un
 razzo sperimentale sono molteplici.
 
@@ -252,7 +259,7 @@ Ciò pone delle sfide tecniche significative tra cui:
           garantire l'autonomia del sistema durante il volo.
 \end{itemize}
 
-\section{Obiettivi della tesi e contributo personale.}
+\section{Obiettivi della tesi e contributo personale}
 L'obiettivo di questa tesi è la descrizione delle fasi di progettazione,
 sviluppo e ottimizzazione del sistema di telemetria per il razzo Borealis di
 Aurora Rocketry, offrendo una panoramica dettagliata delle tecnologie utilizzate
@@ -288,7 +295,7 @@ I sensori utilizzati sono:
           (Giroscopio, Accelerometro e Magnetometro).
     \item Due barometri \emph{Adafruit MPRLS} con presa statica \libref{lib:mprls}.
 \end{itemize}
-\section{Funzioni principali e componenti chiave.}
+\section{Funzioni principali e componenti chiave}
 Il computer di volo si occupa del monitoraggio del volo. Riceve i dati dal modulo
 dei sensori e, tramite algoritmi di \emph{sensor fusion} e \emph{data fusion}
 li elabora e li trasmette alla \emph{ground station}.
@@ -305,15 +312,10 @@ Quando la velocità verticale si annulla e il razzo inizia la discesa,  il
 computer di volo identifica l'apogeo e attiva la sequenza di recupero,
 espellendo il paracadute per garantire una discesa controllata.
 
-\section{Integrazione e ruolo del sistema di telemetria.}
+\section{Integrazione e ruolo del sistema di telemetria}
 Per la telemetria è stato impiegato un modulo \ac{LoRa} \emph{EByte E220-900T22D}
-a 868MHz, con un'antenna a dipolo omnidirezionale e un amplificatore di potenza
-integrato ad alta efficienza che permette di raggiungere una potenza di
-trasmissione fino a +22dBm, mantenendo un consumo energetico contenuto.
-
-Il modulo \ac{LoRa} comunica con il microcontrollore tramite un'interfaccia \ac{UART}
+a 868MHz collegato al microcontrollore tramite un'interfaccia \ac{UART}
 trasmettendo in tempo reale i dati di volo alla ground station.
-L'antenna omnidirezionale assicura una copertura stabile durante l'intera traiettoria.
 
 Il sistema di telemetria è stato integrato nel computer di volo per permettere il
 monitoraggio del volo in tempo reale e la raccolta dati durante la missione,
@@ -327,9 +329,9 @@ una libreria open-source\libref{lib:lora} per l'interfaccia con il modulo \ac{Lo
 e un protocollo di comunicazione personalizzato per la trasmissione e la 
 ricezione dei dati.
 
-\chapter{Tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}} e la sua Applicazione} \label{chap:lora}
+\chapter{Tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}}{} e la sua Applicazione} \label{chap:lora}
 
-\section{Panoramica della tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}}.}
+\section{Panoramica della tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}}{}}
 \ac{LoRa} è una tecnologia proprietaria per la trasmissione wireless di dati a
 lungo raggio e basso consumo energetico. Essa impiega la modulazione \ac{CSS},
 che garantisce un'elevata robustezza alle interferenze e consente comunicazioni
@@ -339,8 +341,8 @@ che rimane comunque adeguata per applicazioni di telemetria e monitoraggio
 in tempo reale. \\
 \ac{LoRa} opera all'interno delle bande di frequenza \ac{ISM} non licenziate, con specifiche allocazioni in base alla regione geografica:
 \begin{itemize}
-    \item \textbf{868 MHz} in Europa,
-    \item \textbf{915 MHz} in Nord America,
+    \item \textbf{868 MHz} in Europa.
+    \item \textbf{915 MHz} in Nord America.
     \item \textbf{433 MHz} in alcune aree dell’Asia.
 \end{itemize}
 
@@ -350,7 +352,7 @@ estesa. In quest'ultimo caso, è comunemente adottata all'interno di
 un'infrastruttura \ac{LoRaWAN}, che consente la trasmissione di dati a lunga
 distanza tramite una rete di gateway interconnessi a server centralizzati.
 
-\section{Specifiche tecniche dei moduli utilizzati.}
+\section{Specifiche tecniche dei moduli utilizzati}
 Il sistema di telemetria di Borealis impiega due moduli \ac{LoRa} 
 \emph{EByte E220-900T22D}, uno in trasmissione a bordo del razzo e uno in 
 ricezione nella \emph{Ground Station}.
@@ -358,7 +360,8 @@ ricezione nella \emph{Ground Station}.
 Il modulo utilizzato integra la ricetrasmittente \ac{LoRa}
 \emph{Smart Home LLCC68} ed è progettato per operare nella banda
 di frequenza compresa tra 850.15 MHz e 930.15 MHz.
-Il modulo può trasmettere con una potenza massima di +22 dBm (160 mW). 
+Il modulo può trasmettere con una potenza massima di +22 dBm (160 mW) grazie 
+all'amplificatore di potenza ad alta efficienza. 
 La sensibilità del ricevitore raggiunge i -129 dBm, permettendo la ricezione di 
 segnali molto deboli. 
 Lo \emph{Spreading Factor} (che determina la durata del segnale per ogni simbolo
@@ -371,22 +374,24 @@ massima potenza (+22 dBm) e circa 10 mA in ricezione.
 L'interfaccia di comunicazione con il microcontrollore avviene tramite \ac{UART} 
 (3.3V TTL), con \emph{baud rate} configurabile tra 1200 e 115200 bps. 
 L'antenna viene collegata tramite connettore SMA femmina, con impedenza standard 
-di 50 \textohm.
+di 50 \textohm\dsref{ds:lora}.
 In condizioni ottimali di propagazione, il modulo può raggiungere una distanza 
 di trasmissione fino a 10 km in campo aperto.
 
-\section{Motivazioni della scelta di \texorpdfstring{LoRa\textsuperscript{\textcopyright}} per il progetto.}
-Le ragioni che hanno portato alla scelta di \ac{LoRa} per il sistema di telemetria
-di Borealis sono molteplici.
+\subsection{Specifiche tecniche delle antenne utilizzate per la comunicazione}
+Il modulo trasmittente monta un'antenna a dipolo omnidirezionale.
+Il modulo ricevente utilizza un'antenna Yagi \sidenote{Inserire specifiche tecniche delle antenne.}
+
+\section{Motivazioni della scelta di \texorpdfstring{LoRa\textsuperscript{\textcopyright}}{} per il progetto}
 Lo scopo era individuare una tecnologia di trasmissione dati che garantisse 
 un'elevata affidabilità e copertura, mantenendo un consumo energetico contenuto,
 anche in un ambiente operativo complesso come quello di un razzo sperimentale.
 
 Le caratteristiche tecniche discusse nelle sezioni precedenti rendono \ac{LoRa} 
 una scelta ideale per il progetto.
-I test effettuati in laboratorio hanno ulteriormente confermato la capacità del 
-modulo E220 di soddisfare i requisiti di trasmissione dati del sistema di 
-telemetria.
+I test effettuati in laboratorio hanno confermato la capacità dei moduli 
+ricetrasmittenti impiegati di soddisfare i requisiti di trasmissione dati del 
+sistema di telemetria.
 
 Inoltre, in letteratura sono presenti diversi esempi di applicazioni di \ac{LoRa} in
 sistemi di questo tipo\cite{Misbahuddin2022}\cite{Ma2024}\sidenote{Forse c'è un modo migliore per citare i casi visti in letteratura}, che hanno dimostrato
@@ -399,27 +404,27 @@ una scelta conveniente e accessibile per il progetto.
 
 \chapter{Implementazione del Sistema di Telemetria} \label{chap:telemetry}
 
-\section{Architettura del sistema di trasmissione dati.}
-\section{Protocollo di comunicazione e gestione dati.}
-\section{Implementazione software e algoritmi di gestione della trasmissione.}
+\section{Architettura del sistema di trasmissione dati}
+\section{Protocollo di comunicazione e gestione dati}
+\section{Implementazione software e algoritmi di gestione della trasmissione}
 
 \chapter{Valutazione delle Prestazioni} \label{chap:performance}
 
-\section{Metodologia di test e criteri di valutazione.}
-\section{Confronto tra simulazioni e risultati sul campo.}
-\section{Ottimizzazioni apportate durante lo sviluppo.}
+\section{Metodologia di test e criteri di valutazione}
+\section{Confronto tra simulazioni e risultati sul campo}
+\section{Ottimizzazioni apportate durante lo sviluppo}
 
 \chapter{Risultati e Analisi} \label{chap:results}
 
-\section{Analisi dei dati raccolti durante le prove sperimentali.}
-\section{Limiti e possibili miglioramenti futuri.}
-\section{Implicazioni del sistema sviluppato per progetti simili.}
+\section{Analisi dei dati raccolti durante le prove sperimentali}
+\section{Limiti e possibili miglioramenti futuri}
+\section{Implicazioni del sistema sviluppato per progetti simili}
 
 \chapter{Conclusioni} \label{chap:conclusion}
 
-\section{Riepilogo dei risultati ottenuti.}
-\section{Riflessioni sull'impatto del progetto nell'ambito della ricerca e dello sviluppo di razzi sperimentali.}
-\section{Prospettive di sviluppo futuro.}
+\section{Riepilogo dei risultati ottenuti}
+\section{Riflessioni sull'impatto del progetto nell'ambito della ricerca e dello sviluppo di razzi sperimentali}
+\section{Prospettive di sviluppo futuro}
 
 \renewcommand{\appendixtocname}{Appendici}
 \renewcommand{\appendixpagename}{Appendici}
@@ -682,5 +687,5 @@ una scelta conveniente e accessibile per il progetto.
 
 \newpage~\newpage
 \chapter*{Ringraziamenti}
-Grazie a tutti
+Grazie a tutti!
 \end{document}
