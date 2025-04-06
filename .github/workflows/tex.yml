@@ -55,7 +55,7 @@ jobs:
           cp -r tesi/img site/
           echo "img {max-width: 100%; height: auto;}" >> site/tesi.css
       - name: Generate build artifact (HTML)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-html
           path: site
@@ -72,21 +72,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Download PDF artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-pdf
           path: site/pdf
       - name: Download HTML artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-html
           path: site/
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: site
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
