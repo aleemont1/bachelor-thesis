@@ -42,6 +42,7 @@ jobs:
         with:
           scheme: full
           run: |
+            cd tesi
             latexmk -pdf -interaction=nonstopmode tesi.tex && make4ht tesi.tex
       - name: Prepare deployment artifact
         run: |
