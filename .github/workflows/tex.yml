@@ -19,49 +19,43 @@ jobs:
     name: Build PDF
     steps:
       - name: Checkout code
-        uses: actions/checkout@main
-      - name: Compile thesis
-        uses: xu-cheng/latex-action@v3
+        uses: actions/checkout@v4
+      - name: Compile thesis PDF
+        uses: xu-cheng/latex-action@3.2.0
         with:
           root_file: tesi/tesi.tex
           work_in_root_file_dir: true
-      - name: Generate build artifact
-        uses: actions/upload-artifact@main
+      - name: Generate build artifact (PDF)
+        uses: actions/upload-artifact@v3
         with:
           name: build-pdf
           path: tesi/tesi.pdf
+
   build-html:
     runs-on: ubuntu-latest
     name: Build HTML
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Compile thesis
-        uses: xu-cheng/latex-action@v3
+      - name: Compile thesis HTML
+        uses: xu-cheng/latex-action@3.2.0
         with:
           root_file: tesi/tesi.tex
           work_in_root_file_dir: true
-          compiler: make4ht
-          # scheme: full
-          # run: |
-          #   cd tesi
-          #   # Compile in pdf for the bibliography
-          #   latexmk -pdf -interaction=nonstopmode tesi.tex 
-          #   # Compile in html
-          #   make4ht tesi.tex
+          # Usa il compilatore custom per eseguire più comandi:
+          compiler: custom
+          args: |
+            latexmk -pdf -interaction=nonstopmode tesi.tex && make4ht tesi.tex
       - name: Prepare deployment artifact
         run: |
           mkdir site
-          # Copy files to the site folder
           cp tesi/tesi.html site/index.html
           cp tesi/tesi.css site/tesi.css
           cp tesi/refs.bib site/refs.bib
           cp -r tesi/img site/
-          # Add CSS to make images responsive
           echo "img {max-width: 100%; height: auto;}" >> site/tesi.css
-
-      - name: Generate build artifact
-        uses: actions/upload-artifact@main
+      - name: Generate build artifact (HTML)
+        uses: actions/upload-artifact@v3
         with:
           name: build-html
           path: site
@@ -75,24 +69,24 @@ jobs:
     needs: [build-pdf, build-html]
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Checkout
-        uses: actions/checkout@main
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Download PDF artifact
-        uses: actions/download-artifact@main
+        uses: actions/download-artifact@v3
         with:
           name: build-pdf
           path: site/pdf
-      - name: Download artifacts
-        uses: actions/download-artifact@main
+      - name: Download HTML artifact
+        uses: actions/download-artifact@v3
         with:
           name: build-html
           path: site/
       - name: Setup Pages
-        uses: actions/configure-pages@main
-      - name: Upload artifacts
-        uses: actions/upload-pages-artifact@main
+        uses: actions/configure-pages@v2
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v1
         with:
           path: site
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@main
+        uses: actions/deploy-pages@v1
