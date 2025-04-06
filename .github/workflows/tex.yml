@@ -37,7 +37,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Compile thesis
-        uses: xu-cheng/texlive-action@v2
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: tesi/tesi.tex
           work_in_root_file_dir: true
