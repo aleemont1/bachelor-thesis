@@ -115,6 +115,7 @@
 \acrodef{LoRa}[LoRa\textsuperscript{\textcopyright}]{Long Range}
 \acrodef{LoRaWAN}[LoRaWAN\textsuperscript{\textcopyright}]{Long Range Wide Area Network}
 \acrodef{CSS}{Chirp Spread Spectrum}
+\acrodef{SF}{Spreading Factor}
 \acrodef{UART}{Universal Asynchronous Receiver-Transmitter}
 \acrodef{I2C}[I\textsuperscript{2}C]{Inter-Integrated Circuit}
 \acrodef{SPI}{Serial Peripheral Interface}
@@ -194,12 +195,12 @@ dall'associazione, progettato per raggiungere un'altitudine di 3Km.
 \end{figure}
 
 Il razzo è formato da una sezione propulsiva (\emph{Motor bay}), una fusoliera
-in alluminio divisa in tre \emph{bays}: 
+in alluminio divisa in tre \emph{bays}:
 \begin{itemize}
-    \item \textbf{\emph{Electronics bay}}: contenente l'elettronica di bordo, 
+    \item \textbf{\emph{Electronics bay}}: contenente l'elettronica di bordo,
     \item \textbf{\emph{Payload bay}}: contenente un carico pagante,
-    \item \textbf{\emph{Parachute tube}}: contenente i due paracadute. 
-\end{itemize} 
+    \item \textbf{\emph{Parachute tube}}: contenente i due paracadute.
+\end{itemize}
 infine un \emph{nose cone} apribile per l'aerodinamica e l'espulsione del paracadute. \\
 
 Nella \emph{Electronics bay}\sidenote{Inserire immagine della Electronics Bay}
@@ -231,13 +232,13 @@ scientifici\cite{seibert2006history}.
 Da allora, i razzi sperimentali sono stati utilizzati per una vasta gamma di
 applicazioni, tra cui:
 \begin{itemize}
-    \item La ricerca spaziale e l’esplorazione planetaria, come i razzi-sonda 
+    \item La ricerca spaziale e l’esplorazione planetaria, come i razzi-sonda
           impiegati per esperimenti scientifici in microgravità.
     \item Lo studio dell’atmosfera e dei fenomeni meteorologici, come i razzi
           impiegati per analizzare la composizione degli strati superiori
           dell’atmosfera terrestre.
-    \item I test di nuove tecnologie aerospaziali, inclusi materiali innovativi, 
-          sistemi di propulsione sperimentali, sistemi di navigazione autonoma e 
+    \item I test di nuove tecnologie aerospaziali, inclusi materiali innovativi,
+          sistemi di propulsione sperimentali, sistemi di navigazione autonoma e
           nuove tecnologie di telecomunicazione.
     \item Applicazioni educative e accademiche, che permettono a università e
           centri di ricerca di sviluppare esperimenti e formare studenti nel campo
@@ -334,8 +335,8 @@ trasmissione dati, la precisione delle misurazioni e l'ottimizzazione del consum
 energetico.%
 \sidenote{Inserire schema della comunicazione tra il computer di volo e la ground station.}
 Il software di gestione della telemetria è stato sviluppato in C++17 utilizzando
-una libreria open-source\libref{lib:lora} per l'interfaccia con il modulo \ac{LoRa} 
-e un protocollo di comunicazione personalizzato per la trasmissione e la 
+una libreria open-source\libref{lib:lora} per l'interfaccia con il modulo \ac{LoRa}
+e un protocollo di comunicazione personalizzato per la trasmissione e la
 ricezione dei dati.
 
 \chapter{Tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}}{} e la sua Applicazione} \label{chap:lora}
@@ -361,30 +362,69 @@ estesa. In quest'ultimo caso, è comunemente adottata all'interno di
 un'infrastruttura \ac{LoRaWAN}, che consente la trasmissione di dati a lunga
 distanza tramite una rete di gateway interconnessi a server centralizzati.
 
+\subsection{Modulazione \emph{Chirp Spread Spectrum}}
+La modulazione \ac{CSS} è una tecnica di modulazione che fa uso di segnali a
+\emph{chirp} per rappresentare informazioni digitali. I \emph{chirp} sono segnali
+la cui frequenza varia linearmente nel tempo: quando la frequenza cresce si parla
+di \emph{up-chirp}, mentre quando decresce si parla di \emph{down-chirp}.
+
+\begin{figure}[H]
+    \centering
+    % Se metti solo una delle due dimensioni, l'altra scala in automatico
+    \includegraphics[width=0.75\textwidth]{img/up-chirp-down-chirp.png}
+    \caption[Up-chirp e down-chirp]{%
+        Esempio temporale di un \emph{up-chirp} (a) e di un \emph{down-chirp} (b).
+        \textit{\tiny{Immagine adattata da \cite{10609524}.}}%
+    }
+
+    % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
+    \label{fig:up-chirp-down-chirp}
+\end{figure}
+
+In un sistema CSS, ogni simbolo viene rappresentato da un singolo \emph{chirp} e
+la quantità di bit che esso trasporta è determinata dallo \ac{SF}, secondo la relazione
+$M = 2^{SF}$, dove $M$ rappresenta il numero di simboli ortogonali e, di
+conseguenza, ogni simbolo trasporta $SF$ bit.
+
+La modulazione \ac{CSS} si basa sulla generazione di un insieme di \emph{chirp}
+ortogonali ottenuti mediante traslazioni circolari nel tempo di un \emph{chirp}
+di riferimento (detto \emph{chirp base}).
+
+La modulazione \ac{CSS} si basa sulla generazione di un insieme di \emph{chirp}
+ortogonali ottenuti mediante traslazioni circolari nel tempo di un \emph{chirp}
+di riferimento (detto \emph{chirp base}). La posizione temporale del \emph{chirp}
+traslato è proporzionale al valore numerico del simbolo da trasmettere, permettendo
+la generazione di $M$ forme d'onda tra loro ortogonali.
+
+Questa proprietà consente al ricevitore di recuperare il simbolo trasmesso mediante
+correlazione con i \emph{chirp} possibili, tipicamente implementata in maniera efficiente
+tramite la trasformata di Fourier (FFT), rendendo il sistema robusto a rumore,
+interferenze e attenuazione multipath~\cite{10609524}.
+
 \section{Specifiche tecniche dei moduli utilizzati}
-Il sistema di telemetria di Borealis impiega due moduli \ac{LoRa} 
-\emph{EByte E220-900T22D}, uno in trasmissione a bordo del razzo e uno in 
+Il sistema di telemetria di Borealis impiega due moduli \ac{LoRa}
+\emph{EByte E220-900T22D}, uno in trasmissione a bordo del razzo e uno in
 ricezione nella \emph{Ground Station}.
 
 Il modulo utilizzato integra la ricetrasmittente \ac{LoRa}
 \emph{Smart Home LLCC68} ed è progettato per operare nella banda
 di frequenza compresa tra 850.15 MHz e 930.15 MHz.
-Il modulo può trasmettere con una potenza massima di +22 dBm (160 mW) grazie 
-all'amplificatore di potenza ad alta efficienza integrato. 
-La sensibilità del ricevitore raggiunge i -129 dBm, permettendo la ricezione di 
-segnali molto deboli. 
+Il modulo può trasmettere con una potenza massima di +22 dBm (160 mW) grazie
+all'amplificatore di potenza ad alta efficienza integrato.
+La sensibilità del ricevitore raggiunge i -129 dBm, permettendo la ricezione di
+segnali molto deboli.
 Lo \emph{Spreading Factor} (che determina la durata del segnale per ogni simbolo
-inviato) è configurabile nell’intervallo SF5 – SF12, influenzando la velocità di 
+inviato) è configurabile nell’intervallo SF5 – SF12, influenzando la velocità di
 trasmissione, che può variare tra 0.3 kbps e 62.5 kbps.
 
-Dal punto di vista energetico, il modulo assorbe 120 mA in trasmissione alla 
+Dal punto di vista energetico, il modulo assorbe 120 mA in trasmissione alla
 massima potenza (+22 dBm) e circa 10 mA in ricezione.
 
-L'interfaccia di comunicazione con il microcontrollore avviene tramite \ac{UART} 
-(3.3V TTL), con \emph{baud rate} configurabile tra 1200 e 115200 bps. 
-L'antenna viene collegata tramite connettore SMA femmina, con impedenza standard 
+L'interfaccia di comunicazione con il microcontrollore avviene tramite \ac{UART}
+(3.3V TTL), con \emph{baud rate} configurabile tra 1200 e 115200 bps.
+L'antenna viene collegata tramite connettore SMA femmina, con impedenza standard
 di 50 \textohm\dsref{ds:lora}.
-In condizioni ottimali di propagazione, il modulo può raggiungere una distanza 
+In condizioni ottimali di propagazione, il modulo può raggiungere una distanza
 di trasmissione fino a 10 km in campo aperto.
 
 \subsection{Specifiche tecniche delle antenne utilizzate per la comunicazione}
@@ -392,19 +432,19 @@ Il modulo trasmittente monta un'antenna a dipolo omnidirezionale.
 Il modulo ricevente utilizza un'antenna Yagi \sidenote{Inserire specifiche tecniche delle antenne.}
 
 \section{Motivazioni della scelta di \texorpdfstring{LoRa\textsuperscript{\textcopyright}}{} per il progetto}
-Lo scopo era individuare una tecnologia di trasmissione dati che garantisse 
+Lo scopo era individuare una tecnologia di trasmissione dati che garantisse
 un'elevata affidabilità e copertura, mantenendo un consumo energetico contenuto,
 anche in un ambiente operativo complesso come quello di un razzo sperimentale.
 
-Le caratteristiche tecniche discusse nelle sezioni precedenti rendono \ac{LoRa} 
+Le caratteristiche tecniche discusse nelle sezioni precedenti rendono \ac{LoRa}
 una scelta ideale per il progetto.
-I test effettuati in laboratorio hanno confermato la capacità dei moduli 
-ricetrasmittenti impiegati di soddisfare i requisiti di trasmissione dati del 
+I test effettuati in laboratorio hanno confermato la capacità dei moduli
+ricetrasmittenti impiegati di soddisfare i requisiti di trasmissione dati del
 sistema di telemetria.
 
 Inoltre, in letteratura sono presenti diversi esempi di applicazioni di \ac{LoRa} in
 sistemi di questo tipo\cite{Misbahuddin2022}\cite{Ma2024}\sidenote{Forse c'è un modo migliore per citare i casi visti in letteratura}, che hanno dimostrato
-l'efficacia di questa tecnologia in condizioni critiche e la sua capacità di 
+l'efficacia di questa tecnologia in condizioni critiche e la sua capacità di
 garantire una trasmissione dati stabile e affidabile.
 
 Infine, l'ampia diffusione dell'uso di \ac{LoRa} nell'\ac{IoT} e la conseguente
