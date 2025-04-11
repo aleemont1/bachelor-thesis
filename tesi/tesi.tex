@@ -376,7 +376,6 @@ di \emph{up-chirp}, mentre quando decresce si parla di \emph{down-chirp}.
         Esempio temporale di un \emph{up-chirp} (a) e di un \emph{down-chirp} (b).
         \textit{\tiny{Immagine adattata da \cite{10609524}.}}%
     }
-
     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
     \label{fig:up-chirp-down-chirp}
 \end{figure}
@@ -402,34 +401,146 @@ tramite la trasformata di Fourier (FFT), rendendo il sistema robusto a rumore,
 interferenze e attenuazione multipath~\cite{10609524}.
 
 \section{Specifiche tecniche dei moduli utilizzati}
+
 Il sistema di telemetria di Borealis impiega due moduli \ac{LoRa}
 \emph{EByte E220-900T22D}, uno in trasmissione a bordo del razzo e uno in
 ricezione nella \emph{Ground Station}.
+Il modulo impiega la ricetrasmittente \ac{LoRa} \emph{Smart Home LLCC68}e opera nella banda di frequenza compresa tra 850.15 MHz e 930.15 MHz.
 
-Il modulo utilizzato integra la ricetrasmittente \ac{LoRa}
-\emph{Smart Home LLCC68} ed è progettato per operare nella banda
-di frequenza compresa tra 850.15 MHz e 930.15 MHz.
-Il modulo può trasmettere con una potenza massima di +22 dBm (160 mW) grazie
-all'amplificatore di potenza ad alta efficienza integrato.
-La sensibilità del ricevitore raggiunge i -129 dBm, permettendo la ricezione di
-segnali molto deboli.
-Lo \emph{Spreading Factor} (che determina la durata del segnale per ogni simbolo
-inviato) è configurabile nell’intervallo SF5 – SF12, influenzando la velocità di
-trasmissione, che può variare tra 0.3 kbps e 62.5 kbps.
+Le specifiche tecniche principali del modulo utilizzato sono riportate nella
+Tabella \ref{tab:LoRa-E220-specs}. Queste caratteristiche includono la potenza di
+trasmissione massima di +22 dBm (160 mW), la sensibilità del ricevitore pari a
+-129 dBm, e la configurabilità dello Spreading Factor (SF) nell'intervallo
+SF5 - SF12, che influisce direttamente sulla velocità di trasmissione (da 0.3 kbps
+a 62.5 kbps). Inoltre, il consumo energetico del modulo varia tra 120 mA in
+trasmissione alla potenza massima e 10 mA in ricezione\dsref{ds:lora}, permettendo una gestione
+efficiente delle risorse in missioni di lunga durata.
 
-Dal punto di vista energetico, il modulo assorbe 120 mA in trasmissione alla
-massima potenza (+22 dBm) e circa 10 mA in ricezione.
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{Caratteristica}                      & \textbf{Valore}         \\ \hline
+            \textbf{Banda di frequenza}                  & 850.15 MHz - 930.15 MHz \\ \hline
+            \textbf{Potenza di trasmissione}             & +22 dBm (160 mW)        \\ \hline
+            \textbf{Sensibilità del ricevitore}          & -129 dBm                \\ \hline
+            \textbf{Spreading Factor (SF)}               & SF5 - SF12              \\ \hline
+            \textbf{Velocità di trasmissione}            & 0.3 kbps - 62.5 kbps    \\ \hline
+            \textbf{Consumo in trasmissione (a +22 dBm)} & 120 mA                  \\ \hline
+            \textbf{Consumo in ricezione}                & 10 mA                   \\ \hline
+            \textbf{Interfaccia di comunicazione}        & \ac{UART} (3.3V TTL)    \\ \hline
+            \textbf{Baud rate}                           & 1200 bps - 115200 bps   \\ \hline
+            \textbf{Connettore antenna}                  & SMA femmina             \\ \hline
+            \textbf{Impedanza connettore}                & 50 \textohm             \\ \hline
+        \end{tabular}
+    }
+    \caption{Caratteristiche tecniche del modulo \ac{LoRa} EByte E220-900T22D.}
+    \label{tab:LoRa-E220-specs}
+\end{table}
 
-L'interfaccia di comunicazione con il microcontrollore avviene tramite \ac{UART}
-(3.3V TTL), con \emph{baud rate} configurabile tra 1200 e 115200 bps.
-L'antenna viene collegata tramite connettore SMA femmina, con impedenza standard
-di 50 \textohm\dsref{ds:lora}.
-In condizioni ottimali di propagazione, il modulo può raggiungere una distanza
-di trasmissione fino a 10 km in campo aperto.
+\section{Specifiche tecniche delle antenne utilizzate}
+La scelta delle antenne per il sistema telemetrico del razzo è stata guidata da
+esigenze tecniche specifiche, nonostante le opzioni disponibili fossero limitate.
+Le caratteristiche fondamentali del sistema richiedevano un'antenna a bordo in
+grado di garantire una copertura di radiazione uniforme su una superficie quanto
+più ampia possibile. Per la \emph{ground station}, invece, è stata selezionata
+un'antenna direzionale.
 
-\subsection{Specifiche tecniche delle antenne utilizzate per la comunicazione}
-Il modulo trasmittente monta un'antenna a dipolo omnidirezionale.
-Il modulo ricevente utilizza un'antenna Yagi \sidenote{Inserire specifiche tecniche delle antenne.}
+\subsection{Antenna omnidirezionale (Razzo)}
+
+Per il razzo, la soluzione ottimale si è rivelata essere un'antenna omnidirezionale.
+Questa scelta è praticamente obbligata a causa della variazione costante dell'orientamento
+del razzo durante il volo, rendendo impraticabile l'utilizzo di antenne direzionali,
+a meno di non implementare sistemi complessi di controllo dell'assetto, che
+tuttavia non rientrano nell'ambito del progetto attuale.
+
+\subsection{Antenna direzionale (Ground Station)}
+
+Per la \emph{ground station}, è stata selezionata un'antenna direzionale. Le due
+tecnologie principali prese in considerazione sono state:
+\begin{itemize}
+    \item Antenna Yagi
+    \item Antenna Log-Periodica
+\end{itemize}
+
+La differenza principale tra questi due tipi di antenne riguarda la direzionalità.
+L'antenna Log-Periodica offre una direzionalità maggiore rispetto alla Yagi,
+caratteristica che, in linea di principio, sarebbe desiderabile per il sistema
+di terra, in quanto consente di concentrare l'energia di ricezione in un angolo
+ristretto, aumentando il guadagno e riducendo il rumore di fondo.
+Tuttavia, l'eccessiva direzionalità della Log-Periodica avrebbe introdotto
+delle complicazioni operative. Poiché il tracciamento del razzo durante il volo
+sarà eseguito manualmente, una direzionalità troppo elevata avrebbe richiesto
+una precisione di puntamento molto elevata, difficile da mantenere senza
+strumenti automatizzati, aumentando il rischio di perdita temporanea del segnale.
+
+L'antenna Yagi, con la sua direzionalità moderata, si è rivelata una scelta più
+equilibrata. Essa offre un buon compromesso tra guadagno e facilità di puntamento,
+consentendo un tracciamento sufficientemente preciso del razzo senza la necessità
+di strumenti avanzati di inseguimento automatico.
+
+\subsection{Confronto delle antenne utilizzate}
+
+Di seguito viene presentata una tabella con le specifiche tecniche delle due
+antenne utilizzate:
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Caratteristica} & \textbf{Antenna Omnidirezionale} & \textbf{Antenna Yagi}       \\ \hline
+            Marca e modello         & \emph{Siretta Delta 5A}          & \emph{Siretta Oscar 3A}     \\ \hline
+            Tipo                    & Omnidirezionale                  & Direzionale                 \\ \hline
+            Frequenza di lavoro     & 433 MHz - 5.9 GHz                & 850 MHz - 930 MHz           \\ \hline
+            Guadagno                & 2-5 dBi                          & 7-10 dBi                    \\ \hline
+            Direzionalità           & Bassa                            & Alta                        \\ \hline
+            Angolo di copertura     & 360\textdegree                   & 45\textdegree-60\textdegree \\ \hline
+            Impedenza               & 50\textohm                       & 50\textohm                  \\ \hline
+            Polarizzazione          & Verticale                        & Verticale                   \\ \hline
+            Tipo di connettore      & SMA maschio                      & FME maschio                 \\ \hline
+            Peso                    & 28 g                             & 210 g                       \\ \hline
+        \end{tabular}
+    }
+    \caption{Confronto delle specifiche tecniche tra l'antenna omnidirezionale e l'antenna Yagi.}
+    \label{tab:antenne_confronto} 
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    % Se metti solo una delle due dimensioni, l'altra scala in automatico
+    \includegraphics[width=\textwidth]{img/omnidirezionale-rad-plot.png}
+    \caption{Grafici di radiazione dell'antenna omnidirezionale. \tiny{Immagine adattata da \dsref{ds:omni}}}%
+    % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
+    \label{fig:omni-rad-plot}
+\end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     % Se metti solo una delle due dimensioni, l'altra scala in automatico
+%     \includegraphics[width=0.75\textwidth]{img/omnidirezionale-3D-rad-plot.png}
+%     \caption{Grafico di radiazione dell'antenna omnidirezionale.}%
+%     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
+%     \label{fig:omni-3D-rad-plot}
+% \end{figure}
+
+\begin{figure}[H]
+    \centering
+    % Se metti solo una delle due dimensioni, l'altra scala in automatico
+    \includegraphics[width=\textwidth]{img/yagi-rad-plot.png}
+    \caption{Grafici di radiazione dell'antenna Yagi. \tiny{Immagine adattata da \dsref{ds:yagi}}}%
+    % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
+    \label{fig:yagi-rad-plot}
+\end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     % Se metti solo una delle due dimensioni, l'altra scala in automatico
+%     \includegraphics[width=0.75\textwidth]{img/yagi-3D-rad-plot.png}
+%     \caption{Grafico di radiazione 3D dell'antenna yagi.}%
+%     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
+%     \label{fig:yagi-3D-rad-plot}
+% \end{figure}
 
 \section{Motivazioni della scelta di \texorpdfstring{LoRa\textsuperscript{\textcopyright}}{} per il progetto}
 Lo scopo era individuare una tecnologia di trasmissione dati che garantisse
@@ -522,6 +633,12 @@ una scelta conveniente e accessibile per il progetto.
         \library{https://www.cdebyte.com/pdf-down.aspx?id=3552}%
         {Datasheet EByte E220-900T22D}%
         {Datasheet del modulo EByte E220-900T22D.}{ds:lora}
+        \library{https://www.siretta.com/?sdm_process_download=1&download_id=3401}%
+        {Datasheet Siretta Oscar 3A}%
+        {Datasheet dell'antenna Yagi Siretta Oscar 3A.}{ds:yagi}
+        \library{https://www.mouser.it/datasheet/2/1161/Delta_5A_Datasheet_Rev_2_2-2486634.pdf}%
+        {Datasheet Siretta Delta 5A}%
+        {Datasheet dell'antenna omnidirezionale Siretta Delta 5A.}{ds:omni}
     \end{enumerate}
     % \chapter{Embed di interi PDF}
     % \label{Appendice:C}
