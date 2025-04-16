@@ -24,7 +24,6 @@
 \usepackage{indentfirst}
 \usepackage[utf8]{inputenc}
 \usepackage{float}
-\usepackage{hyperref}
 \usepackage[capitalize,noabbrev]{cleveref}
 \usepackage{soul}
 \usepackage[font=footnotesize,labelfont=bf]{caption}
@@ -36,6 +35,8 @@
 \usepackage{lscape} 
 
 \usepackage{natbib}
+\usepackage{hyperref}
+
 \bibliographystyle{alpha}
 \setcitestyle{super, open={[}, close={]}}
 
@@ -45,6 +46,12 @@
 \usepackage{pdfpages}
 
 \begin{document}
+
+\makeatletter
+\@ifundefined{HCode}{}{
+  \renewcommand{\@biblabel}[1]{\HCode{<a id="bibitem#1"></a>}[#1]}
+}
+\makeatother
 % Per spostare i vari elementi più su o più giù gioca con i valori di vspace che ci sono tra uno e l'altro
 \pagestyle{empty}
 \newgeometry{
@@ -383,10 +390,6 @@ In un sistema CSS, ogni simbolo viene rappresentato da un singolo \emph{chirp} e
 la quantità di bit che esso trasporta è determinata dallo \ac{SF}, secondo la relazione
 $M = 2^{SF}$, dove $M$ rappresenta il numero di simboli ortogonali e, di
 conseguenza, ogni simbolo trasporta $SF$ bit.
-
-La modulazione \ac{CSS} si basa sulla generazione di un insieme di \emph{chirp}
-ortogonali ottenuti mediante traslazioni circolari nel tempo di un \emph{chirp}
-di riferimento (detto \emph{chirp base}).
 
 La modulazione \ac{CSS} si basa sulla generazione di un insieme di \emph{chirp}
 ortogonali ottenuti mediante traslazioni circolari nel tempo di un \emph{chirp}

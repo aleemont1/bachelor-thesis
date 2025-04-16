@@ -43,7 +43,7 @@ jobs:
           scheme: full
           run: |
             cd tesi
-            latexmk -pdf -interaction=nonstopmode tesi.tex && make4ht tesi.tex
+            make4ht -u tesi.tex "mathjax,htmlex" && bibtex tesi && make4ht -u tesi.tex "mathjax,htmlex"
       - name: Prepare deployment artifact
         run: |
           mkdir site
