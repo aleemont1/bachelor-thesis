@@ -52,7 +52,7 @@ jobs:
           cp tesi/refs.bib site/refs.bib
           cp -r tesi/img site/
           echo "img {max-width: 100%; height: auto;}" >> site/tesi.css
-          echo "table { display: block; overflow-x: auto; white-space: nowrap; max-width: 100%; box-sizing: border-box; }" >> site/tesi.css
+          echo "table { display: block; overflow-x: auto; overflow-y: hidden; white-space: nowrap; max-width: 100%; box-sizing: border-box; }" >> site/tesi.css
       - name: Generate build artifact (HTML)
         uses: actions/upload-artifact@v4
         with:
