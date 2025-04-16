@@ -438,7 +438,7 @@ efficiente delle risorse in missioni di lunga durata.
     \label{tab:LoRa-E220-specs}
 \end{table}
 
-\section{Specifiche tecniche delle antenne utilizzate}
+\section{Specifiche delle antenne utilizzate}
 La scelta delle antenne per il sistema telemetrico del razzo è stata guidata da
 esigenze tecniche specifiche, nonostante le opzioni disponibili fossero limitate.
 Le caratteristiche fondamentali del sistema richiedevano un'antenna a bordo in
@@ -446,7 +446,7 @@ grado di garantire una copertura di radiazione uniforme su una superficie quanto
 più ampia possibile. Per la \emph{ground station}, invece, è stata selezionata
 un'antenna direzionale.
 
-\subsection{Antenna omnidirezionale (Razzo)}
+\subsection*{Antenna omnidirezionale (Razzo)}
 
 Per il razzo, la soluzione ottimale si è rivelata essere un'antenna omnidirezionale.
 Questa scelta è praticamente obbligata a causa della variazione costante dell'orientamento
@@ -454,7 +454,7 @@ del razzo durante il volo, rendendo impraticabile l'utilizzo di antenne direzion
 a meno di non implementare sistemi complessi di controllo dell'assetto, che
 tuttavia non rientrano nell'ambito del progetto attuale.
 
-\subsection{Antenna direzionale (Ground Station)}
+\subsection*{Antenna direzionale (Ground Station)}
 
 Per la \emph{ground station}, è stata selezionata un'antenna direzionale. Le due
 tecnologie principali prese in considerazione sono state:
@@ -479,29 +479,30 @@ equilibrata. Essa offre un buon compromesso tra guadagno e facilità di puntamen
 consentendo un tracciamento sufficientemente preciso del razzo senza la necessità
 di strumenti avanzati di inseguimento automatico.
 
-\subsection{Confronto delle antenne utilizzate}
+\subsection*{Dettagli tecnici delle antenne}
 
 Di seguito viene presentata una tabella con le specifiche tecniche delle due
-antenne utilizzate:
+antenne utilizzate:\sidenote{Verificare col prof. l'angolo di copertura della Yagi}
+
 \begin{table}[H]
     \centering
     \resizebox{\textwidth}{!}{
         \begin{tabular}{|c|c|c|}
             \hline
-            \textbf{Caratteristica} & \textbf{Antenna Omnidirezionale} & \textbf{Antenna Yagi}       \\ \hline
-            Marca e modello         & \emph{Siretta Delta 5A}          & \emph{Siretta Oscar 3A}     \\ \hline
-            Tipo                    & Omnidirezionale                  & Direzionale                 \\ \hline
-            Frequenza di lavoro     & 433 MHz - 5.9 GHz                & 850 MHz - 930 MHz           \\ \hline
-            Guadagno                & 2-5 dBi                          & 7-10 dBi                    \\ \hline
-            Direzionalità           & Bassa                            & Alta                        \\ \hline
-            Angolo di copertura     & 360\textdegree                   & 45\textdegree-60\textdegree \\ \hline
-            Impedenza               & 50\textohm                       & 50\textohm                  \\ \hline
-            Polarizzazione          & Verticale                        & Verticale                   \\ \hline
-            Tipo di connettore      & SMA maschio                      & FME maschio                 \\ \hline
-            Peso                    & 28 g                             & 210 g                       \\ \hline
+                                & \textbf{Antenna Omnidirezionale} & \textbf{Antenna Yagi}   \\ \hline
+            Marca e modello     & \emph{Siretta Delta 5A}          & \emph{Siretta Oscar 3A} \\ \hline
+            Tipo                & Omnidirezionale elicoidale       & Direzionale Yagi        \\ \hline
+            Frequenza di lavoro & 433 MHz - 5.9 GHz                & 850 MHz - 930 MHz       \\ \hline
+            Guadagno            & 2 - 5 dBi                        & 7 - 10 dBi              \\ \hline
+            Direzionalità       & Bassa                            & Alta                    \\ \hline
+            Angolo di copertura & 360\textdegree                   & 60\textdegree           \\ \hline
+            Impedenza           & 50 \textohm                      & 50 \textohm             \\ \hline
+            Polarizzazione      & Verticale                        & Verticale               \\ \hline
+            Tipo di connettore  & SMA maschio                      & FME maschio             \\ \hline
+            Peso                & 28 g                             & 210 g                   \\ \hline
         \end{tabular}
     }
-    \caption{Confronto delle specifiche tecniche tra l'antenna omnidirezionale e l'antenna Yagi.}
+    \caption{Specifiche tecniche dell'antenna omnidirezionale e dell'antenna Yagi.}
     \label{tab:antenne_confronto}
 \end{table}
 
@@ -554,10 +555,10 @@ I test effettuati in laboratorio hanno confermato la capacità dei moduli
 ricetrasmittenti impiegati di soddisfare i requisiti di trasmissione dati del
 sistema di telemetria.
 
-Inoltre, in letteratura sono presenti diversi esempi di applicazioni di \ac{LoRa} in
-sistemi di questo tipo\cite{Misbahuddin2022}\cite{Ma2024}\sidenote{Forse c'è un modo migliore per citare i casi visti in letteratura}, che hanno dimostrato
-l'efficacia di questa tecnologia in condizioni critiche e la sua capacità di
-garantire una trasmissione dati stabile e affidabile.
+In letteratura sono stati documentati numerosi casi di applicazione di \ac{LoRa}
+in sistemi simili\cite{Misbahuddin2022, Ma2024}, che hanno dimostrato la sua
+efficacia in ambienti operativi critici, garantendo trasmissioni dati stabili e
+affidabili.
 
 Infine, l'ampia diffusione dell'uso di \ac{LoRa} nell'\ac{IoT} e la conseguente
 vasta disponibilità di hardware a costi contenuti hanno reso questa tecnologia
