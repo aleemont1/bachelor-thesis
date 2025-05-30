@@ -1,0 +1,75 @@
+@startuml ground-station
+
+skinparam DefaultFontName Open Sans
+skinparam DefaultFontStyle bold
+
+skinparam ArrowColor #1b3651
+skinparam FontColor #1b3651
+
+skinparam class {
+    BackgroundColor #E0F2F7
+    BorderColor #5B9BD5
+    FontColor #1b3651
+}
+
+interface IReceiver {
+    + init(): ResponseStatusContainer
+    + receive(): optional<Packet>
+}
+
+class PacketAssembler{
+    +addChunk(Packet) : void
+    +isComplete(Packet) : bool
+    +assemble() : vector<uint8_t>
+    +getLastCallTime() : unsigned long int
+    - chunks : map<uint8_t, Packet>
+    - totalChunks : uint8_t
+    - packetNumber : uint16_t
+    - lastCallTime : unsigned long int
+}
+class PacketDeserializer{
+    +poll() : void
+    +getCompletePayload() : optional<vector<uint8_t>>
+    - Receiver : IReceiver
+    - assemblers : map<uint16_t, PacketAssembler>
+    - lastCleanupTime : unsigned long int
+    - cleanupInterval : unsigned long int
+}
+class PacketValidator { 
+    + {static} isValid(Packet) : bool
+    - {static} calculateCRC(Packet) : uint16_t
+}
+
+struct PacketHeader {
+    uint16_t packetNumber
+    uint8_t totalChunks
+    uint8_t chunkNumber
+    uint8_t chunkSize
+    uint8_t payloadSize
+    uint32_t timestamp
+    uint8_t protocolVersion
+}
+
+struct PacketPayload {
+    uint8_t data[MAX_PAYLOAD_SIZE]
+}
+
+struct Packet {
+    header: PacketHeader
+    payload: PacketPayload
+    crc: uint16_t
+    + calculateCRC(): void
+}
+
+' Relazioni migliorate
+Packet *-- PacketHeader
+Packet *-- PacketPayload
+PacketDeserializer *-- "0..*" PacketAssembler
+PacketDeserializer o-- IReceiver
+
+' Dipendenze (possono rimanere come sono o essere implicite)
+IReceiver ..> Packet : " receives"
+PacketAssembler ..> Packet : " assembles"
+PacketDeserializer ..> Packet : " deserializes"
+PacketValidator ..> Packet : " validates"
+@enduml

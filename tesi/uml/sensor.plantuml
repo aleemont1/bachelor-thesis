@@ -1,0 +1,31 @@
+@startuml Sensors
+
+skinparam DefaultFontName Open Sans
+skinparam DefaultFontStyle bold
+
+skinparam ArrowColor #1b3651
+skinparam FontColor #1b3651
+
+skinparam class {
+    BackgroundColor #E0F2F7
+    BorderColor #5B9BD5
+    FontColor #1b3651
+}
+
+interface ISensor {
+    {abstract} + init(): bool
+    {abstract} + getData(): optional<SensorData>
+    + isInitialized(): bool
+    # setInitialized(bool initialized): void
+    - initialized: bool
+}
+
+class SensorData {
+    # sensorName: string
+    # dataMap: map<string, variant<...>>
+}
+
+' Relationships
+ISensor ..> SensorData : " uses"
+
+@enduml

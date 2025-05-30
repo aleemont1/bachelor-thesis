@@ -1,0 +1,67 @@
+@startuml Logger
+
+skinparam DefaultFontName Open Sans
+skinparam DefaultFontStyle bold
+
+skinparam ArrowColor #1b3651
+skinparam FontColor #1b3651
+
+skinparam class {
+    BackgroundColor #E0F2F7
+    BorderColor #5B9BD5
+    FontColor #1b3651
+}
+
+interface ILogger {
+    # logDataList: vector<LogData>
+    + {abstract} logInfo(const string& message): void
+    + {abstract} logWarning(const string& message): void
+    + {abstract} logError(const string& message): void
+    + {abstract} logSensorData(const SensorData sensorData): void
+    + {abstract} getJSONAll(): json
+    + clearData(): void
+}
+
+interface ILoggable {
+    # source: string
+    + getSource(): string
+    + {abstract} toJSON(): json
+}
+
+class LogMessage {
+    - message: string
+}
+
+class LogSensorData {
+    - sensorData: SensorData
+}
+
+class LogData {
+    - source: string
+    - data: ILoggable*
+}
+
+class SensorData {
+    - sensorName: string
+    - dataMap: map<string, variant<...>>
+    + getSensorName(): string
+}
+
+' --- Relationships ---
+
+' ILogger contains a collection of LogData
+ILogger o-left- "0..*" LogData
+
+' LogData holds an ILoggable object
+LogData o-- "1" ILoggable
+
+' LogMessage implements ILoggable
+LogMessage --right|> ILoggable
+
+' LogSensorData implements ILoggable
+LogSensorData --left|> ILoggable
+
+' LogSensorData owns a SensorData object
+LogSensorData *--right "1" SensorData
+
+@enduml

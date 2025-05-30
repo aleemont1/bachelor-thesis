@@ -1,0 +1,55 @@
+@startuml Transmitter
+
+skinparam DefaultFontName Open Sans
+skinparam DefaultFontStyle bold
+
+skinparam ArrowColor #1b3651
+skinparam FontColor #1b3651
+
+skinparam class {
+    BackgroundColor #E0F2F7
+    BorderColor #5B9BD5
+    FontColor #1b3651
+}
+
+interface "ITransmitter<T>" {
+    {abstract} + init(): ResponseStatusContainer
+    {abstract} + transmit(T data): ResponseStatusContainer
+}
+
+struct PacketHeader {
+    uint16_t packetNumber
+    uint8_t totalChunks
+    uint8_t chunkNumber
+    uint8_t chunkSize
+    uint8_t payloadSize
+    uint32_t timestamp
+    uint8_t protocolVersion
+}
+
+struct PacketPayload {
+    uint8_t data[MAX_PAYLOAD_SIZE]
+}
+
+struct Packet {
+    header: PacketHeader
+    payload: PacketPayload
+    crc: uint16_t
+    + <u>calculateCRC</u>(): void
+}
+
+class SensorData {
+    - sensorName: string
+    - dataMap: map<string, variant<...>>
+    + getSensorName(): string
+}
+
+' Relationships
+Packet *-- PacketHeader
+Packet *-left- PacketPayload
+
+' ITransmitter depends on Packet (when T is Packet)
+"ITransmitter<T>" ..> Packet : "transmits <T=Packet>"
+
+PacketPayload ..> SensorData : "contains"
+@enduml
