@@ -646,18 +646,24 @@ attuatori per il recupero del razzo.
 
 Il sistema è orchestrato da una macchina a stati finiti, che gestisce le diverse
 fasi del volo, rappresentata nella Figura \ref{fig:flight-computer-fsm}.
-\begin{landscape}
-    \begin{figure}[H]
-        \centering
-        \vspace*{2cm}  % Reduce space from top
-        \hspace*{-4cm}
-        \includegraphics[width=1.7\textwidth]{img/uml/fsm.png}
-        \caption{Macchina a stati finiti del computer di volo.}
-        \label{fig:flight-computer-fsm}
-        \vspace*{-1cm}  % Reduce space at bottom
-    \end{figure}
-    \thispagestyle{empty}  % Remove page numbering for this page
-\end{landscape}
+\ifdefined\HCode
+\else
+    \begin{landscape}
+        \fi
+        \begin{figure}[H]
+            \centering
+            \vspace*{2cm}  % Reduce space from top
+            \hspace*{-4cm}
+            \includegraphics[width=1.7\textwidth]{img/uml/fsm.png}
+            \caption{Macchina a stati finiti del computer di volo.}
+            \label{fig:flight-computer-fsm}
+            \vspace*{-1cm}  % Reduce space at bottom
+        \end{figure}
+        \thispagestyle{empty}  % Remove page numbering for this page
+        \ifdefined\HCode
+        \else
+    \end{landscape}
+\fi
 
 \newpage
 Il computer di volo è composto da 4 elementi principali:
