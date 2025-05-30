@@ -49,7 +49,7 @@
 
 \makeatletter
 \@ifundefined{HCode}{}{
-  \renewcommand{\@biblabel}[1]{\HCode{<a id="bibitem#1"></a>}[#1]}
+    \renewcommand{\@biblabel}[1]{\HCode{<a id="bibitem#1"></a>}[#1]}
 }
 \makeatother
 % Per spostare i vari elementi più su o più giù gioca con i valori di vspace che ci sono tra uno e l'altro
@@ -127,6 +127,8 @@
 \acrodef{I2C}[I\textsuperscript{2}C]{Inter-Integrated Circuit}
 \acrodef{SPI}{Serial Peripheral Interface}
 \acrodef{ISM}{Industrial, Scientific and Medical}
+\acrodef{RSSI}{Received Signal Strength Indicator}
+\acrodef{EKF}{Extended Kalman Filter}
 \restoregeometry
 \newpage
 % \begin{center}
@@ -190,7 +192,7 @@ Aurora Rocketry è un'associazione studentesca dell'Università di Bologna nata
 nel 2024, che si occupa di progettare e costruire razzi sperimentali per
 partecipare a competizioni internazionali. \\
 Borealis è il primo prototipo di razzo sperimentale sviluppato
-dall'associazione, progettato per raggiungere un'altitudine di 3Km.
+dall'associazione, progettato per raggiungere un'altitudine di 3000m.
 
 \begin{figure}[H]
     \centering
@@ -202,15 +204,16 @@ dall'associazione, progettato per raggiungere un'altitudine di 3Km.
 \end{figure}
 
 Il razzo è formato da una sezione propulsiva (\emph{Motor bay}), una fusoliera
-in alluminio divisa in tre \emph{bays}:
+in alluminio divisa in quattri \emph{bays}:
 \begin{itemize}
+    \item \textbf{\emph{Motor bay}}: contenente il motore,
     \item \textbf{\emph{Electronics bay}}: contenente l'elettronica di bordo,
-    \item \textbf{\emph{Payload bay}}: contenente un carico pagante,
+    \item \textbf{\emph{Payload bay}}: contenente un carico pagante sperimentale,
     \item \textbf{\emph{Parachute tube}}: contenente i due paracadute.
 \end{itemize}
 infine un \emph{nose cone} apribile per l'aerodinamica e l'espulsione del paracadute. \\
 
-Nella \emph{Electronics bay}\sidenote{Inserire immagine della Electronics Bay}
+Nella \emph{Electronics bay}
 è presente il computer di volo, che si occupa di
 gestire il lancio e il recupero del razzo e di raccogliere dati durante il volo. \\
 Il computer di volo è dotato di un sistema di telemetria che trasmette in tempo
@@ -225,7 +228,7 @@ del volo da terra.
     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
     \label{fig:electronics-bay}
 \end{figure}
-
+\sidenote{Cambiare immagine della Electronics Bay}
 \section{Contesto storico della creazione e dell'impiego di razzi sperimentali}
 II razzi sperimentali svolgono un ruolo cruciale nella ricerca e nello sviluppo
 tecnologico sin dalla fine del XIX secolo.
@@ -313,10 +316,10 @@ I sensori utilizzati sono:
 \end{itemize}
 \section{Funzioni principali e componenti chiave}
 Il computer di volo si occupa del monitoraggio del volo. Riceve i dati dal modulo
-dei sensori e, tramite algoritmi di \emph{sensor fusion} e \emph{data fusion}
-li elabora e li trasmette alla \emph{ground station}.
+dei sensori, tramite algoritmi di \emph{sensor fusion} li elabora e
+contemporaneamente li trasmette alla \emph{ground station}.
 In particolare fa uso di un Extended Kalman Filter per filtrare e combinare i
-dati rumorosi ottenuti dalla \ac{IMU} e dei due barometri, ottenendo una stima
+dati ottenuti dalla \ac{IMU} e dei due barometri, ottenendo una stima
 affidabile dell'orientamento, della velocità e dell'altitudine.
 Il filtro mitiga gli errori dei sensori, corregge la deriva della \ac{IMU} e riduce
 le incertezze delle misurazioni barometriche, combinando i dati di accelerazione,
@@ -324,9 +327,10 @@ orientamento e pressione atmosferica.
 
 L'algoritmo di rilevamento dell'apogeo monitora l'altitudine e la velocità verticale
 del razzo.
-Quando la velocità verticale si annulla e il razzo inizia la discesa,  il
-computer di volo identifica l'apogeo e attiva la sequenza di recupero,
-espellendo il paracadute per garantire una discesa controllata.
+Quando la velocità verticale si annulla e il razzo inizia la discesa, il
+computer di volo rileva l'apogeo e attiva la sequenza di recupero,
+espellendo prima il paracadute \emph{drogue} per stabilizzare il razzo, e poi
+il paracadute principale per garantire una discesa controllata.
 
 \section{Integrazione e ruolo del sistema di telemetria}
 Per la telemetria è stato impiegato un modulo \ac{LoRa} \emph{EByte E220-900T22D}
@@ -349,13 +353,13 @@ ricezione dei dati.
 
 \section{Panoramica della tecnologia \texorpdfstring{LoRa\textsuperscript{\textcopyright}}{}}
 \ac{LoRa} è una tecnologia proprietaria per la trasmissione wireless di dati a
-lungo raggio e basso consumo energetico. Essa impiega la modulazione \ac{CSS},
+lungo raggio e basso consumo energetico. Impiega la modulazione \ac{CSS},
 che garantisce un'elevata robustezza alle interferenze e consente comunicazioni
-su lunghe distanze.
-Tuttavia, questo vantaggio comporta una riduzione della velocità di trasmissione,
+su lunghe distanze a basso consumo energetico, a costo di una ridotta velocità di trasmissione,
 che rimane comunque adeguata per applicazioni di telemetria e monitoraggio
 in tempo reale. \\
-\ac{LoRa} opera all'interno delle bande di frequenza \ac{ISM} non licenziate, con specifiche allocazioni in base alla regione geografica:
+\ac{LoRa} opera all'interno delle bande di frequenza \ac{ISM} non licenziate,
+con specifiche allocazioni in base alla regione geografica:
 \begin{itemize}
     \item \textbf{868 MHz} in Europa.
     \item \textbf{915 MHz} in Nord America.
@@ -400,14 +404,15 @@ la generazione di $M$ forme d'onda tra loro ortogonali.
 Questa proprietà consente al ricevitore di recuperare il simbolo trasmesso mediante
 correlazione con i \emph{chirp} possibili, tipicamente implementata in maniera efficiente
 tramite la trasformata di Fourier (FFT), rendendo il sistema robusto a rumore,
-interferenze e attenuazione multipath~\cite{10609524}.
+interferenze e attenuazione multipath\cite{10609524}.
 
 \section{Specifiche tecniche dei moduli utilizzati}
 
 Il sistema di telemetria di Borealis impiega due moduli \ac{LoRa}
 \emph{EByte E220-900T22D}, uno in trasmissione a bordo del razzo e uno in
 ricezione nella \emph{Ground Station}.
-Il modulo impiega la ricetrasmittente \ac{LoRa} \emph{Smart Home LLCC68}e opera nella banda di frequenza compresa tra 850.15 MHz e 930.15 MHz.
+Il modulo impiega la ricetrasmittente \ac{LoRa} \emph{Smart Home LLCC68} e
+opera nella banda di frequenza compresa tra 850.15 MHz e 930.15 MHz.
 
 Le specifiche tecniche principali del modulo utilizzato sono riportate nella
 Tabella \ref{tab:LoRa-E220-specs}. Queste caratteristiche includono la potenza di
@@ -441,7 +446,7 @@ efficiente delle risorse in missioni di lunga durata.
     \label{tab:LoRa-E220-specs}
 \end{table}
 
-\section{Specifiche delle antenne utilizzate}
+\section{Specifiche delle antenne utilizzate} \label{sec:antennas}
 La scelta delle antenne per il sistema telemetrico del razzo è stata guidata da
 esigenze tecniche specifiche, nonostante le opzioni disponibili fossero limitate.
 Le caratteristiche fondamentali del sistema richiedevano un'antenna a bordo in
@@ -480,12 +485,9 @@ strumenti automatizzati, aumentando il rischio di perdita temporanea del segnale
 L'antenna Yagi, con la sua direzionalità moderata, si è rivelata una scelta più
 equilibrata. Essa offre un buon compromesso tra guadagno e facilità di puntamento,
 consentendo un tracciamento sufficientemente preciso del razzo senza la necessità
-di strumenti avanzati di inseguimento automatico.
+di strumenti avanzati d'inseguimento automatico.
 
 \subsection*{Dettagli tecnici delle antenne}
-
-Di seguito viene presentata una tabella con le specifiche tecniche delle due
-antenne utilizzate:\sidenote{Verificare col prof. l'angolo di copertura della Yagi}
 
 \begin{table}[H]
     \centering
@@ -496,13 +498,13 @@ antenne utilizzate:\sidenote{Verificare col prof. l'angolo di copertura della Ya
             Marca e modello     & \emph{Siretta Delta 5A}          & \emph{Siretta Oscar 3A} \\ \hline
             Tipo                & Omnidirezionale elicoidale       & Direzionale Yagi        \\ \hline
             Frequenza di lavoro & 433 MHz - 5.9 GHz                & 850 MHz - 930 MHz       \\ \hline
-            Guadagno            & 2 - 5 dBi                        & 7 - 10 dBi              \\ \hline
-            Direzionalità       & Bassa                            & Alta                    \\ \hline
+            Guadagno            & 3 dBi                            & 10.55 dBi               \\ \hline
+            %Direzionalità       & Bassa                            & Alta                    \\ \hline
             Angolo di copertura & 360\textdegree                   & 60\textdegree           \\ \hline
             Impedenza           & 50 \textohm                      & 50 \textohm             \\ \hline
             Polarizzazione      & Verticale                        & Verticale               \\ \hline
             Tipo di connettore  & SMA maschio                      & FME maschio             \\ \hline
-            Peso                & 28 g                             & 210 g                   \\ \hline
+            % Peso                & 28 g                             & 210 g                   \\ \hline
         \end{tabular}
     }
     \caption{Specifiche tecniche dell'antenna omnidirezionale e dell'antenna Yagi.}
@@ -519,15 +521,6 @@ antenne utilizzate:\sidenote{Verificare col prof. l'angolo di copertura della Ya
     \label{fig:omni-rad-plot}
 \end{figure}
 
-% \begin{figure}[H]
-%     \centering
-%     % Se metti solo una delle due dimensioni, l'altra scala in automatico
-%     \includegraphics[width=0.75\textwidth]{img/omnidirezionale-3D-rad-plot.png}
-%     \caption{Grafico di radiazione dell'antenna omnidirezionale.}%
-%     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
-%     \label{fig:omni-3D-rad-plot}
-% \end{figure}
-
 \begin{figure}[H]
     \centering
     % Se metti solo una delle due dimensioni, l'altra scala in automatico
@@ -538,17 +531,8 @@ antenne utilizzate:\sidenote{Verificare col prof. l'angolo di copertura della Ya
     \label{fig:yagi-rad-plot}
 \end{figure}
 
-% \begin{figure}[H]
-%     \centering
-%     % Se metti solo una delle due dimensioni, l'altra scala in automatico
-%     \includegraphics[width=0.75\textwidth]{img/yagi-3D-rad-plot.png}
-%     \caption{Grafico di radiazione 3D dell'antenna yagi.}%
-%     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
-%     \label{fig:yagi-3D-rad-plot}
-% \end{figure}
-
 \section{Motivazioni della scelta di \texorpdfstring{LoRa\textsuperscript{\textcopyright}}{} per il progetto}
-Lo scopo era individuare una tecnologia di trasmissione dati che garantisse
+Il progetto richiedeva di individuare una tecnologia di trasmissione dati che garantisse
 un'elevata affidabilità e copertura, mantenendo un consumo energetico contenuto,
 anche in un ambiente operativo complesso come quello di un razzo sperimentale.
 
@@ -569,9 +553,151 @@ una scelta conveniente e accessibile per il progetto.
 
 \chapter{Implementazione del Sistema di Telemetria} \label{chap:telemetry}
 
+In questo capitolo verranno discussi i dettagli di progettazione e di Implementazione
+del software che gestisce la telemetria a bordo di Borealis e nella \emph{ground station}.
+
 \section{Architettura del sistema di trasmissione dati}
+Il sistema di trasmissione dati impiegato su Borealis è basato su un'architettura
+punto-punto monodirezionale.
+
+Come discusso nel capitolo \ref{chap:lora} il sistema è composto dai seguenti componenti principali:
+\begin{itemize}
+    \item \textbf{Modulo \ac{LoRa} trasmettitore (Razzo)}: EByte E220-900T22D per
+          la trasmissione della telemetria alla \emph{ground station} con antenna omnidirezionale (Sez. \ref{sec:antennas}).
+          Collegato tramite interfaccia \ac{UART} al computer di volo.
+    \item \textbf{Modulo \ac{LoRa} ricevitore (Ground Station)}: EByte E220-900T22D, identico al ricevente,
+          impiegato nella \emph{ground station} per ricevere i dati con antenna direzionale Yagi (Sez. \ref{sec:antennas}).
+          Collegato ad un microcontrollore ESP32-S3 tramite interfaccia \ac{UART}
+          che si occupa di inviare i dati ricevuti ad un PC tramite connessione seriale.
+\end{itemize}
+
+Il flusso dei dati nel sistema è il seguente:
+\begin{enumerate}
+    \item I dati di volo vengono raccolti dai sensori a bordo del razzo e inviati al computer di volo.
+    \item Il computer di volo elabora i dati attraverso un \ac{EKF} che permette di derivare l'altitudine e la velocità verticale del razzo.
+    \item I dati elaborati vengono inseriti in un oggetto JSON.
+    \item L'oggetto JSON viene serializzato e segmentato per rispettare i limiti di dimensione del payload dei moduli \ac{LoRa}.
+    \item Ogni segmento viene inserito in un pacchetto ad-hoc per gestire la logica di trasmissione e ricezione.
+    \item I dati serializzati vengono trasmessi al modulo \ac{LoRa} trasmettitore via \ac{UART}
+    \item Il modulo \ac{LoRa} trasmettitore invia i pacchetti dati via wireless.
+    \item Il modulo \ac{LoRa} ricevitore riceve i dati trasmessi.
+    \item I dati ricevuti vengono deserializzati, ricomponendo il \emph{payload} originale.
+    \item Il \emph{payload} viene inviato al PC per essere salvati e in seguito analizzati.
+\end{enumerate} \sidenote{Usa uno schema a blocchi per rappresentarlo?}
+
+La progettazione del sistema ha tenuto conto di diverse sfide, tra cui l'ambiente
+operativo difficile, vista la presenza di forti vibrazioni e accelerazioni estreme,
+oltre alla presenza di possibili interferenze elettromagnetiche.
+
 \section{Protocollo di comunicazione e gestione dati}
+
+Il protocollo di comunicazione è stato progettato per garantire efficienza e
+semplicità, consentendo la trasmissione di pacchetti dati strutturati e adattabili
+a diversi formati.
+
+Il pacchetto generato dal nodo trasmittente è composto dalle seguenti sezioni:
+
+\begin{itemize}
+    \item \textbf{\emph{Header} fisico} (3 byte), che include:
+          \begin{itemize}
+              \item Byte alto dell’indirizzo del destinatario
+              \item Byte basso dell’indirizzo del destinatario
+              \item Identificativo del canale di trasmissione
+          \end{itemize}
+    \item \textbf{\emph{Payload}} (200 byte): contiene i dati applicativi da trasmettere.
+
+    \item \textbf{\emph{Footer} opzionale} (1 byte): include il valore del \ac{RSSI},
+          utilizzato per la diagnostica della qualità del link.
+\end{itemize}
+
+Considerando le limitazioni fisiche del modulo \ac{LoRa} impiegato (in particolare,
+la dimensione massima dei pacchetti), il protocollo è stato esteso per supportare
+la segmentazione del \emph{payload}. Quando il dato da trasmettere eccede la dimensione
+massima consentita, esso viene suddiviso in sotto-segmenti detti \emph{chunk},
+ciascuno trasmesso come pacchetto indipendente.
+
+Per supportare questa funzionalità è stato introdotto un \textbf{header logico}
+aggiuntivo di 11 byte, il cui schema è riportato di seguito.\
+\sidenote{Inserire immagine schematica del pacchetto esteso}
+
+Tale header include le seguenti informazioni di controllo:
+
+\begin{itemize}
+    \item \textbf{\emph{Packet Number}}: identificatore univoco della sequenza di pacchetti riferita a una singola lettura.
+    \item \textbf{\emph{Total Chunks}}: numero totale di chunk in cui è stato suddiviso il \emph{payload} originale.
+    \item \textbf{\emph{Chunk Index}}: indice progressivo del chunk corrente all'interno della sequenza, utilizzato per la ricostruzione corretta del dato.
+    \item \textbf{\emph{Payload Size}}: dimensione effettiva del \emph{payload} trasportato nel chunk, espressa in byte.
+    \item \textbf{\emph{Timestamp}}: riferimento temporale associato all’invio del pacchetto, utile per analisi temporali e sincronizzazione.
+    \item \textbf{\emph{Protocol Version}}: campo riservato per la gestione di versioni successive del protocollo, utile in ottica di retrocompatibilità.
+\end{itemize}
 \section{Implementazione software e algoritmi di gestione della trasmissione}
+L'implementazione del software è stata realizzata in C++17, usando un approccio
+modulare, applicando i principi di \emph{Clean Coding} e in un'ottica di espandibilità
+futura.
+
+\subsection{Architettura software}
+In questo paragrafo verranno illustrati, tramite diagrammi UML e schemi, i moduli software
+principali del computer di volo, del modulo trasmettitore e del modulo ricevitore.
+
+\subsubsection{Computer di volo}
+Il computer di volo è responsabile della raccolta e dell'elaborazione dei dati
+provenienti dai sensori, della gestione della telemetria e dell'attivazione degli
+attuatori per il recupero del razzo.
+
+Il sistema è orchestrato da una macchina a stati finiti, che gestisce le diverse
+fasi del volo, rappresentata nella Figura \ref{fig:flight-computer-fsm}.
+\begin{landscape}
+    \begin{figure}[H]
+        \centering
+        \vspace*{2cm}  % Reduce space from top
+        \hspace*{-4cm}
+        \includegraphics[width=1.7\textwidth]{img/uml/fsm.png}
+        \caption{Macchina a stati finiti del computer di volo.}
+        \label{fig:flight-computer-fsm}
+        \vspace*{-1cm}  % Reduce space at bottom
+    \end{figure}
+    \thispagestyle{empty}  % Remove page numbering for this page
+\end{landscape}
+
+\newpage
+Il computer di volo è composto da 4 elementi principali:
+\begin{itemize}
+    \item \textbf{Modulo di raccolta dati}: gestisce la lettura dei sensori.
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=0.5\textwidth]{img/uml/sensor.png}
+              \caption{Interfaccia per la raccolta dati da un sensore.}
+              \label{fig:flight-computer-data-collection}
+          \end{figure}
+    \item \textbf{Modulo di elaborazione dati}: si occupa dell'elaborazione dei dati
+          raccolti dai sensori, applicando filtri e algoritmi di \emph{sensor fusion}.
+    \item \textbf{Modulo di logging}: si occupa della serializzazione dei dati in formato JSON.
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=1\textwidth]{img/uml/logger.png}
+              \caption{Interfaccia per il logging dei dati.}
+              \label{fig:flight-computer-logger}
+          \end{figure}
+          \newpage
+    \item \textbf{Modulo di telemetria}: si occupa della serializzazione, segmentazione
+          e trasmissione dei dati via \ac{LoRa}.
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=0.8\textwidth]{img/uml/transmitter.png}
+              \caption{Interfaccia per la telemetria.}
+              \label{fig:flight-computer-telemetry}
+          \end{figure}
+\end{itemize}
+\newpage
+\subsubsection{Ground Station}
+La \emph{ground station} è responsabile della ricezione dei dati trasmessi dal
+razzo, della loro deserializzazione e dell'invio al PC su cui vengono salvati.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/uml/receiver.png}
+    \caption{Architettura della \emph{ground station}.}
+    \label{fig:ground-station-architecture}
+\end{figure}
 
 \chapter{Valutazione delle Prestazioni} \label{chap:performance}
 
@@ -600,7 +726,8 @@ una scelta conveniente e accessibile per il progetto.
     % or
     % \library[url=...,name=...,description=...,label=...]
     % 
-    % This command creates a hyperlink with a bold name and a description, and assigns a label for referencing.
+    % This command creates a hyperlink with a bold name and a description, 
+    % and assigns a label for referencing.
     % 
     % Parameters:
     %   #1: The URL to link to.
@@ -610,7 +737,6 @@ una scelta conveniente e accessibile per il progetto.
     \newcommandx{\library}[4]{\item \href{#1}{\textbf{#2}} - #3\label{#4}}
     \renewcommand{\thechapter}{\Alph{chapter}} % Per avere "Appendice A, B, C..."
     \chapter{Librerie} \label{app:librerie}
-    \section*{Librerie open-source utilizzate nel progetto.}
 
     \begin{enumerate}
         \library{https://github.com/xreef/EByte_LoRa_E220_Series_Library}%
@@ -632,8 +758,7 @@ una scelta conveniente e accessibile per il progetto.
         {nlohmann-json}%
         {Per la gestione di oggetti JSON in C++.}{lib:json}
     \end{enumerate}
-    \chapter{Datasheet}
-    \label{app:datasheet}
+    \chapter{Datasheet} \label{app:datasheet}
     \begin{enumerate}
         \library{https://www.cdebyte.com/pdf-down.aspx?id=3552}%
         {Datasheet EByte E220-900T22D}%
