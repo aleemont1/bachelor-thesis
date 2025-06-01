@@ -553,8 +553,8 @@ una scelta conveniente e accessibile per il progetto.
 
 \chapter{Implementazione del Sistema di Telemetria} \label{chap:telemetry}
 
-In questo capitolo verranno discussi i dettagli di progettazione e di Implementazione
-del software che gestisce la telemetria a bordo di Borealis e nella \emph{ground station}.
+% In questo capitolo verranno discussi i dettagli di progettazione e di implementazione
+% del software che gestisce la telemetria a bordo di Borealis e nella \emph{ground station}.
 
 \section{Architettura del sistema di trasmissione dati}
 Il sistema di trasmissione dati impiegato su Borealis è basato su un'architettura
@@ -563,10 +563,12 @@ punto-punto monodirezionale.
 Come discusso nel capitolo \ref{chap:lora} il sistema è composto dai seguenti componenti principali:
 \begin{itemize}
     \item \textbf{Modulo \ac{LoRa} trasmettitore (Razzo)}: EByte E220-900T22D per
-          la trasmissione della telemetria alla \emph{ground station} con antenna omnidirezionale (Sez. \ref{sec:antennas}).
+          la trasmissione della telemetria alla \emph{ground station} con antenna
+          omnidirezionale (Sez. \ref{sec:antennas}).
           Collegato tramite interfaccia \ac{UART} al computer di volo.
-    \item \textbf{Modulo \ac{LoRa} ricevitore (Ground Station)}: EByte E220-900T22D, identico al ricevente,
-          impiegato nella \emph{ground station} per ricevere i dati con antenna direzionale Yagi (Sez. \ref{sec:antennas}).
+    \item \textbf{Modulo \ac{LoRa} ricevitore (Ground Station)}: EByte E220-900T22D,
+          identico al ricevente, impiegato nella \emph{ground station} per
+          ricevere i dati con antenna direzionale Yagi (Sez. \ref{sec:antennas}).
           Collegato ad un microcontrollore ESP32-S3 tramite interfaccia \ac{UART}
           che si occupa di inviare i dati ricevuti ad un PC tramite connessione seriale.
 \end{itemize}
@@ -583,11 +585,18 @@ Il flusso dei dati nel sistema è il seguente:
     \item Il modulo \ac{LoRa} ricevitore riceve i dati trasmessi.
     \item I dati ricevuti vengono deserializzati, ricomponendo il \emph{payload} originale.
     \item Il \emph{payload} viene inviato al PC per essere salvati e in seguito analizzati.
-\end{enumerate} \sidenote{Usa uno schema a blocchi per rappresentarlo?}
+\end{enumerate} \sidenote{Usa uno schema a blocchi per rappresentarlo}
 
-La progettazione del sistema ha tenuto conto di diverse sfide, tra cui l'ambiente
-operativo difficile, vista la presenza di forti vibrazioni e accelerazioni estreme,
-oltre alla presenza di possibili interferenze elettromagnetiche.
+La progettazione del sistema ha tenuto conto dell'ambiente
+operativo difficile, vista la presenza di forti vibrazioni, accelerazioni estreme,
+e alla presenza di possibili interferenze elettromagnetiche, sono stati valutati
+gli impatti che questi fattori possono avere sulla trasmissione dei dati e sulla
+loro integrità. \\
+Abbiamo calcolato che la banda di frequenza di 868 MHz, utilizzata dai moduli
+\ac{LoRa}, non è soggetta a interferenze significative da parte di altri dispositivi
+e che la modulazione \ac{CSS} impiegata garantisce una robustezza adeguata contro
+le interferenze, il rumore ambientale e l'effetto Doppler, permettendo una
+trasmissione affidabile anche in condizioni difficili.
 
 \section{Protocollo di comunicazione e gestione dati}
 
@@ -618,7 +627,6 @@ ciascuno trasmesso come pacchetto indipendente.
 
 Per supportare questa funzionalità è stato introdotto un \textbf{header logico}
 aggiuntivo di 11 byte, il cui schema è riportato di seguito.\
-\sidenote{Inserire immagine schematica del pacchetto esteso}
 
 Tale header include le seguenti informazioni di controllo:
 
@@ -629,11 +637,12 @@ Tale header include le seguenti informazioni di controllo:
     \item \textbf{\emph{Payload Size}}: dimensione effettiva del \emph{payload} trasportato nel chunk, espressa in byte.
     \item \textbf{\emph{Timestamp}}: riferimento temporale associato all’invio del pacchetto, utile per analisi temporali e sincronizzazione.
     \item \textbf{\emph{Protocol Version}}: campo riservato per la gestione di versioni successive del protocollo, utile in ottica di retrocompatibilità.
-\end{itemize}
+\end{itemize} \sidenote{Inserire immagine schematica del pacchetto esteso}
+
 \section{Implementazione software e algoritmi di gestione della trasmissione}
 L'implementazione del software è stata realizzata in C++17, usando un approccio
-modulare, applicando i principi di \emph{Clean Coding} e in un'ottica di espandibilità
-futura.
+modulare, applicando i principi \emph{SOLID} della programmazione a oggett, e in
+un'ottica di continua evoluzione.
 
 \subsection{Architettura software}
 In questo paragrafo verranno illustrati, tramite diagrammi UML e schemi, i moduli software
@@ -645,7 +654,7 @@ provenienti dai sensori, della gestione della telemetria e dell'attivazione degl
 attuatori per il recupero del razzo.
 
 Il sistema è orchestrato da una macchina a stati finiti, che gestisce le diverse
-fasi del volo, rappresentata nella Figura \ref{fig:flight-computer-fsm}.
+fasi del volo, rappresentata nella Figura \ref{fig:flight-computer-fsm}. AS
 \ifdefined\HCode
 \else
     \begin{landscape}
@@ -667,40 +676,45 @@ fasi del volo, rappresentata nella Figura \ref{fig:flight-computer-fsm}.
 
 \newpage
 Il computer di volo è composto da 4 elementi principali:
-\begin{itemize}
-    \item \textbf{Modulo di raccolta dati}: gestisce la lettura dei sensori.
-          \begin{figure}[H]
-              \centering
-              \includegraphics[width=0.5\textwidth]{img/uml/sensor.png}
-              \caption{Interfaccia per la raccolta dati da un sensore.}
-              \label{fig:flight-computer-data-collection}
-          \end{figure}
-    \item \textbf{Modulo di elaborazione dati}: si occupa dell'elaborazione dei dati
-          raccolti dai sensori, applicando filtri e algoritmi di \emph{sensor fusion}.
-    \item \textbf{Modulo di logging}: si occupa della serializzazione dei dati in formato JSON.
-          \begin{figure}[H]
-              \centering
-              \includegraphics[width=1\textwidth]{img/uml/logger.png}
-              \caption{Interfaccia per il logging dei dati.}
-              \label{fig:flight-computer-logger}
-          \end{figure}
-          \newpage
-    \item \textbf{Modulo di telemetria}: si occupa della serializzazione, segmentazione
-          e trasmissione dei dati via \ac{LoRa}.
-          \begin{figure}[H]
-              \centering
-              \includegraphics[width=0.8\textwidth]{img/uml/transmitter.png}
-              \caption{Interfaccia per la telemetria.}
-              \label{fig:flight-computer-telemetry}
-          \end{figure}
-\end{itemize}
+\paragraph{\textbf{Modulo di raccolta dati:}} Gestisce la lettura dei sensori.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/uml/sensor.png}
+    \caption{Interfaccia per la raccolta dati da un sensore.}
+    \label{fig:flight-computer-data-collection}
+\end{figure}
+
+\newpage
+\paragraph{\textbf{Modulo di elaborazione dati:}}Si occupa dell'elaborazione dei 
+dati raccolti dai sensori, applicando un \ac{EKF} e algoritmi di \emph{sensor 
+fusion} per la stime dell'altitudine e della velocità verticale, che sono 
+utilizzate per il rilevamento dell'apogeo e la gestione della sequenza di recupero.
+\sidenote{Inserire immagine del diagramma di flusso dell'algoritmo di elaborazione dati.}
+
+\newpage
+\paragraph{\textbf{Modulo di logging:}}Si occupa della serializzazione dei dati in formato JSON.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{img/uml/logger.png}
+    \caption{Interfaccia per il logging dei dati.}
+    \label{fig:flight-computer-logger}
+\end{figure}
+\newpage
+\paragraph{\textbf{Modulo di telemetria:}}Si occupa della serializzazione, segmentazione
+e trasmissione dei dati via \ac{LoRa}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/uml/transmitter.png}
+    \caption{Interfaccia per la telemetria.}
+    \label{fig:flight-computer-telemetry}
+\end{figure}
 \newpage
 \subsubsection{Ground Station}
 La \emph{ground station} è responsabile della ricezione dei dati trasmessi dal
 razzo, della loro deserializzazione e dell'invio al PC su cui vengono salvati.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/uml/receiver.png}
+    \includegraphics[width=\textwidth]{img/uml/ground-station.png}
     \caption{Architettura della \emph{ground station}.}
     \label{fig:ground-station-architecture}
 \end{figure}
