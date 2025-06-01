@@ -2,6 +2,7 @@
 
 skinparam DefaultFontName Open Sans
 skinparam DefaultFontStyle bold
+skinparam dpi 600
 
 skinparam ArrowColor #1b3651
 skinparam FontColor #1b3651

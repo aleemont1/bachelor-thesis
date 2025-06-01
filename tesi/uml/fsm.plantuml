@@ -4,8 +4,8 @@ left to right direction
 skinparam DefaultFontName Open Sans
 skinparam DefaultFontStyle bold
 skinparam ArrowThickness 3
-
-
+scale 1920*1080
+skinparam dpi 600
 ' Palette Colori
 skinparam ArrowColor #1b3651
 skinparam FontColor #1b3651
@@ -31,7 +31,7 @@ state "Preparazione al Volo" as Preparazione #85b1bd {
     Pronto_Prep : entry / Abilitazione trasmissione dati
 
     [*] --> Inattivo_Prep
-    Inattivo_Prep --> Calibrazione_Prep : Accensione
+    Inattivo_Prep --> Calibrazione_Prep : Sistema Inizializzato
     Calibrazione_Prep --> Pronto_Prep : Sensori Calibrati
 }
 
@@ -40,42 +40,39 @@ state "Fase di Volo" as Volo #85b1bd{
     state "Lancio" as Lancio_Volo
     Lancio_Volo : entry / Avvio timer volo
 
-    state "In Volo Accelerato" as InVoloAcc_Volo
+    state "Volo Accelerato" as InVoloAcc_Volo
     InVoloAcc_Volo : entry / Inizio raccolta dati
 
-    state "In Volo Balistico" as InVoloBal_Volo
+    state "Volo Balistico" as InVoloBal_Volo
     InVoloBal_Volo : entry / Inizio elaborazione dati con EKF
 
     state "Apogeo" as Apogeo_Volo
-    Apogeo_Volo : entry / Attivazione attuatori primari
+    Apogeo_Volo : entry / Invio interrupt di recupero
 
     Lancio_Volo -right-> InVoloAcc_Volo : \n\n\nAccensione motore\n\n\n
-    InVoloAcc_Volo -right-> InVoloBal_Volo : \n\n\nSpegnimento motore   \n\n\n
+    InVoloAcc_Volo -right-> InVoloBal_Volo : \n\n\nSpegnimento motore \n\n\n
     InVoloBal_Volo -right-> Apogeo_Volo : \n\nApogeo Rilevato    \n\n
 }
 
+
 ' Macro-stato: Recupero
 state "Fase di Recupero" as Recupero #85b1bd{
-
     state "Stabilizzazione" as Drogue_Rec
-    Drogue_Rec : entry / Apertura drogue
-
+    Drogue_Rec : exit / Attivazione attuatori primari
     state "Rallentamento" as Paracadute_Rec
     Paracadute_Rec : entry / Attivazione attuatori secondari
 
     state "Atterraggio" as Atterraggio_Rec
     Atterraggio_Rec : entry / Fine elaborazione dati
-    Atterraggio_Rec : entry / Fine raccolta dati
+    Atterraggio_Rec : exit / Fine raccolta dati
     Atterraggio_Rec : exit / Salvataggio dati su scheda SD
 
     state "Recuperato" as Recuperato_Fin
     Recuperato_Fin : entry / Disabilita trasmissione
     Recuperato_Fin : exit / Spegnimento sistema
 
-    ' Transizioni interne al macro-stato di recupero
-    ' NOTA: La transizione da Apogeo_Volo deve essere fuori dal blocco Recupero
-    Drogue_Rec -left-> Paracadute_Rec : \n\n\n\n\n                        Quota raggiunta\n\n\n\n\n
-    Paracadute_Rec -left-> Atterraggio_Rec : \n\n\n\n\n                            Touchdown\n\n\n\n
+    Drogue_Rec -left-> Paracadute_Rec : \n\n\n\n\n                            Quota raggiunta\n\n\n\n\n
+    Paracadute_Rec -left-> Atterraggio_Rec : \n\n\n\n\n                                     Touchdown\n\n\n\n\n
     Atterraggio_Rec -down-> Recuperato_Fin : Recupero Completato
 }
 
