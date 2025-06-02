@@ -722,7 +722,28 @@ razzo, della loro deserializzazione e dell'invio al PC su cui vengono salvati.
     \caption{Architettura della \emph{ground station}.}
     \label{fig:ground-station-architecture}
 \end{figure}
+\newpage
+\subsection{Algoritmo di ricostruzione dei dati} \sidenote{Trovare un titolo migliore}
+L'algoritmo di ricostruzione del \emph{payload} originale a partire dai pacchetti 
+ricevuti, permette di gestire la segmentazione dei dati e garantire l'integrità 
+delle informazioni trasmesse.
 
+L'algoritmo organizza i pacchetti ricevuti in base al loro identificativo di sequenza 
+(\emph{Packet Number}), consentendo la ricostruzione dei messaggi frammentati. 
+Ogni pacchetto in arrivo viene validato, verificando la consistenza dell'\emph{header} logico
+e il \ac{CRC} per assicurare l'integrit\'a del contenuto.
+
+I pacchetti validati vengono inseriti in una struttura dati temporanea, corrispondente 
+alla sequenza a cui appartengono, indicizzandoli in base al \emph{Chunk Number}. 
+Una volta ricevuti tutti i \emph{chunk} previsti per una sequenza, il \emph{payload} 
+originale viene ricostruito, concatenando i dati dei \emph{chunk}.
+
+Per ottimizzare l'uso delle risorse, \'e stato implementato un meccanismo di \emph{drop} 
+temporizzato per le sequenze incomplete, prevenendo cos\'i l'accumulo di dati parziali, 
+sfruttando la tolleranza del sistema alla perdita occasionale di letture dei dati 
+dei sensori (dato il buon \emph{throughput}, verificato sperimentalmente) e la 
+garanzia di disponibilità dei dati grazie al sistema di logging secondario a 
+bordo del computer di volo. 
 \chapter{Valutazione delle Prestazioni} \label{chap:performance}
 
 \section{Metodologia di test e criteri di valutazione}
