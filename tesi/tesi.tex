@@ -129,6 +129,7 @@
 \acrodef{ISM}{Industrial, Scientific and Medical}
 \acrodef{RSSI}{Received Signal Strength Indicator}
 \acrodef{EKF}{Extended Kalman Filter}
+\acrodef{CRC}{Controllo di Ridondanza Ciclica}
 \restoregeometry
 \newpage
 % \begin{center}
@@ -204,14 +205,13 @@ dall'associazione, progettato per raggiungere un'altitudine di 3000m.
 \end{figure}
 
 Il razzo è formato da una sezione propulsiva (\emph{Motor bay}), una fusoliera
-in alluminio divisa in quattri \emph{bays}:
+in alluminio divisa in tre \emph{bays}:
 \begin{itemize}
-    \item \textbf{\emph{Motor bay}}: contenente il motore,
     \item \textbf{\emph{Electronics bay}}: contenente l'elettronica di bordo,
     \item \textbf{\emph{Payload bay}}: contenente un carico pagante sperimentale,
     \item \textbf{\emph{Parachute tube}}: contenente i due paracadute.
 \end{itemize}
-infine un \emph{nose cone} apribile per l'aerodinamica e l'espulsione del paracadute. \\
+infine un \emph{nose cone} apribile per permettere l'espulsione del paracadute. \\
 
 Nella \emph{Electronics bay}
 è presente il computer di volo, che si occupa di
@@ -264,7 +264,7 @@ ambientali e sulle eventuali anomalie che possono verificarsi durante il volo.
 Inoltre, la raccolta di dati durante il volo \`e fondamentale per l’analisi
 post missione e per l’ottimizzazione del design del razzo.
 Infine, la telemetria \`e essenziale per poter analizzare il volo in caso di
-problemi o incidenti, al fine d'identificare le cause se il sistema di
+problemi o incidenti, al fine d'identificarne le cause se il sistema di
 \emph{logging} a bordo dovesse andare perso.
 
 Ciò pone delle sfide tecniche significative tra cui:
@@ -456,7 +456,8 @@ un'antenna direzionale.
 
 \subsection*{Antenna omnidirezionale (Razzo)}
 
-Per il razzo, la soluzione ottimale si è rivelata essere un'antenna omnidirezionale.
+Per il razzo, la soluzione ottimale si è rivelata essere un'antenna omnidirezionale 
+elicoidale.
 Questa scelta è praticamente obbligata a causa della variazione costante dell'orientamento
 del razzo durante il volo, rendendo impraticabile l'utilizzo di antenne direzionali,
 a meno di non implementare sistemi complessi di controllo dell'assetto, che
@@ -587,16 +588,19 @@ Il flusso dei dati nel sistema è il seguente:
     \item Il \emph{payload} viene inviato al PC per essere salvati e in seguito analizzati.
 \end{enumerate} \sidenote{Usa uno schema a blocchi per rappresentarlo}
 
-La progettazione del sistema ha tenuto conto dell'ambiente
-operativo difficile, vista la presenza di forti vibrazioni, accelerazioni estreme,
-e alla presenza di possibili interferenze elettromagnetiche, sono stati valutati
+Vista la presenza di forti vibrazioni, accelerazioni estreme,
+variazioni continue di assetto e orientamento, condizioni atmosferiche variabili
+e possibili interferenze elettromagnetiche, sono stati valutati
 gli impatti che questi fattori possono avere sulla trasmissione dei dati e sulla
 loro integrità. \\
 Abbiamo calcolato che la banda di frequenza di 868 MHz, utilizzata dai moduli
-\ac{LoRa}, non è soggetta a interferenze significative da parte di altri dispositivi
-e che la modulazione \ac{CSS} impiegata garantisce una robustezza adeguata contro
-le interferenze, il rumore ambientale e l'effetto Doppler, permettendo una
-trasmissione affidabile anche in condizioni difficili.
+\ac{LoRa} impiegati, non è soggetta a interferenze significative da parte di altri 
+dispositivi e che la modulazione \ac{CSS} impiegata garantisce una robustezza 
+adeguata contro le interferenze, il rumore ambientale e l'effetto Doppler, 
+permettendo una trasmissione affidabile anche in condizioni difficili.
+Bisogna inoltre tenere conto che nella \emph{ground station} non \'e previsto 
+alcun sistema di inseguimento, quindi l'antenna direzionale Yagi deve essere puntata manualmente
+verso il razzo durante il volo, per garantire una ricezione ottimale del segnale.
 
 \section{Protocollo di comunicazione e gestione dati}
 
@@ -641,11 +645,11 @@ Tale header include le seguenti informazioni di controllo:
 
 \section{Implementazione software e algoritmi di gestione della trasmissione}
 L'implementazione del software è stata realizzata in C++17, usando un approccio
-modulare, applicando i principi \emph{SOLID} della programmazione a oggett, e in
+modulare, applicando i principi \emph{SOLID} della programmazione a oggetti, e in
 un'ottica di continua evoluzione.
 
 \subsection{Architettura software}
-In questo paragrafo verranno illustrati, tramite diagrammi UML e schemi, i moduli software
+In questa sezione verranno illustrati, tramite diagrammi UML e schemi, i moduli software
 principali del computer di volo, del modulo trasmettitore e del modulo ricevitore.
 
 \subsubsection{Computer di volo}
