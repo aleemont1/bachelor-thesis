@@ -456,7 +456,7 @@ un'antenna direzionale.
 
 \subsection*{Antenna omnidirezionale (Razzo)}
 
-Per il razzo, la soluzione ottimale si è rivelata essere un'antenna omnidirezionale 
+Per il razzo, la soluzione ottimale si è rivelata essere un'antenna omnidirezionale
 elicoidale.
 Questa scelta è praticamente obbligata a causa della variazione costante dell'orientamento
 del razzo durante il volo, rendendo impraticabile l'utilizzo di antenne direzionali,
@@ -594,11 +594,11 @@ e possibili interferenze elettromagnetiche, sono stati valutati
 gli impatti che questi fattori possono avere sulla trasmissione dei dati e sulla
 loro integrità. \\
 Abbiamo calcolato che la banda di frequenza di 868 MHz, utilizzata dai moduli
-\ac{LoRa} impiegati, non è soggetta a interferenze significative da parte di altri 
-dispositivi e che la modulazione \ac{CSS} impiegata garantisce una robustezza 
-adeguata contro le interferenze, il rumore ambientale e l'effetto Doppler, 
+\ac{LoRa} impiegati, non è soggetta a interferenze significative da parte di altri
+dispositivi e che la modulazione \ac{CSS} impiegata garantisce una robustezza
+adeguata contro le interferenze, il rumore ambientale e l'effetto Doppler,
 permettendo una trasmissione affidabile anche in condizioni difficili.
-Bisogna inoltre tenere conto che nella \emph{ground station} non \'e previsto 
+Bisogna inoltre tenere conto che nella \emph{ground station} non \'e previsto
 alcun sistema di inseguimento, quindi l'antenna direzionale Yagi deve essere puntata manualmente
 verso il razzo durante il volo, per garantire una ricezione ottimale del segnale.
 
@@ -689,9 +689,9 @@ Il computer di volo è composto da 4 elementi principali:
 \end{figure}
 
 \newpage
-\paragraph{\textbf{Modulo di elaborazione dati:}}Si occupa dell'elaborazione dei 
-dati raccolti dai sensori, applicando un \ac{EKF} e algoritmi di \emph{sensor 
-fusion} per la stime dell'altitudine e della velocità verticale, che sono 
+\paragraph{\textbf{Modulo di elaborazione dati:}}Si occupa dell'elaborazione dei
+dati raccolti dai sensori, applicando un \ac{EKF} e algoritmi di \emph{sensor
+    fusion} per la stime dell'altitudine e della velocità verticale, che sono
 utilizzate per il rilevamento dell'apogeo e la gestione della sequenza di recupero.
 \sidenote{Inserire immagine del diagramma di flusso dell'algoritmo di elaborazione dati.}
 
@@ -724,35 +724,126 @@ razzo, della loro deserializzazione e dell'invio al PC su cui vengono salvati.
 \end{figure}
 \newpage
 \subsection{Algoritmo di ricostruzione dei dati} \sidenote{Trovare un titolo migliore}
-L'algoritmo di ricostruzione del \emph{payload} originale a partire dai pacchetti 
-ricevuti, permette di gestire la segmentazione dei dati e garantire l'integrità 
+L'algoritmo di ricostruzione del \emph{payload} originale a partire dai pacchetti
+ricevuti, permette di gestire la segmentazione dei dati e garantire l'integrità
 delle informazioni trasmesse.
 
-L'algoritmo organizza i pacchetti ricevuti in base al loro identificativo di sequenza 
-(\emph{Packet Number}), consentendo la ricostruzione dei messaggi frammentati. 
+L'algoritmo organizza i pacchetti ricevuti in base al loro identificativo di sequenza
+(\emph{Packet Number}), consentendo la ricostruzione dei messaggi frammentati.
 Ogni pacchetto in arrivo viene validato, verificando la consistenza dell'\emph{header} logico
 e il \ac{CRC} per assicurare l'integrit\'a del contenuto.
 
-I pacchetti validati vengono inseriti in una struttura dati temporanea, corrispondente 
-alla sequenza a cui appartengono, indicizzandoli in base al \emph{Chunk Number}. 
-Una volta ricevuti tutti i \emph{chunk} previsti per una sequenza, il \emph{payload} 
+I pacchetti validati vengono inseriti in una struttura dati temporanea, corrispondente
+alla sequenza a cui appartengono, indicizzandoli in base al \emph{Chunk Number}.
+Una volta ricevuti tutti i \emph{chunk} previsti per una sequenza, il \emph{payload}
 originale viene ricostruito, concatenando i dati dei \emph{chunk}.
 
-Per ottimizzare l'uso delle risorse, \'e stato implementato un meccanismo di \emph{drop} 
-temporizzato per le sequenze incomplete, prevenendo cos\'i l'accumulo di dati parziali, 
-sfruttando la tolleranza del sistema alla perdita occasionale di letture dei dati 
-dei sensori (dato il buon \emph{throughput}, verificato sperimentalmente) e la 
-garanzia di disponibilità dei dati grazie al sistema di logging secondario a 
-bordo del computer di volo. 
+Per ottimizzare l'uso delle risorse, \'e stato implementato un meccanismo di \emph{drop}
+temporizzato per le sequenze incomplete, prevenendo cos\'i l'accumulo di dati parziali,
+sfruttando la tolleranza del sistema alla perdita occasionale di letture dei dati
+dei sensori (dato il buon \emph{throughput}, verificato sperimentalmente) e la
+garanzia di disponibilità dei dati grazie al sistema di logging secondario a
+bordo del computer di volo.
 \chapter{Valutazione delle Prestazioni} \label{chap:performance}
 
 \section{Metodologia di test e criteri di valutazione}
+\subsection{Test preliminari}
+La valutazione delle prestazioni del sistema è stata preceduta da una serie di test
+preliminari, condotti per determinare le capacità effettive dei moduli prima
+dell'implementazione del protocollo di comunicazione.
+Utilizzando una configurazione punto-punto, sono state effettuate misurazioni dell'\ac{RSSI}
+in diverse condizioni ambientali.
+I risultati di questi test sono stati favorevoli, dimostrando una comunicazione
+efficace anche in presenza di ostacoli come alberi, edifici e rilievi, fornendo
+una base solida per lo sviluppo successivo.
+\subsubsection*{Disallineamento angolare dell'antenna direzionale}
+Per ogni distanza si sono effettuate 8 misurazioni, con angoli di disallineamento
+dell'antenna direzionale compresi tra 0° e 30°, e un ulteriore test a 90° per
+verificare la perdita di segnale in caso di disallineamento completo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/telemetry_test_direct.png}
+    \caption{Test di disallineamento angolare dell'antenna direzionale.}
+    \label{fig:directional-test}
+\end{figure}
+I risultati sono riportati nella Tabella \ref{tab:signal-strength-directional}.
+
+
+\subsubsection*{Disallineamento angolare dell'antenna omnidirezionale}
+In seguito si \'e proceduto ad eseguire lo stesso test, ma variando l'angolo di
+disallineamento dell'antenna omnidirezionale, sul piano verticale tra 0° e 30°,
+e un ulteriore test a 90°, per verificare l'effetto della variazione di assetto
+del razzo durante il volo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/telemetry_test_omni.png}
+    \caption{Test di disallineamento angolare dell'antenna omnidirezionale.}
+    \label{fig:omnidirectional-test}
+\end{figure}
+I risultati sono riportati nella Tabella \ref{tab:signal-strength-omni}.
+
+\subsection{Test sul protocollo di comunicazione}
+Dopo aver verificato le prestazioni dei moduli \ac{LoRa} e delle antenne, si è
+proceduto a testare il protocollo di comunicazione implementato, valutando
+l'affidabilità della trasmissione dei dati, la capacità di gestire la segmentazione
+e la ricostruzione dei messaggi, e la robustezza del sistema in condizioni
+di rumore e interferenze.
+
 \section{Confronto tra simulazioni e risultati sul campo}
 \section{Ottimizzazioni apportate durante lo sviluppo}
 
 \chapter{Risultati e Analisi} \label{chap:results}
 
 \section{Analisi dei dati raccolti durante le prove sperimentali}
+\subsection{Risultati dei test preliminari}
+\subsubsection*{Disallineamento angolare dell'antenna direzionale}
+\begin{table}[H]
+    \centering
+    \resizebox{0.9\textwidth}{!}{
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+            \hline    \textbf{Distance (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
+            \hline    \textbf{100}          & 83.92       & 83.92       & 83.14        & 83.14        & 83.14        & 83.14        & 83.14        & 78.43        \\
+            \hline    \textbf{250}          & 80.39       & 78.43       & 80.78        & 79.61        & 79.61        & 76.86        & 76.86        & 74.51        \\
+            \hline    \textbf{780}          & 78.43       & 76.47       & 77.25        & 76.47        & 74.51        & 74.51        & 74.51        & 70.59        \\
+            \hline    \textbf{1000}         & 69.02       & 68.63       & 66.67        & 65.49        & 68.63        & 71.37        & 71.37        & 69.80        \\
+            \hline    \textbf{1500}         & 63.53       & 63.14       & 63.53        & 62.75        & 63.53        & 62.35        & 62.75        & 63.92        \\
+            \hline    \textbf{2000}         & 62.75       & 62.75       & 62.75        & 63.14        & 62.75        & 63.14        & 62.75        & 62.75        \\
+            \hline
+        \end{tabular}
+    }
+    \caption{Intensità del segnale (\%) in funzione del disallineamento angolare dell'antenna direzionale e della distanza}
+    \label{tab:signal-strength-directional}
+\end{table}
+\subsubsection*{Disallineamento angolare dell'antenna omnidirezionale}
+\begin{table}[H]
+    \centering
+    \resizebox{0.9\textwidth}{!}{
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+            \hline
+            \textbf{Distance (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
+            \hline
+            \textbf{100}          & 80.00       & 78.43       & 77.65        & 78.43        & 80.39        & 82.35        & 82.35        & 84.31        \\
+            \textbf{250}          & 76.47       & 79.61       & 79.61        & 78.43        & 78.43        & 78.82        & 78.82        & 82.35        \\
+            \textbf{780}          & 73.73       & 72.55       & 69.80        & 72.55        & 72.94        & 73.73        & 71.37        & 76.47        \\
+            \textbf{1000}         & 66.27       & 67.84       & 66.67        & 68.24        & 67.06        & 68.63        & 68.24        & 68.63        \\
+            \textbf{1500}         & 62.75       & 62.75       & 63.14        & 62.75        & 62.35        & 62.35        & 62.35        & 64.71        \\
+            \textbf{2000}         & 63.14       & 63.14       & 63.14        & 63.14        & 63.14        & 63.14        & 63.14        & 63.14        \\
+            \hline
+        \end{tabular}
+    }
+    \caption{Intensità del segnale (\%) in funzione del disallineamento angolare dell'antenna omnidirezionale e della distanza}
+    \label{tab:signal-strength-omni}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/antenna-misalignement.png}
+    \caption{Intensità del segnale in funzione della distanza e dell'angolo di disallineamento delle antenne.}
+    \label{fig:telemetry-misalignement}
+\end{figure}
+
 \section{Limiti e possibili miglioramenti futuri}
 \section{Implicazioni del sistema sviluppato per progetti simili}
 
