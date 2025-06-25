@@ -193,12 +193,12 @@ Aurora Rocketry è un'associazione studentesca dell'Università di Bologna nata
 nel 2024, che si occupa di progettare e costruire razzi sperimentali per
 partecipare a competizioni internazionali. \\
 Borealis è il primo prototipo di razzo sperimentale sviluppato
-dall'associazione, progettato per raggiungere un'altitudine di 3000m.
+dall'associazione, progettato per raggiungere un'altitudine di 1500m.
 
 \begin{figure}[H]
     \centering
     % Se metti solo una delle due dimensioni, l'altra scala in automatico
-    \includegraphics[width=\textwidth]{img/borealis-schema.png}
+    \includegraphics[width=0.75\textwidth]{img/borealis-schema.png}
     \caption{Schema rappresentativo di \emph{Borealis}.}
     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
     \label{fig:borealis-schema}
@@ -223,7 +223,7 @@ del volo da terra.
 \begin{figure}[H]
     \centering
     % Se metti solo una delle due dimensioni, l'altra scala in automatico
-    \includegraphics[width=0.5\textwidth]{img/electronics-bay.jpeg}
+    \includegraphics[width=0.6\textwidth]{img/electronics-bay.jpg}
     \caption{\emph{Electronics bay}.}
     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
     \label{fig:electronics-bay}
@@ -630,9 +630,7 @@ massima consentita, esso viene suddiviso in sotto-segmenti detti \emph{chunk},
 ciascuno trasmesso come pacchetto indipendente.
 
 Per supportare questa funzionalità è stato introdotto un \textbf{header logico}
-aggiuntivo di 11 byte, il cui schema è riportato di seguito.\
-
-Tale header include le seguenti informazioni di controllo:
+aggiuntivo di 11 byte, che include le seguenti informazioni di controllo:
 
 \begin{itemize}
     \item \textbf{\emph{Packet Number}}: identificatore univoco della sequenza di pacchetti riferita a una singola lettura.
@@ -644,13 +642,11 @@ Tale header include le seguenti informazioni di controllo:
 \end{itemize} \sidenote{Inserire immagine schematica del pacchetto esteso}
 
 \section{Implementazione software e algoritmi di gestione della trasmissione}
-L'implementazione del software è stata realizzata in C++17, usando un approccio
-modulare, applicando i principi \emph{SOLID} della programmazione a oggetti, e in
-un'ottica di continua evoluzione.
+Il software è stato implementato in C++17. Questa sezione illustra l'architettura 
+dei principali moduli software: il computer di volo, il modulo trasmettitore e 
+il modulo ricevitore, supportata da diagrammi UML e schemi esplicativi.
 
 \subsection{Architettura software}
-In questa sezione verranno illustrati, tramite diagrammi UML e schemi, i moduli software
-principali del computer di volo, del modulo trasmettitore e del modulo ricevitore.
 
 \subsubsection{Computer di volo}
 Il computer di volo è responsabile della raccolta e dell'elaborazione dei dati
@@ -658,7 +654,7 @@ provenienti dai sensori, della gestione della telemetria e dell'attivazione degl
 attuatori per il recupero del razzo.
 
 Il sistema è orchestrato da una macchina a stati finiti, che gestisce le diverse
-fasi del volo, rappresentata nella Figura \ref{fig:flight-computer-fsm}. AS
+fasi del volo, rappresentata nella Figura \ref{fig:flight-computer-fsm}.
 \ifdefined\HCode
 \else
     \begin{landscape}
@@ -689,13 +685,6 @@ Il computer di volo è composto da 4 elementi principali:
 \end{figure}
 
 \newpage
-\paragraph{\textbf{Modulo di elaborazione dati:}}Si occupa dell'elaborazione dei
-dati raccolti dai sensori, applicando un \ac{EKF} e algoritmi di \emph{sensor
-    fusion} per la stime dell'altitudine e della velocità verticale, che sono
-utilizzate per il rilevamento dell'apogeo e la gestione della sequenza di recupero.
-\sidenote{Inserire immagine del diagramma di flusso dell'algoritmo di elaborazione dati.}
-
-\newpage
 \paragraph{\textbf{Modulo di logging:}}Si occupa della serializzazione dei dati in formato JSON.
 \begin{figure}[H]
     \centering
@@ -703,6 +692,14 @@ utilizzate per il rilevamento dell'apogeo e la gestione della sequenza di recupe
     \caption{Interfaccia per il logging dei dati.}
     \label{fig:flight-computer-logger}
 \end{figure}
+
+\newpage
+\paragraph{\textbf{Modulo di elaborazione dati:}}Si occupa dell'elaborazione dei
+dati raccolti dai sensori, applicando un \ac{EKF} e algoritmi di \emph{sensor
+    fusion} per la stime dell'altitudine e della velocità verticale, che sono
+utilizzate per il rilevamento dell'apogeo e la gestione della sequenza di recupero.
+\sidenote{Inserire immagine del diagramma di flusso dell'algoritmo di elaborazione dati.}
+
 \newpage
 \paragraph{\textbf{Modulo di telemetria:}}Si occupa della serializzazione, segmentazione
 e trasmissione dei dati via \ac{LoRa}.
@@ -744,6 +741,8 @@ sfruttando la tolleranza del sistema alla perdita occasionale di letture dei dat
 dei sensori (dato il buon \emph{throughput}, verificato sperimentalmente) e la
 garanzia di disponibilità dei dati grazie al sistema di logging secondario a
 bordo del computer di volo.
+\sidenote{Inserire immagine del diagramma di flusso dell'algoritmo di ricostruzione dei dati.}
+
 \chapter{Valutazione delle Prestazioni} \label{chap:performance}
 
 \section{Metodologia di test e criteri di valutazione}
@@ -756,21 +755,21 @@ in diverse condizioni ambientali.
 I risultati di questi test sono stati favorevoli, dimostrando una comunicazione
 efficace anche in presenza di ostacoli come alberi, edifici e rilievi, fornendo
 una base solida per lo sviluppo successivo.
-\subsubsection*{Disallineamento angolare dell'antenna direzionale}
+
+\newpage
+\subsubsection{Disallineamento angolare dell'antenna direzionale}
 Per ogni distanza si sono effettuate 8 misurazioni, con angoli di disallineamento
 dell'antenna direzionale compresi tra 0° e 30°, e un ulteriore test a 90° per
 verificare la perdita di segnale in caso di disallineamento completo.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{img/telemetry_test_direct.png}
+    \includegraphics[width=0.6\textwidth]{img/telemetry-test-direct.png}
     \caption{Test di disallineamento angolare dell'antenna direzionale.}
     \label{fig:directional-test}
 \end{figure}
-I risultati sono riportati nella Tabella \ref{tab:signal-strength-directional}.
 
-
-\subsubsection*{Disallineamento angolare dell'antenna omnidirezionale}
+\subsubsection{Disallineamento angolare dell'antenna omnidirezionale}
 In seguito si \'e proceduto ad eseguire lo stesso test, ma variando l'angolo di
 disallineamento dell'antenna omnidirezionale, sul piano verticale tra 0° e 30°,
 e un ulteriore test a 90°, per verificare l'effetto della variazione di assetto
@@ -778,11 +777,10 @@ del razzo durante il volo.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{img/telemetry_test_omni.png}
+    \includegraphics[width=0.6\textwidth]{img/telemetry-test-omni.png}
     \caption{Test di disallineamento angolare dell'antenna omnidirezionale.}
     \label{fig:omnidirectional-test}
 \end{figure}
-I risultati sono riportati nella Tabella \ref{tab:signal-strength-omni}.
 
 \subsection{Test sul protocollo di comunicazione}
 Dopo aver verificato le prestazioni dei moduli \ac{LoRa} e delle antenne, si è
@@ -790,15 +788,27 @@ proceduto a testare il protocollo di comunicazione implementato, valutando
 l'affidabilità della trasmissione dei dati, la capacità di gestire la segmentazione
 e la ricostruzione dei messaggi, e la robustezza del sistema in condizioni
 di rumore e interferenze.
+\subsubsection{Test sul \emph{throushput}}
+\subsubsection{Test sulla segmentazione e ricostruzione dei dati}
+\subsubsection{Test del meccanismo di \emph{drop}}
+\subsubsection{Test del riordinamento dei pacchetti}
+\subsubsection{Test di robustezza e affidabilità}
 
 \section{Confronto tra simulazioni e risultati sul campo}
+
+
 \section{Ottimizzazioni apportate durante lo sviluppo}
+\subsection{Compressione dei dati}
+\subsection{Meccanismo di \emph{drop} dei pacchetti}
+\subsection{Gestione del riordinamento dei pacchetti}
 
 \chapter{Risultati e Analisi} \label{chap:results}
 
 \section{Analisi dei dati raccolti durante le prove sperimentali}
+
 \subsection{Risultati dei test preliminari}
-\subsubsection*{Disallineamento angolare dell'antenna direzionale}
+
+\subsubsection{Disallineamento angolare dell'antenna direzionale}
 \begin{table}[H]
     \centering
     \resizebox{0.9\textwidth}{!}{
@@ -816,20 +826,19 @@ di rumore e interferenze.
     \caption{Intensità del segnale (\%) in funzione del disallineamento angolare dell'antenna direzionale e della distanza}
     \label{tab:signal-strength-directional}
 \end{table}
-\subsubsection*{Disallineamento angolare dell'antenna omnidirezionale}
+
+\subsubsection{Disallineamento angolare dell'antenna omnidirezionale}
 \begin{table}[H]
     \centering
     \resizebox{0.9\textwidth}{!}{
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-            \hline
-            \textbf{Distance (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
-            \hline
-            \textbf{100}          & 80.00       & 78.43       & 77.65        & 78.43        & 80.39        & 82.35        & 82.35        & 84.31        \\
-            \textbf{250}          & 76.47       & 79.61       & 79.61        & 78.43        & 78.43        & 78.82        & 78.82        & 82.35        \\
-            \textbf{780}          & 73.73       & 72.55       & 69.80        & 72.55        & 72.94        & 73.73        & 71.37        & 76.47        \\
-            \textbf{1000}         & 66.27       & 67.84       & 66.67        & 68.24        & 67.06        & 68.63        & 68.24        & 68.63        \\
-            \textbf{1500}         & 62.75       & 62.75       & 63.14        & 62.75        & 62.35        & 62.35        & 62.35        & 64.71        \\
-            \textbf{2000}         & 63.14       & 63.14       & 63.14        & 63.14        & 63.14        & 63.14        & 63.14        & 63.14        \\
+            \hline    \textbf{Distance (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
+            \hline    \textbf{100}          & 80.00       & 78.43       & 77.65        & 78.43        & 80.39        & 82.35        & 82.35        & 84.31        \\
+            \hline    \textbf{250}          & 76.47       & 79.61       & 79.61        & 78.43        & 78.43        & 78.82        & 78.82        & 82.35        \\
+            \hline    \textbf{780}          & 73.73       & 72.55       & 69.80        & 72.55        & 72.94        & 73.73        & 71.37        & 76.47        \\
+            \hline    \textbf{1000}         & 66.27       & 67.84       & 66.67        & 68.24        & 67.06        & 68.63        & 68.24        & 68.63        \\
+            \hline    \textbf{1500}         & 62.75       & 62.75       & 63.14        & 62.75        & 62.35        & 62.35        & 62.35        & 64.71        \\
+            \hline    \textbf{2000}         & 63.14       & 63.14       & 63.14        & 63.14        & 63.14        & 63.14        & 63.14        & 63.14        \\
             \hline
         \end{tabular}
     }
@@ -844,14 +853,41 @@ di rumore e interferenze.
     \label{fig:telemetry-misalignement}
 \end{figure}
 
+\subsubsection{Test sul \emph{throushput}}
+\subsubsection{Test sulla segmentazione e ricostruzione dei dati}
+\subsubsection{Test del meccanismo di \emph{drop}}
+\subsubsection{Test del riordinamento dei pacchetti}
+\subsubsection{Test di robustezza e affidabilità}
+
 \section{Limiti e possibili miglioramenti futuri}
+
 \section{Implicazioni del sistema sviluppato per progetti simili}
+Il sistema di telemetria sviluppato per Borealis rappresenta un progetto economico, 
+affidabile e facilmente replicabile, che può essere adattato a una vasta gamma di applicazioni
+nel campo della ricerca e dello sviluppo di razzi sperimentali.
+La modularità del design e l'uso di tecnologie open-source permettono una facile
+personalizzazione e integrazione con altri sistemi, rendendo il progetto un
+ottimo punto di partenza per futuri sviluppi.
+Il protocollo di comunicazione ... 
+\sidenote{Da rivedere ed espandere}
 
 \chapter{Conclusioni} \label{chap:conclusion}
 
 \section{Riepilogo dei risultati ottenuti}
+
 \section{Riflessioni sull'impatto del progetto nell'ambito della ricerca e dello sviluppo di razzi sperimentali}
+
 \section{Prospettive di sviluppo futuro}
+\subsection{Miglioramenti al sistema di telemetria}
+\subsubsection{Utilizzo di antennte \emph{patch}}
+\subsubsection{Aggiunta di un modulo GPS}
+
+\subsection{Miglioramenti al protocollo di comunicazione}
+\subsubsection{Aggiunta di un meccanismo di \emph{acknowledgment} dei pacchetti}
+\subsubsection{Implementazione di un sistema di \emph{retransmission}}
+
+\subsection{Parsing dei dati e visualizzazione}
+\subsubsection{Implementazione di un sistema di visualizzazione in tempo reale}
 
 \renewcommand{\appendixtocname}{Appendici}
 \renewcommand{\appendixpagename}{Appendici}
