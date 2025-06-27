@@ -641,6 +641,9 @@ aggiuntivo di 11 byte, che include le seguenti informazioni di controllo:
     \item \textbf{\emph{Protocol Version}}: campo riservato per la gestione di versioni successive del protocollo, utile in ottica di retrocompatibilità.
 \end{itemize} \sidenote{Inserire immagine schematica del pacchetto esteso}
 
+Considerando la dimensione del \emph{header} logico, il \emph{payload} massimo trasportabile in un singolo pacchetto
+è di 189 byte usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte per pacchetto.
+
 \section{Implementazione software e algoritmi di gestione della trasmissione}
 Il software è stato implementato in C++17. Questa sezione illustra l'architettura 
 dei principali moduli software: il computer di volo, il modulo trasmettitore e 
@@ -790,15 +793,17 @@ e la ricostruzione dei messaggi, e la robustezza del sistema in condizioni
 di rumore e interferenze.
 \subsubsection{Test sul \emph{throughput}}
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
-Per valutare l'efficacia della segmentazione dei dati \'e stato misurato il tempo 
-di ricostruzione del \emph{payload} originale a partire dai \emph{chunk} ricevuti.
-Il test \'e stato condotto con 4 \emph{payload} di dimensioni diverse (2, 3, 4 e 5 chunk).
-Lo scopo del test era verificare il tempo medio di ricostruzione del \emph{payload}
-originale a partire dai chunk ricevuti, in funzione della dimensione del
-\emph{payload} e del numero di \emph{chunk} in cui \'e stato suddiviso.
-Questo permette di valutare l'efficienza del protocollo di comunicazione per la trasmissione 
-di pacchetti di dati di dimensioni variabili, la capacità di gestire la segmentazione e 
-la ricostruzione dei messaggi.
+Per valutare le prestazioni del protocollo di trasmissione nella gestione di pacchetti segmentati,
+è stato condotto un test sperimentale mirato a misurare il tempo necessario alla ricostruzione
+del \emph{payload} originale a partire dai \emph{chunk} ricevuti.
+
+Il test è stato eseguito considerando \emph{payload} di dimensioni crescenti, suddivisi in 2, 3, 4 e 5
+\emph{chunk}, secondo il criterio di frammentazione descritto nel capitolo~\ref{<riferimento-chunk>}.
+L’obiettivo era analizzare l’evoluzione del tempo medio di ricostruzione al variare del numero di
+\emph{chunk}, al fine di valutare l’efficienza e la scalabilità del protocollo nella fase di riassemblaggio.
+
+Questa analisi permette di stimare la robustezza del sistema in scenari di trasmissione con pacchetti
+di lunghezza variabile e di evidenziare eventuali criticità legate alla latenza introdotta dalla segmentazione.
 
 \subsubsection{Test del meccanismo di \emph{drop}}
 
@@ -866,14 +871,25 @@ la ricostruzione dei messaggi.
 
 \subsubsection{Test sul \emph{throughput}}
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
-I dati raccolti durante i test di segmentazione e ricostruzione dei dati sono 
-disponibili nell'appendice \ref{test:segmentation}. I risultati mostrano che il 
-sistema è in grado di gestire efficacemente la segmentazione dei dati, mantenendo 
-un tempo di ricostruzione stabile. Viste le limitazioni dei moduli \ac{LoRa} 
-i tempi di ricostruzione sono accettabili, seppur non ottimali, per questo motivo 
-si \'e deciso di implementare una compressione dei dati con codifica delta, per 
-ridurre la dimensione dei \emph{payload} a parit\'a di informazioni trasmesse.
-\begin{figure}
+I risultati dei test condotti sulla segmentazione e successiva ricostruzione dei dati
+sono riportati in appendice~\ref{test:segmentation}. Il sistema ha dimostrato di essere
+in grado di gestire correttamente il riassemblaggio dei \emph{payload} segmentati, con
+un tempo medio di ricostruzione che cresce in maniera approssimativamente lineare con
+il numero di \emph{chunk}, come mostrato in figura~\ref{fig:segmentation-reconstruction-avg-time}.
+
+Come evidenziato in figura~\ref{fig:segmentation-reconstruction-sd}, la deviazione standard
+dei tempi di ricostruzione si mantiene relativamente stabile al variare del numero di \emph{chunk},
+indicando una buona prevedibilità temporale del processo di riassemblaggio.
+
+Le distribuzioni dei tempi di ricostruzione (figure~\ref{fig:segmentation-test-2chunks}–\ref{fig:segmentation-test-5chunks})
+mostrano che i tempi di ricostruzione sono concentrati attorno a valori medi, con una 
+leggera variabilità, ma senza picchi significativi.
+
+Considerando le limitazioni intrinseche dei moduli \ac{LoRa} utilizzati,
+i tempi di ricostruzione osservati risultano comunque compatibili con i requisiti applicativi.
+Per ridurre ulteriormente il carico trasmissivo, è stata implementata una compressione
+delta per ridurre la dimensione complessiva dei \emph{payload} mantenendo inalterato il contenuto informativo.
+\begin{figure}[H]
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
