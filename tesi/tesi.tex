@@ -764,7 +764,7 @@ verificare la perdita di segnale in caso di disallineamento completo.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{img/telemetry-test-direct.png}
+    \includegraphics[width=0.6\textwidth]{img/tests/telemetry-test-direct.png}
     \caption{Test di disallineamento angolare dell'antenna direzionale.}
     \label{fig:directional-test}
 \end{figure}
@@ -777,7 +777,7 @@ del razzo durante il volo.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{img/telemetry-test-omni.png}
+    \includegraphics[width=0.6\textwidth]{img/tests/telemetry-test-omni.png}
     \caption{Test di disallineamento angolare dell'antenna omnidirezionale.}
     \label{fig:omnidirectional-test}
 \end{figure}
@@ -788,9 +788,20 @@ proceduto a testare il protocollo di comunicazione implementato, valutando
 l'affidabilità della trasmissione dei dati, la capacità di gestire la segmentazione
 e la ricostruzione dei messaggi, e la robustezza del sistema in condizioni
 di rumore e interferenze.
-\subsubsection{Test sul \emph{throushput}}
+\subsubsection{Test sul \emph{throughput}}
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
+Per valutare l'efficacia della segmentazione dei dati \'e stato misurato il tempo 
+di ricostruzione del \emph{payload} originale a partire dai \emph{chunk} ricevuti.
+Il test \'e stato condotto con 4 \emph{payload} di dimensioni diverse (2, 3, 4 e 5 chunk).
+Lo scopo del test era verificare il tempo medio di ricostruzione del \emph{payload}
+originale a partire dai chunk ricevuti, in funzione della dimensione del
+\emph{payload} e del numero di \emph{chunk} in cui \'e stato suddiviso.
+Questo permette di valutare l'efficienza del protocollo di comunicazione per la trasmissione 
+di pacchetti di dati di dimensioni variabili, la capacità di gestire la segmentazione e 
+la ricostruzione dei messaggi.
+
 \subsubsection{Test del meccanismo di \emph{drop}}
+
 \subsubsection{Test del riordinamento dei pacchetti}
 \subsubsection{Test di robustezza e affidabilità}
 
@@ -848,13 +859,69 @@ di rumore e interferenze.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/antenna-misalignement.png}
+    \includegraphics[width=\textwidth]{img/tests/antenna-misalignement.png}
     \caption{Intensità del segnale in funzione della distanza e dell'angolo di disallineamento delle antenne.}
     \label{fig:telemetry-misalignement}
 \end{figure}
 
-\subsubsection{Test sul \emph{throushput}}
+\subsubsection{Test sul \emph{throughput}}
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
+I dati raccolti durante i test di segmentazione e ricostruzione dei dati sono 
+disponibili nell'appendice \ref{test:segmentation}. I risultati mostrano che il 
+sistema è in grado di gestire efficacemente la segmentazione dei dati, mantenendo 
+un tempo di ricostruzione stabile. Viste le limitazioni dei moduli \ac{LoRa} 
+i tempi di ricostruzione sono accettabili, seppur non ottimali, per questo motivo 
+si \'e deciso di implementare una compressione dei dati con codifica delta, per 
+ridurre la dimensione dei \emph{payload} a parit\'a di informazioni trasmesse.
+\begin{figure}
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-avg-time.png}
+        \caption{Tempo medio di ricostruzione per numero di chunk.}
+        \label{fig:segmentation-reconstruction-avg-time}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-sd.png}
+        \caption{Deviazione standard dei tempi di ricostruzione per numero di chunk.}
+        \label{fig:segmentation-reconstruction-sd}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-2chunks.png}
+        \caption{Distribuzione dei tempi di ricostruzione per 2 chunk}
+        \label{fig:segmentation-test-2chunks}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-3chunks.png}
+        \caption{Distribuzione dei tempi di ricostruzione per 3 chunk}
+        \label{fig:segmentation-test-3chunks}
+    \end{minipage}
+    
+    \vspace{1cm}
+    
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-4chunks.png}
+        \caption{Distribuzione dei tempi di ricostruzione per 4 chunk}
+        \label{fig:segmentation-test-4chunks}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-5chunks.png}
+        \caption{Distribuzione dei tempi di ricostruzione per 5 chunk}
+        \label{fig:segmentation-test-5chunks}
+    \end{minipage}
+\end{figure}
 \subsubsection{Test del meccanismo di \emph{drop}}
 \subsubsection{Test del riordinamento dei pacchetti}
 \subsubsection{Test di robustezza e affidabilità}
@@ -909,7 +976,6 @@ Il protocollo di comunicazione ...
     \newcommandx{\library}[4]{\item \href{#1}{\textbf{#2}} - #3\label{#4}}
     \renewcommand{\thechapter}{\Alph{chapter}} % Per avere "Appendice A, B, C..."
     \chapter{Librerie} \label{app:librerie}
-
     \begin{enumerate}
         \library{https://github.com/xreef/EByte_LoRa_E220_Series_Library}%
         {EByte LoRa E220 Series}%
@@ -930,6 +996,7 @@ Il protocollo di comunicazione ...
         {nlohmann-json}%
         {Per la gestione di oggetti JSON in C++.}{lib:json}
     \end{enumerate}
+
     \chapter{Datasheet} \label{app:datasheet}
     \begin{enumerate}
         \library{https://www.cdebyte.com/pdf-down.aspx?id=3552}%
@@ -941,6 +1008,25 @@ Il protocollo di comunicazione ...
         \library{https://www.siretta.com/?sdm_process_download=1&download_id=3401}%
         {Datasheet Siretta Oscar 3A}%
         {Datasheet dell'antenna Yagi Siretta Oscar 3A.}{ds:yagi}
+    \end{enumerate}
+
+    \chapter{Dati di test} \label{app:test}
+    \begin{enumerate}
+        \library{https://docs.google.com/spreadsheets/d/18jeeM74zrUXYElvqgezdn9tdanWeXri5lLqX9B6a6Do/edit?usp=sharing}%
+        {Disallineamento delle antenne}%
+        {Dati raccolti durante i test di disallineamento delle antenne.}{test:misalignement}
+        \library{https://docs.google.com/spreadsheets/}%
+        {Throughput}%
+        {Dati raccolti durante i test di throughput del protocollo di comunicazione.}{test:throughput}
+        \library{https://docs.google.com/spreadsheets/d/1S1JPVLed6u9Xg_fJpRhLmknomVhyZoRTk6BMkn2IwYY/edit?usp=sharing}%
+        {Test di segmentazione e ricostruzione dei dati}%
+        {Dati raccolti durante i test di segmentazione e ricostruzione dei dati.}{test:segmentation}
+        \library{https://docs.google.com/spreadsheets/}%
+        {Test di riordinamento dei pacchetti}%
+        {Dati raccolti durante i test di riordinamento dei pacchetti.}{test:reordering}
+        \library{https://docs.google.com/spreadsheets/}%
+        {Test di robustezza e affidabilità}%
+        {Dati raccolti durante i test di robustezza e affidabilità del protocollo di comunicazione.}{test:robustness}
     \end{enumerate}
     % \chapter{Embed di interi PDF}
     % \label{Appendice:C}
