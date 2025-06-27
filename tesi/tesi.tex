@@ -798,7 +798,7 @@ Per valutare le prestazioni del protocollo di trasmissione nella gestione di pac
 del \emph{payload} originale a partire dai \emph{chunk} ricevuti.
 
 Il test è stato eseguito considerando \emph{payload} di dimensioni crescenti, suddivisi in 2, 3, 4 e 5
-\emph{chunk}, secondo il criterio di frammentazione descritto nel capitolo~\ref{<riferimento-chunk>}.
+\emph{chunk}, secondo il criterio di frammentazione descritto nel capitolo~\ref{chap:telemetry}.
 L’obiettivo era analizzare l’evoluzione del tempo medio di ricostruzione al variare del numero di
 \emph{chunk}, al fine di valutare l’efficienza e la scalabilità del protocollo nella fase di riassemblaggio.
 
@@ -823,7 +823,19 @@ di lunghezza variabile e di evidenziare eventuali criticità legate alla latenza
 \section{Analisi dei dati raccolti durante le prove sperimentali}
 
 \subsection{Risultati dei test preliminari}
+I test preliminari hanno dimostrato che i moduli \ac{LoRa} EByte E220-900T22D
+sono in grado di mantenere una comunicazione stabile anche in presenza di ostacoli naturali
+(rilievi collinari, vegetazione) e artificiali, fino a distanze dell’ordine dei 2000 metri.
+Questi risultati evidenziano la solidità della modulazione \ac{CSS}, in grado di garantire
+una buona resilienza al rumore ambientale e alle interferenze radio locali.
 
+Come mostrato in figura~\ref{fig:telemetry-misalignement}, anche con un disallineamento angolare
+tra le antenne, l’intensità del segnale ricevuto è rimasta superiore al 60\% in tutti i casi testati,
+con assenza di errori di decodifica o perdite significative di pacchetti.
+
+Le evidenze sperimentali ottenute hanno validato la scelta architetturale del sistema radio,
+consentendo di procedere con lo sviluppo del protocollo di comunicazione e della logica
+di trasmissione, assumendo una robusta copertura anche in scenari outdoor complessi.
 \subsubsection{Disallineamento angolare dell'antenna direzionale}
 \begin{table}[H]
     \centering
