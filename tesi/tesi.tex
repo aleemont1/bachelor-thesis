@@ -645,8 +645,8 @@ Considerando la dimensione del \emph{header} logico, il \emph{payload} massimo t
 è di 189 byte usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte per pacchetto.
 
 \section{Implementazione software e algoritmi di gestione della trasmissione}
-Il software è stato implementato in C++17. Questa sezione illustra l'architettura 
-dei principali moduli software: il computer di volo, il modulo trasmettitore e 
+Il software è stato implementato in C++17. Questa sezione illustra l'architettura
+dei principali moduli software: il computer di volo, il modulo trasmettitore e
 il modulo ricevitore, supportata da diagrammi UML e schemi esplicativi.
 
 \subsection{Architettura software}
@@ -806,9 +806,24 @@ Questa analisi permette di stimare la robustezza del sistema in scenari di trasm
 di lunghezza variabile e di evidenziare eventuali criticità legate alla latenza introdotta dalla segmentazione.
 
 \subsubsection{Test del meccanismo di \emph{drop}}
+La valutazione del meccanismo di \emph{drop} dei pacchetti è stata effettuata
+per verificare la capacità del sistema di gestire situazioni in cui i pacchetti
+ricevuti non sono completi o presentano errori di trasmissione.
+Il test ha simulato la mancata trasmissione di alcuni chunk, consentendo di 
+verificare che il sistema identificasse e scartasse correttamente i pacchetti incompleti.
 
 \subsubsection{Test del riordinamento dei pacchetti}
+Per garantire l'integrit\'a dei dati, il protocollo mantiene i \emph{chunk} ricevuti
+in una struttura dati ordinata.
+Il test ha confermato la capacità del sistema di riconoscere e riordinare 
+correttamente sequenze di \emph{chunk} non ordinate.
+
 \subsubsection{Test di robustezza e affidabilità}
+Per valutare la robustezza del sistema, si \'e eseguita una trasmissione di dati
+prolungata, monitorando la stabilit\'a della comunicazione e del tempo di ricostruzione
+del \emph{payload} originale.
+Il test ha confermato la capacità del sistema di gestire un flusso continuo di dati 
+senza perdita di pacchetti né degrado delle prestazioni.
 
 \section{Confronto tra simulazioni e risultati sul campo}
 
@@ -833,15 +848,17 @@ Come mostrato in figura~\ref{fig:telemetry-misalignement}, anche con un disallin
 tra le antenne, l’intensità del segnale ricevuto è rimasta superiore al 60\% in tutti i casi testati,
 con assenza di errori di decodifica o perdite significative di pacchetti.
 
-Le evidenze sperimentali ottenute hanno validato la scelta architetturale del sistema radio,
-consentendo di procedere con lo sviluppo del protocollo di comunicazione e della logica
-di trasmissione, assumendo una robusta copertura anche in scenari outdoor complessi.
+I risultati sperimentali raccolti confermano la validità della scelta architetturale 
+adottata per il sistema radio, consentendo di procedere con lo sviluppo del 
+protocollo di comunicazione e della logica di trasmissione, assumendo una robusta 
+copertura anche in scenari \emph{outdoor} complessi.
+
 \subsubsection{Disallineamento angolare dell'antenna direzionale}
 \begin{table}[H]
     \centering
     \resizebox{0.9\textwidth}{!}{
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-            \hline    \textbf{Distance (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
+            \hline    \textbf{Distanza (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
             \hline    \textbf{100}          & 83.92       & 83.92       & 83.14        & 83.14        & 83.14        & 83.14        & 83.14        & 78.43        \\
             \hline    \textbf{250}          & 80.39       & 78.43       & 80.78        & 79.61        & 79.61        & 76.86        & 76.86        & 74.51        \\
             \hline    \textbf{780}          & 78.43       & 76.47       & 77.25        & 76.47        & 74.51        & 74.51        & 74.51        & 70.59        \\
@@ -860,7 +877,7 @@ di trasmissione, assumendo una robusta copertura anche in scenari outdoor comple
     \centering
     \resizebox{0.9\textwidth}{!}{
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-            \hline    \textbf{Distance (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
+            \hline    \textbf{Distanza (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
             \hline    \textbf{100}          & 80.00       & 78.43       & 77.65        & 78.43        & 80.39        & 82.35        & 82.35        & 84.31        \\
             \hline    \textbf{250}          & 76.47       & 79.61       & 79.61        & 78.43        & 78.43        & 78.82        & 78.82        & 82.35        \\
             \hline    \textbf{780}          & 73.73       & 72.55       & 69.80        & 72.55        & 72.94        & 73.73        & 71.37        & 76.47        \\
@@ -884,8 +901,8 @@ di trasmissione, assumendo una robusta copertura anche in scenari outdoor comple
 \subsubsection{Test sul \emph{throughput}}
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
 I risultati dei test condotti sulla segmentazione e successiva ricostruzione dei dati
-sono riportati in appendice~\ref{test:segmentation}. Il sistema ha dimostrato di essere
-in grado di gestire correttamente il riassemblaggio dei \emph{payload} segmentati, con
+sono riportati in appendice~\ref{test:segmentation}. I risultati confermano che il 
+sistema gestisce correttamente il riassemblaggio dei \emph{payload} segmentati, con
 un tempo medio di ricostruzione che cresce in maniera approssimativamente lineare con
 il numero di \emph{chunk}, come mostrato in figura~\ref{fig:segmentation-reconstruction-avg-time}.
 
@@ -894,7 +911,7 @@ dei tempi di ricostruzione si mantiene relativamente stabile al variare del nume
 indicando una buona prevedibilità temporale del processo di riassemblaggio.
 
 Le distribuzioni dei tempi di ricostruzione (figure~\ref{fig:segmentation-test-2chunks}–\ref{fig:segmentation-test-5chunks})
-mostrano che i tempi di ricostruzione sono concentrati attorno a valori medi, con una 
+mostrano che i tempi di ricostruzione sono concentrati attorno a valori medi, con una
 leggera variabilità, ma senza picchi significativi.
 
 Considerando le limitazioni intrinseche dei moduli \ac{LoRa} utilizzati,
@@ -933,9 +950,9 @@ delta per ridurre la dimensione complessiva dei \emph{payload} mantenendo inalte
         \caption{Distribuzione dei tempi di ricostruzione per 3 chunk}
         \label{fig:segmentation-test-3chunks}
     \end{minipage}
-    
+
     \vspace{1cm}
-    
+
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-4chunks.png}
@@ -950,20 +967,140 @@ delta per ridurre la dimensione complessiva dei \emph{payload} mantenendo inalte
         \label{fig:segmentation-test-5chunks}
     \end{minipage}
 \end{figure}
+\newpage
 \subsubsection{Test del meccanismo di \emph{drop}}
+Il meccanismo di \emph{drop} si \'e dimostrato efficace nel gestire l'arrivo di pacchetti
+non validi o incompleti, evitando l'accumulo di dati parziali, garantendo un'efficace
+gestione della memoria e delle risorse.
+La simulazione prevedeva l'invio di pacchetti frammentati, con la perdita di un \emph{chunk}
+ogni 3 pacchetti, con una percentuale di perdita prevista del 33\%.
+I risultati ottenuti sono riportati nella tabella~\ref{tab:loss_rate}, che conferma la
+percentuale di perdita dei pacchetti attesa.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \textbf{Tempo} & \textbf{\emph{Loss Rate} (\%)} & \textbf{\emph{Packet Number}} & \textbf{Pacchetti ricevuti} & \textbf{Pacchetti scartati} \\
+            \hline
+            00:00:000      & 33,33                          & 3                             & 3                           & 1                           \\ \hline
+            00:04:359      & 33,33                          & 6                             & 6                           & 2                           \\ \hline
+            00:08:720      & 33,33                          & 9                             & 9                           & 3                           \\ \hline
+            00:13:080      & 33,33                          & 12                            & 12                          & 4                           \\ \hline
+            00:17:440      & 33,33                          & 15                            & 15                          & 5                           \\ \hline
+            00:21:803      & 33,33                          & 18                            & 18                          & 6                           \\ \hline
+            00:26:166      & 33,33                          & 21                            & 21                          & 7                           \\ \hline
+            00:30:528      & 33,33                          & 24                            & 24                          & 8                           \\ \hline
+            00:39:255      & 33,33                          & 30                            & 30                          & 10                          \\ \hline
+            00:43:617      & 33,33                          & 33                            & 33                          & 11                          \\ \hline
+            00:47:980      & 33,33                          & 36                            & 36                          & 12                          \\ \hline
+            00:52:343      & 33,33                          & 39                            & 39                          & 13                          \\ \hline
+            00:56:706      & 33,33                          & 42                            & 42                          & 14                          \\ \hline
+            01:01:069      & 33,33                          & 45                            & 45                          & 15                          \\ \hline
+            01:05:433      & 33,33                          & 48                            & 48                          & 16                          \\ \hline
+            01:09:795      & 33,33                          & 51                            & 51                          & 17                          \\ \hline
+            01:14:158      & 33,33                          & 54                            & 54                          & 18                          \\ \hline
+            01:18:521      & 33,33                          & 57                            & 57                          & 19                          \\ \hline
+            01:22:884      & 33,33                          & 60                            & 60                          & 20                          \\ \hline
+            01:27:248      & 33,33                          & 63                            & 63                          & 21                          \\ \hline
+            01:31:611      & 33,33                          & 66                            & 66                          & 22                          \\ \hline
+            01:35:973      & 33,33                          & 69                            & 69                          & 23                          \\ \hline
+            01:40:336      & 33,33                          & 72                            & 72                          & 24                          \\ \hline
+            01:44:700      & 33,33                          & 75                            & 75                          & 25                          \\ \hline
+            01:49:063      & 33,33                          & 78                            & 78                          & 26                          \\ \hline
+            01:53:425      & 33,33                          & 81                            & 81                          & 27                          \\ \hline
+            01:57:789      & 33,33                          & 84                            & 84                          & 28                          \\ \hline
+            02:02:152      & 33,33                          & 87                            & 87                          & 29                          \\ \hline
+            02:06:514      & 33,33                          & 90                            & 90                          & 30                          \\ \hline
+        \end{tabular}
+    }
+    \caption{Tasso di perdita dei pacchetti durante il test del meccanismo di \emph{drop}.}
+    \label{tab:loss_rate}
+\end{table}
+\newpage
 \subsubsection{Test del riordinamento dei pacchetti}
+Il test di riordinamento dei pacchetti ha dimostrato che il sistema è in grado di
+riconoscere e gestire correttamente i \emph{chunk} ricevuti in ordine sparso,
+riordinandoli in base al loro \emph{Chunk Number} prima della ricostruzione del \emph{payload} originale.
+I risultati sono riportati nella tabella~\ref{tab:chunk_order}, che mostra l'ordine
+di arrivo dei pacchetti, e lo stato di ordinamento per ogni sequenza di \emph{chunk}.
+Come nel test precedente, la simulazione prevedeva l'invio di pacchetti frammentati,
+con lo scambio dell'ordine di arrivo di due \emph{chunk} ogni 3 pacchetti.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            \textbf{Tempo} & \textbf{\emph{Packet Number}} & \textbf{\emph{Total Chunks}} & \textbf{\emph{Chunk} ricevuti} & \textbf{Ordinati} & \textbf{Ordine di arrivo} \\
+            \hline
+            00:00:000      & 1                             & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:03:101      & 2                             & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:04:652      & 3                             & 5                            & 5                              & NO                & 1-3-2-4-5                 \\ \hline
+            00:06:203      & 4                             & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:07:753      & 5                             & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:09:305      & 6                             & 5                            & 5                              & NO                & 1-3-2-4-5                 \\ \hline
+            00:10:856      & 7                             & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:12:407      & 8                             & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:13:958      & 9                             & 5                            & 5                              & NO                & 1-3-2-4-5                 \\ \hline
+            00:15:509      & 10                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:17:059      & 11                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:18:610      & 12                            & 5                            & 5                              & NO                & 1-3-2-4-5                 \\ \hline
+            00:20:161      & 13                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:21:712      & 14                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:23:264      & 15                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:24:815      & 16                            & 5                            & 5                              & NO                & 1-3-2-4-5                 \\ \hline
+            00:26:366      & 17                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:27:916      & 18                            & 5                            & 5                              & NO                & 1-3-2-4-5                 \\ \hline
+            00:29:468      & 19                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:31:019      & 20                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:32:569      & 21                            & 5                            & 5                              & NO                & 1-3-2-4-5                 \\ \hline
+            00:34:121      & 22                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:35:671      & 23                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:37:223      & 24                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:38:773      & 25                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:40:325      & 26                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:41:875      & 27                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:43:426      & 28                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:44:978      & 29                            & 5                            & 5                              & YES               & 1-2-3-4-5                 \\ \hline
+            00:46:529      & 30                            & 5                            & 5                              & NO                & 1-3-2-4-5                 \\
+            \hline
+        \end{tabular}
+    }
+    \caption{Verifica dell'ordine di arrivo dei chunk per ogni pacchetto}
+    \label{tab:chunk_order}
+\end{table}
+\newpage
 \subsubsection{Test di robustezza e affidabilità}
+Il test di robustezza ha dimostrato che il sistema \'e in grado di mantenere una comunicazione
+stabile e affidabile per periodi prolungati, senza cali di prestazioni o perdite di pacchetti.
+Il test ha previsto l'invio di pacchetti frammentati per un periodo di 15 minuti,
+monitorando la stabilità della comunicazione e il tempo di ricostruzione del \emph{payload} originale.
+I risultati mostrano che il sistema ha mantenuto il livello di prestazioni costante durante l'intero periodo di test, 
+vista la crescita lineare del numero di pacchetti ricevuti, e la stabilità del tempo di ricostruzione del \emph{payload} originale.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/tests/T5/T5.png}
+    \caption{Stabilità della comunicazione.}
+    \label{fig:telemetry-robustness-test}
+\end{figure}
 
 \section{Limiti e possibili miglioramenti futuri}
+Il sistema di telemetria sviluppato ha dimostrato buone prestazioni e affidabilità, ma presenta 
+alcuni limiti che potrebbero essere migliorati in futuro.
+Tra questi, la necessità di migliorare la gestione della latenza nella ricostruzione dei \emph{payload} segmentati, 
+e il basso \emph{throughput} dei moduli \ac{LoRa} utilizzati, che limita la quantità di dati trasmessi in un dato intervallo di tempo.
 
 \section{Implicazioni del sistema sviluppato per progetti simili}
-Il sistema di telemetria sviluppato per Borealis rappresenta un progetto economico, 
+Il sistema di telemetria sviluppato per Borealis rappresenta un progetto economico,
 affidabile e facilmente replicabile, che può essere adattato a una vasta gamma di applicazioni
 nel campo della ricerca e dello sviluppo di razzi sperimentali.
 La modularità del design e l'uso di tecnologie open-source permettono una facile
 personalizzazione e integrazione con altri sistemi, rendendo il progetto un
 ottimo punto di partenza per futuri sviluppi.
-Il protocollo di comunicazione ... 
+Il protocollo di comunicazione ...
 \sidenote{Da rivedere ed espandere}
 
 \chapter{Conclusioni} \label{chap:conclusion}
