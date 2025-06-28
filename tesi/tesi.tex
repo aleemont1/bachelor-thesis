@@ -28,14 +28,16 @@
 \usepackage{soul}
 \usepackage[font=footnotesize,labelfont=bf]{caption}
 
+\ifdefined\HCode
+\else
 \usepackage{multirow}
+\fi
 \usepackage{hyphenat}
 \hyphenation{mate-mati-ca recu-perare}
 
 \usepackage{lscape} 
 
 \usepackage{natbib}
-\usepackage{hyperref}
 
 \bibliographystyle{alpha}
 \setcitestyle{super, open={[}, close={]}}
@@ -213,8 +215,8 @@ in alluminio divisa in tre \emph{bays}:
 \end{itemize}
 infine un \emph{nose cone} apribile per permettere l'espulsione del paracadute. \\
 
-La \emph{Electronics bay} \'e inserita in una finestra in plexiglass, per permettere 
-la trasmissione del segnale radio della telemetria, che sarebbe altrimenti schermato 
+La \emph{Electronics bay} \'e inserita in una finestra in plexiglass, per permettere
+la trasmissione del segnale radio della telemetria, che sarebbe altrimenti schermato
 dal corpo in alluminio del razzo. \\
 
 Nella \emph{Electronics bay}
@@ -817,19 +819,35 @@ l'affidabilità della trasmissione dei dati, la capacità di gestire la segmenta
 e la ricostruzione dei messaggi, e la robustezza del sistema in condizioni
 di rumore e interferenze.
 \subsubsection{Test del \emph{throughput}}
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|}
-        \hline
-        \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}         \\ \hline
-        10m               & \multirow{4}{*}{+17 dBm}     & \multirow{4}{*}{Dimensione del payload} \\ \cline{1-1}
-        50m               &                              &                                         \\ \cline{1-1}
-        100m              &                              &                                         \\ \cline{1-1}
-        500m              &                              &                                         \\ \hline
-    \end{tabular}
-    \caption{Condizioni del test del throughput.}
-    \label{tab:T1-conditions}
-\end{table}
+\ifdefined\HCode
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
+            10m               & +17 dBm                      & Dimensione del payload          \\ \hline
+            50m               &                              &                                 \\ \hline
+            100m              &                              &                                 \\ \hline
+            500m              &                              &                                 \\ \hline
+        \end{tabular}
+        \caption{Condizioni del test del throughput (HTML).}
+        \label{tab:T1-conditions-html}
+    \end{table}
+\else
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}         \\ \hline
+            10m               & \multirow{4}{*}{+17 dBm}     & \multirow{4}{*}{Dimensione del payload} \\ \cline{1-1}
+            50m               &                              &                                         \\ \cline{1-1}
+            100m              &                              &                                         \\ \cline{1-1}
+            500m              &                              &                                         \\ \hline
+        \end{tabular}
+        \caption{Condizioni del test del throughput (PDF).}
+        \label{tab:T1-conditions-pdf}
+    \end{table}
+\fi
 \newpage
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
 \begin{table}[H]
@@ -889,17 +907,31 @@ Il test ha confermato la capacità del sistema di riconoscere e riordinare
 correttamente sequenze di \emph{chunk} non ordinate.
 
 \subsubsection{Test di robustezza e affidabilità}
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|}
-        \hline
-        \textbf{Distanza}   & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
-        \multirow{2}{*}{5m} & \multirow{2}{*}{+17 dBm}     & Durata di trasmissione          \\ \cline{3-3}
-                            &                              & Dimensione del \emph{payload}   \\ \hline
-    \end{tabular}
-    \caption{Condizioni del test di robustezza e affidabilità.}
-    \label{tab:T5-conditions}
-\end{table}
+\ifdefined\HCode
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
+            5m                & +17 dBm                      & Durata di trasmissione          \\ \hline
+                              &                              & Dimensione del \emph{payload}   \\ \hline
+        \end{tabular}
+        \caption{Condizioni del test di robustezza e affidabilità.}
+        \label{tab:T5-conditions-html}
+    \end{table}
+\else
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Distanza}   & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
+            \multirow{2}{*}{5m} & \multirow{2}{*}{+17 dBm}     & Durata di trasmissione          \\ \cline{3-3}
+                                &                              & Dimensione del \emph{payload}   \\ \hline
+        \end{tabular}
+        \caption{Condizioni del test di robustezza e affidabilità.}
+        \label{tab:T5-conditions-pdf}
+    \end{table}
+\fi
 Per valutare la robustezza del sistema, si \'e eseguita una trasmissione di dati
 prolungata, monitorando la stabilit\'a della comunicazione e del tempo di ricostruzione
 del \emph{payload} originale.
@@ -1193,16 +1225,16 @@ nel campo della ricerca e dello sviluppo di razzi sperimentali e non solo.
 La modularità del design e l'uso di tecnologie open-source permettono una facile
 personalizzazione e integrazione con altri sistemi, rendendo il progetto un
 ottimo punto di partenza per futuri sviluppi.
-Il protocollo di comunicazione implementato, con le sue caratteristiche di segmentazione, 
-offre un'espansione delle capacit\'a di trasmissione dei dati tramite \ac{LoRa}, 
-rendendolo adatto anche ad applicazioni che richiedono l'invio di pacchetti di dati 
-di medie dimensioni. 
+Il protocollo di comunicazione implementato, con le sue caratteristiche di segmentazione,
+offre un'espansione delle capacit\'a di trasmissione dei dati tramite \ac{LoRa},
+rendendolo adatto anche ad applicazioni che richiedono l'invio di pacchetti di dati
+di medie dimensioni.
 
 \chapter{Conclusioni} \label{chap:conclusion}
 \section{Riepilogo dei risultati ottenuti}
-Il progetto di telemetria per il razzo Borealis ha raggiunto gli obiettivi operativi prefissati. 
-Tutti i test condotti hanno confermato la robustezza e l'affidabilità del sistema, 
-con una compertura adeguata, una gestione efficace della segmentazione dei dati 
+Il progetto di telemetria per il razzo Borealis ha raggiunto gli obiettivi operativi prefissati.
+Tutti i test condotti hanno confermato la robustezza e l'affidabilità del sistema,
+con una compertura adeguata, una gestione efficace della segmentazione dei dati
 e una buona stabilità della comunicazione anche in condizioni di disallineamento angolare
 delle antenne.
 
@@ -1211,31 +1243,31 @@ delle antenne.
 \section{Prospettive di sviluppo futuro}
 \subsection{Miglioramenti al sistema di telemetria}
 \subsubsection{Utilizzo di antennte \emph{patch}}
-L'utilizzo di un'antenna elicoidale omnidirezionale si \'e rivelato efficace, tuttavia, 
-per migliorare la copertura e la direzionalit\'a, e per ridurre le dimensioni del sistema, 
-si potrebbe considerare l'uso di antenne \emph{patch}, da applicare sulla fusoliera del razzo, 
-in questo modo si elimina il problema del mascheramento del segnale dovuto al materiale della fusoliera 
-(alluminio o fibra di carbonio), eliminando la necessità di inserire la finestra in plexiglass utilizzata 
+L'utilizzo di un'antenna elicoidale omnidirezionale si \'e rivelato efficace, tuttavia,
+per migliorare la copertura e la direzionalit\'a, e per ridurre le dimensioni del sistema,
+si potrebbe considerare l'uso di antenne \emph{patch}, da applicare sulla fusoliera del razzo,
+in questo modo si elimina il problema del mascheramento del segnale dovuto al materiale della fusoliera
+(alluminio o fibra di carbonio), eliminando la necessità di inserire la finestra in plexiglass utilizzata
 su Borealis. In questo modo migliorerebbero anche le propriet\'a strutturali e aerodinamiche del razzo.
 \subsubsection{Utilizzo di moduli \ac{LoRa} con maggiore \emph{throughput}}
 I moduli \ac{LoRa} EByte E220-900T22D utilizzati hanno dimostrato buone prestazioni
 in termini di portata e affidabilità, ma presentano un limite di \emph{throughput} che
 può essere migliorato utilizzando moduli con capacità di trasmissione dati più elevate.
-Moduli come i moduli della serie Semtech SX126x offrono un \emph{throughput} maggiore e 
-una maggiore flessibilità nella configurazione dei parametri di trasmissione, a fronte 
+Moduli come i moduli della serie Semtech SX126x offrono un \emph{throughput} maggiore e
+una maggiore flessibilità nella configurazione dei parametri di trasmissione, a fronte
 di un costo superiore e del minore support software rispetto ai moduli EByte.
 \subsection{Miglioramenti al protocollo di comunicazione}
 \subsubsection{Implementazione di un sistema di \emph{retransmission}}
-Attualmente il protocollo di comunicazione implementato non prevede un meccanismo di \emph{retransmission} dei pacchetti persi, 
+Attualmente il protocollo di comunicazione implementato non prevede un meccanismo di \emph{retransmission} dei pacchetti persi,
 si potrebeb valutare l'implementazione di un sistema di \emph{retransmission} da coadiuvare al meccanismo di \emph{drop} temporizzato dei pacchetti,
 in modo da ridurre il numero di pacchetti persi in caso di errori di trasmissione o di congestione della rete.
-Questo potrebbe essere realizzato implementando un sistema di \emph{acknowledgment} dei pacchetti, 
+Questo potrebbe essere realizzato implementando un sistema di \emph{acknowledgment} dei pacchetti,
 tuttavia, bisogna valutare l'impatto che questo potrebbe avere sul \emph{throughput} del sistema.
 \subsection{Parsing dei dati e visualizzazione}
 \subsubsection{Implementazione di un sistema di visualizzazione in tempo reale}
-\'E prevista l'implementazione di una \emph{dashboard}, per poter monitorare il 
-volo del razzo in tempo reale. 
-Si prevede di utilizzare un sistema di visualizzazione basato su \emph{Flask}, 
+\'E prevista l'implementazione di una \emph{dashboard}, per poter monitorare il
+volo del razzo in tempo reale.
+Si prevede di utilizzare un sistema di visualizzazione basato su \emph{Flask},
 che permetterebbe di visualizzare i dati raccolti in tempo reale tramite un'interfaccia web.
 
 \renewcommand{\appendixtocname}{Appendici}
