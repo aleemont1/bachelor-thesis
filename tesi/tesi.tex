@@ -213,6 +213,10 @@ in alluminio divisa in tre \emph{bays}:
 \end{itemize}
 infine un \emph{nose cone} apribile per permettere l'espulsione del paracadute. \\
 
+La \emph{Electronics bay} \'e inserita in una finestra in plexiglass, per permettere 
+la trasmissione del segnale radio della telemetria, che sarebbe altrimenti schermato 
+dal corpo in alluminio del razzo. \\
+
 Nella \emph{Electronics bay}
 è presente il computer di volo, che si occupa di
 gestire il lancio e il recupero del razzo e di raccogliere dati durante il volo. \\
@@ -228,7 +232,6 @@ del volo da terra.
     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
     \label{fig:electronics-bay}
 \end{figure}
-\sidenote{Cambiare immagine della Electronics Bay}
 \section{Contesto storico della creazione e dell'impiego di razzi sperimentali}
 II razzi sperimentali svolgono un ruolo cruciale nella ricerca e nello sviluppo
 tecnologico sin dalla fine del XIX secolo.
@@ -723,7 +726,7 @@ razzo, della loro deserializzazione e dell'invio al PC su cui vengono salvati.
     \label{fig:ground-station-architecture}
 \end{figure}
 \newpage
-\subsection{Algoritmo di ricostruzione dei dati} \sidenote{Trovare un titolo migliore}
+\subsection{Algoritmo di ricostruzione del \emph{payload}} \label{sec:reconstruction-algorithm}
 L'algoritmo di ricostruzione del \emph{payload} originale a partire dai pacchetti
 ricevuti, permette di gestire la segmentazione dei dati e garantire l'integrità
 delle informazioni trasmesse.
@@ -741,14 +744,37 @@ originale viene ricostruito, concatenando i dati dei \emph{chunk}.
 Per ottimizzare l'uso delle risorse, \'e stato implementato un meccanismo di \emph{drop}
 temporizzato per le sequenze incomplete, prevenendo cos\'i l'accumulo di dati parziali,
 sfruttando la tolleranza del sistema alla perdita occasionale di letture dei dati
-dei sensori (dato il buon \emph{throughput}, verificato sperimentalmente) e la
-garanzia di disponibilità dei dati grazie al sistema di logging secondario a
+dei sensori e la garanzia di disponibilità dei dati grazie al sistema di logging secondario a
 bordo del computer di volo.
 \sidenote{Inserire immagine del diagramma di flusso dell'algoritmo di ricostruzione dei dati.}
-
 \chapter{Valutazione delle Prestazioni} \label{chap:performance}
-
+\vspace{-0.5cm}
 \section{Metodologia di test e criteri di valutazione}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{|p{4cm}|p{6.5cm}|p{4cm}|}
+        \hline
+        \textbf{Test}                     & \textbf{Obiettivo}                                                                                                                                                                       & \textbf{Metrica misurata}                                     \\
+        \hline
+        Affidabilit\'a della trasmissione & Verificare la capacit\'a del sistema di trasmettere e ricevere pacchetti su distanze variabili, in condizioni ambientali diverse, con ostacoli, rumore e disallineamento tra le antenne. & \ac{RSSI}, angolo di disallineamento tra le antenne           \\
+        \hline
+        Throughput                        & Valutare la velocità effettiva di trasmissione su diversi scenari di distanza e ambiente                                                                                                 & Pacchetti/s, bit/s, percentuale di pacchetti persi, \ac{RSSI} \\
+        \hline
+        Segmentazione e ricostruzione     & Verificare l'efficienza e la scalabilità del protocollo nel ricostruire correttamente i payload segmentati                                                                               & Tempo medio di ricostruzione                                  \\
+        \hline
+        Meccanismo di \emph{drop}         & Verificare la capacità del sistema di identificare e scartare pacchetti incompleti o corrotti                                                                                            & Loss rate (\%), pacchetti scartati,                           \\
+        \hline
+        Riordinamento dei \emph{chunk}    & Verificare la capacità del sistema di gestire chunk ricevuti in ordine scorretto e ripristinare l'ordine corretto prima della ricostruzione                                              & Stato di ordinamento                                          \\
+        \hline
+        Robustezza e affidabilità         & Valutare la stabilità del sistema durante trasmissioni prolungate e in condizioni realistiche di rumore e interferenza                                                                   & Stabilità throughput, variazione delay                        \\
+        \hline
+    \end{tabular}
+    \caption{Schema riassuntivo dei test sperimentali}
+    \label{tab:riassunto_test}
+\end{table}
+
+\newpage
 \subsection{Test preliminari}
 La valutazione delle prestazioni del sistema è stata preceduta da una serie di test
 preliminari, condotti per determinare le capacità effettive dei moduli prima
@@ -759,7 +785,6 @@ I risultati di questi test sono stati favorevoli, dimostrando una comunicazione
 efficace anche in presenza di ostacoli come alberi, edifici e rilievi, fornendo
 una base solida per lo sviluppo successivo.
 
-\newpage
 \subsubsection{Disallineamento angolare dell'antenna direzionale}
 Per ogni distanza si sono effettuate 8 misurazioni, con angoli di disallineamento
 dell'antenna direzionale compresi tra 0° e 30°, e un ulteriore test a 90° per
@@ -771,7 +796,7 @@ verificare la perdita di segnale in caso di disallineamento completo.
     \caption{Test di disallineamento angolare dell'antenna direzionale.}
     \label{fig:directional-test}
 \end{figure}
-
+\newpage
 \subsubsection{Disallineamento angolare dell'antenna omnidirezionale}
 In seguito si \'e proceduto ad eseguire lo stesso test, ma variando l'angolo di
 disallineamento dell'antenna omnidirezionale, sul piano verticale tra 0° e 30°,
@@ -791,8 +816,33 @@ proceduto a testare il protocollo di comunicazione implementato, valutando
 l'affidabilità della trasmissione dei dati, la capacità di gestire la segmentazione
 e la ricostruzione dei messaggi, e la robustezza del sistema in condizioni
 di rumore e interferenze.
-\subsubsection{Test sul \emph{throughput}}
+\subsubsection{Test del \emph{throughput}}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}         \\ \hline
+        10m               & \multirow{4}{*}{+17 dBm}     & \multirow{4}{*}{Dimensione del payload} \\ \cline{1-1}
+        50m               &                              &                                         \\ \cline{1-1}
+        100m              &                              &                                         \\ \cline{1-1}
+        500m              &                              &                                         \\ \hline
+    \end{tabular}
+    \caption{Condizioni del test del throughput.}
+    \label{tab:T1-conditions}
+\end{table}
+\newpage
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
+        5m                & +17 dBm                      & Dimensione del payload          \\ \hline
+    \end{tabular}
+    \caption{Condizioni del test di segmentazione e ricostruzione dei dati.}
+    \label{tab:T2-conditions}
+\end{table}
+
 Per valutare le prestazioni del protocollo di trasmissione nella gestione di pacchetti segmentati,
 è stato condotto un test sperimentale mirato a misurare il tempo necessario alla ricostruzione
 del \emph{payload} originale a partire dai \emph{chunk} ricevuti.
@@ -806,32 +856,76 @@ Questa analisi permette di stimare la robustezza del sistema in scenari di trasm
 di lunghezza variabile e di evidenziare eventuali criticità legate alla latenza introdotta dalla segmentazione.
 
 \subsubsection{Test del meccanismo di \emph{drop}}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}                      \\ \hline
+        5m                & +17 dBm                      & Frequenza di mancata trasmissione di un \emph{chunk} \\ \hline
+    \end{tabular}
+    \caption{Condizioni del test del meccanismo di \emph{drop}.}
+    \label{tab:T3-conditions}
+\end{table}
 La valutazione del meccanismo di \emph{drop} dei pacchetti è stata effettuata
 per verificare la capacità del sistema di gestire situazioni in cui i pacchetti
 ricevuti non sono completi o presentano errori di trasmissione.
-Il test ha simulato la mancata trasmissione di alcuni chunk, consentendo di 
+Il test ha simulato la mancata trasmissione di alcuni \emph{chunk}, consentendo di
 verificare che il sistema identificasse e scartasse correttamente i pacchetti incompleti.
 
 \subsubsection{Test del riordinamento dei pacchetti}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}                 \\ \hline
+        5m                & +17 dBm                      & Frequenza di invio di \emph{chunk} fuori ordine \\ \hline
+    \end{tabular}
+    \caption{Condizioni del test del meccanismo di riordinamento.}
+    \label{tab:T4-conditions}
+\end{table}
 Per garantire l'integrit\'a dei dati, il protocollo mantiene i \emph{chunk} ricevuti
 in una struttura dati ordinata.
-Il test ha confermato la capacità del sistema di riconoscere e riordinare 
+Il test ha confermato la capacità del sistema di riconoscere e riordinare
 correttamente sequenze di \emph{chunk} non ordinate.
 
 \subsubsection{Test di robustezza e affidabilità}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Distanza}   & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
+        \multirow{2}{*}{5m} & \multirow{2}{*}{+17 dBm}     & Durata di trasmissione          \\ \cline{3-3}
+                            &                              & Dimensione del \emph{payload}   \\ \hline
+    \end{tabular}
+    \caption{Condizioni del test di robustezza e affidabilità.}
+    \label{tab:T5-conditions}
+\end{table}
 Per valutare la robustezza del sistema, si \'e eseguita una trasmissione di dati
 prolungata, monitorando la stabilit\'a della comunicazione e del tempo di ricostruzione
 del \emph{payload} originale.
-Il test ha confermato la capacità del sistema di gestire un flusso continuo di dati 
+Il test ha confermato la capacità del sistema di gestire un flusso continuo di dati
 senza perdita di pacchetti né degrado delle prestazioni.
-
+\sidenote{Da aggiungere il test di robustezza in condizioni di rumore e interferenze, con un grafico che mostra l'andamento del \ac{RSSI} durante la trasmissione.}
 \section{Confronto tra simulazioni e risultati sul campo}
-
-
+\sidenote{Forse da rimuovere}
 \section{Ottimizzazioni apportate durante lo sviluppo}
 \subsection{Compressione dei dati}
-\subsection{Meccanismo di \emph{drop} dei pacchetti}
-\subsection{Gestione del riordinamento dei pacchetti}
+Considerando le limitazioni intrinseche dei moduli \ac{LoRa} utilizzati,
+i tempi di ricostruzione osservati risultano comunque compatibili con i requisiti applicativi.
+Per ridurre ulteriormente il carico trasmissivo, è stata implementata una compressione
+delta per ridurre la dimensione complessiva dei \emph{payload} mantenendo inalterato il contenuto informativo.
+\subsection{Gestione dei pacchetti}
+Come discusso nella sezione \ref{sec:reconstruction-algorithm}, \'e stato implementato
+un meccanismo di \emph{drop} dei pacchetti, che consente di scartare i pacchetti
+incompleti o corrotti, evitando di accumulare dati parziali che potrebbero compromettere
+le prestazioni e l'affidabilità del sistema.
+Questo meccanismo si basa su un timeout configurabile, che permette di scartare i pacchetti
+che non sono stati completati entro un certo intervallo di tempo, evitando l'accumulo
+di dati inutili e garantendo una gestione efficiente della memoria.
+
+Inoltre, per garantire l'integrità dei dati, il protocollo implementa un meccanismo di riordinamento
+dei pacchetti, che consente di gestire situazioni in cui i \emph{chunk} arrivano
+in ordine non sequenziale.
 
 \chapter{Risultati e Analisi} \label{chap:results}
 
@@ -848,9 +942,9 @@ Come mostrato in figura~\ref{fig:telemetry-misalignement}, anche con un disallin
 tra le antenne, l’intensità del segnale ricevuto è rimasta superiore al 60\% in tutti i casi testati,
 con assenza di errori di decodifica o perdite significative di pacchetti.
 
-I risultati sperimentali raccolti confermano la validità della scelta architetturale 
-adottata per il sistema radio, consentendo di procedere con lo sviluppo del 
-protocollo di comunicazione e della logica di trasmissione, assumendo una robusta 
+I risultati sperimentali raccolti confermano la validità della scelta architetturale
+adottata per il sistema radio, consentendo di procedere con lo sviluppo del
+protocollo di comunicazione e della logica di trasmissione, assumendo una robusta
 copertura anche in scenari \emph{outdoor} complessi.
 
 \subsubsection{Disallineamento angolare dell'antenna direzionale}
@@ -898,10 +992,11 @@ copertura anche in scenari \emph{outdoor} complessi.
     \label{fig:telemetry-misalignement}
 \end{figure}
 
-\subsubsection{Test sul \emph{throughput}}
+\subsubsection{Test del \emph{throughput}}
+
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
 I risultati dei test condotti sulla segmentazione e successiva ricostruzione dei dati
-sono riportati in appendice~\ref{test:segmentation}. I risultati confermano che il 
+sono riportati in appendice~\ref{test:segmentation}. I risultati confermano che il
 sistema gestisce correttamente il riassemblaggio dei \emph{payload} segmentati, con
 un tempo medio di ricostruzione che cresce in maniera approssimativamente lineare con
 il numero di \emph{chunk}, come mostrato in figura~\ref{fig:segmentation-reconstruction-avg-time}.
@@ -913,21 +1008,17 @@ indicando una buona prevedibilità temporale del processo di riassemblaggio.
 Le distribuzioni dei tempi di ricostruzione (figure~\ref{fig:segmentation-test-2chunks}–\ref{fig:segmentation-test-5chunks})
 mostrano che i tempi di ricostruzione sono concentrati attorno a valori medi, con una
 leggera variabilità, ma senza picchi significativi.
-
-Considerando le limitazioni intrinseche dei moduli \ac{LoRa} utilizzati,
-i tempi di ricostruzione osservati risultano comunque compatibili con i requisiti applicativi.
-Per ridurre ulteriormente il carico trasmissivo, è stata implementata una compressione
-delta per ridurre la dimensione complessiva dei \emph{payload} mantenendo inalterato il contenuto informativo.
+\newpage
 \begin{figure}[H]
     \centering
-    \begin{minipage}{0.45\textwidth}
+    \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-avg-time.png}
         \caption{Tempo medio di ricostruzione per numero di chunk.}
         \label{fig:segmentation-reconstruction-avg-time}
     \end{minipage}
     \hfill
-    \begin{minipage}{0.45\textwidth}
+    \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-sd.png}
         \caption{Deviazione standard dei tempi di ricostruzione per numero di chunk.}
@@ -937,14 +1028,14 @@ delta per ridurre la dimensione complessiva dei \emph{payload} mantenendo inalte
 
 \begin{figure}[H]
     \centering
-    \begin{minipage}{0.45\textwidth}
+    \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-2chunks.png}
         \caption{Distribuzione dei tempi di ricostruzione per 2 chunk}
         \label{fig:segmentation-test-2chunks}
     \end{minipage}
     \hfill
-    \begin{minipage}{0.45\textwidth}
+    \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-3chunks.png}
         \caption{Distribuzione dei tempi di ricostruzione per 3 chunk}
@@ -953,14 +1044,14 @@ delta per ridurre la dimensione complessiva dei \emph{payload} mantenendo inalte
 
     \vspace{1cm}
 
-    \begin{minipage}{0.45\textwidth}
+    \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-4chunks.png}
         \caption{Distribuzione dei tempi di ricostruzione per 4 chunk}
         \label{fig:segmentation-test-4chunks}
     \end{minipage}
     \hfill
-    \begin{minipage}{0.45\textwidth}
+    \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-5chunks.png}
         \caption{Distribuzione dei tempi di ricostruzione per 5 chunk}
@@ -1077,8 +1168,10 @@ Il test di robustezza ha dimostrato che il sistema \'e in grado di mantenere una
 stabile e affidabile per periodi prolungati, senza cali di prestazioni o perdite di pacchetti.
 Il test ha previsto l'invio di pacchetti frammentati per un periodo di 15 minuti,
 monitorando la stabilità della comunicazione e il tempo di ricostruzione del \emph{payload} originale.
-I risultati mostrano che il sistema ha mantenuto il livello di prestazioni costante durante l'intero periodo di test, 
-vista la crescita lineare del numero di pacchetti ricevuti, e la stabilità del tempo di ricostruzione del \emph{payload} originale.
+I risultati mostrano che il sistema ha mantenuto il livello di prestazioni costante durante
+l'intero periodo di test, vista la crescita lineare del numero di pacchetti ricevuti,
+e la stabilità del tempo di ricostruzione del \emph{payload} originale, come
+mostrato nella figura~\ref{fig:telemetry-robustness-test}.
 
 \begin{figure}[H]
     \centering
@@ -1086,40 +1179,64 @@ vista la crescita lineare del numero di pacchetti ricevuti, e la stabilità del 
     \caption{Stabilità della comunicazione.}
     \label{fig:telemetry-robustness-test}
 \end{figure}
-
+\newpage
 \section{Limiti e possibili miglioramenti futuri}
-Il sistema di telemetria sviluppato ha dimostrato buone prestazioni e affidabilità, ma presenta 
+Il sistema di telemetria sviluppato ha dimostrato buone prestazioni e affidabilità, ma presenta
 alcuni limiti che potrebbero essere migliorati in futuro.
-Tra questi, la necessità di migliorare la gestione della latenza nella ricostruzione dei \emph{payload} segmentati, 
+Tra questi, la necessità di migliorare la gestione della latenza nella ricostruzione dei \emph{payload} segmentati,
 e il basso \emph{throughput} dei moduli \ac{LoRa} utilizzati, che limita la quantità di dati trasmessi in un dato intervallo di tempo.
 
 \section{Implicazioni del sistema sviluppato per progetti simili}
 Il sistema di telemetria sviluppato per Borealis rappresenta un progetto economico,
 affidabile e facilmente replicabile, che può essere adattato a una vasta gamma di applicazioni
-nel campo della ricerca e dello sviluppo di razzi sperimentali.
+nel campo della ricerca e dello sviluppo di razzi sperimentali e non solo.
 La modularità del design e l'uso di tecnologie open-source permettono una facile
 personalizzazione e integrazione con altri sistemi, rendendo il progetto un
 ottimo punto di partenza per futuri sviluppi.
-Il protocollo di comunicazione ...
-\sidenote{Da rivedere ed espandere}
+Il protocollo di comunicazione implementato, con le sue caratteristiche di segmentazione, 
+offre un'espansione delle capacit\'a di trasmissione dei dati tramite \ac{LoRa}, 
+rendendolo adatto anche ad applicazioni che richiedono l'invio di pacchetti di dati 
+di medie dimensioni. 
 
 \chapter{Conclusioni} \label{chap:conclusion}
-
 \section{Riepilogo dei risultati ottenuti}
+Il progetto di telemetria per il razzo Borealis ha raggiunto gli obiettivi operativi prefissati. 
+Tutti i test condotti hanno confermato la robustezza e l'affidabilità del sistema, 
+con una compertura adeguata, una gestione efficace della segmentazione dei dati 
+e una buona stabilità della comunicazione anche in condizioni di disallineamento angolare
+delle antenne.
 
 \section{Riflessioni sull'impatto del progetto nell'ambito della ricerca e dello sviluppo di razzi sperimentali}
 
 \section{Prospettive di sviluppo futuro}
 \subsection{Miglioramenti al sistema di telemetria}
 \subsubsection{Utilizzo di antennte \emph{patch}}
-\subsubsection{Aggiunta di un modulo GPS}
-
+L'utilizzo di un'antenna elicoidale omnidirezionale si \'e rivelato efficace, tuttavia, 
+per migliorare la copertura e la direzionalit\'a, e per ridurre le dimensioni del sistema, 
+si potrebbe considerare l'uso di antenne \emph{patch}, da applicare sulla fusoliera del razzo, 
+in questo modo si elimina il problema del mascheramento del segnale dovuto al materiale della fusoliera 
+(alluminio o fibra di carbonio), eliminando la necessità di inserire la finestra in plexiglass utilizzata 
+su Borealis. In questo modo migliorerebbero anche le propriet\'a strutturali e aerodinamiche del razzo.
+\subsubsection{Utilizzo di moduli \ac{LoRa} con maggiore \emph{throughput}}
+I moduli \ac{LoRa} EByte E220-900T22D utilizzati hanno dimostrato buone prestazioni
+in termini di portata e affidabilità, ma presentano un limite di \emph{throughput} che
+può essere migliorato utilizzando moduli con capacità di trasmissione dati più elevate.
+Moduli come i moduli della serie Semtech SX126x offrono un \emph{throughput} maggiore e 
+una maggiore flessibilità nella configurazione dei parametri di trasmissione, a fronte 
+di un costo superiore e del minore support software rispetto ai moduli EByte.
 \subsection{Miglioramenti al protocollo di comunicazione}
-\subsubsection{Aggiunta di un meccanismo di \emph{acknowledgment} dei pacchetti}
 \subsubsection{Implementazione di un sistema di \emph{retransmission}}
-
+Attualmente il protocollo di comunicazione implementato non prevede un meccanismo di \emph{retransmission} dei pacchetti persi, 
+si potrebeb valutare l'implementazione di un sistema di \emph{retransmission} da coadiuvare al meccanismo di \emph{drop} temporizzato dei pacchetti,
+in modo da ridurre il numero di pacchetti persi in caso di errori di trasmissione o di congestione della rete.
+Questo potrebbe essere realizzato implementando un sistema di \emph{acknowledgment} dei pacchetti, 
+tuttavia, bisogna valutare l'impatto che questo potrebbe avere sul \emph{throughput} del sistema.
 \subsection{Parsing dei dati e visualizzazione}
 \subsubsection{Implementazione di un sistema di visualizzazione in tempo reale}
+\'E prevista l'implementazione di una \emph{dashboard}, per poter monitorare il 
+volo del razzo in tempo reale. 
+Si prevede di utilizzare un sistema di visualizzazione basato su \emph{Flask}, 
+che permetterebbe di visualizzare i dati raccolti in tempo reale tramite un'interfaccia web.
 
 \renewcommand{\appendixtocname}{Appendici}
 \renewcommand{\appendixpagename}{Appendici}
