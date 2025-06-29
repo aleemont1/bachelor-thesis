@@ -129,7 +129,7 @@
 \acrodef{I2C}[I\textsuperscript{2}C]{Inter-Integrated Circuit}
 \acrodef{SPI}{Serial Peripheral Interface}
 \acrodef{ISM}{Industrial, Scientific and Medical}
-\acrodef{RSSI}{Received Signal Strength Indicator}
+\acrodef{RSSI}{\emph{Received Signal Strength Indicator}}
 \acrodef{EKF}{Extended Kalman Filter}
 \acrodef{CRC}{Controllo di Ridondanza Ciclica}
 \restoregeometry
@@ -665,9 +665,9 @@ Considerando la dimensione del \emph{header} logico, il \emph{payload} massimo t
 è di 189 byte usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte per pacchetto.
 
 \section{Implementazione software e algoritmi di gestione della trasmissione}
-Il software è stato implementato in C++17. Questa sezione illustra l'architettura
-dei principali moduli software: il computer di volo, il modulo trasmettitore e
-il modulo ricevitore, supportata da diagrammi UML e schemi esplicativi.
+Il software è stato implementato in C++17. Nei seguenti paragrafi verrà illustrata 
+l'architettura dei principali moduli software: il computer di volo, 
+il modulo trasmettitore e il modulo ricevitore.
 
 \subsection{Architettura software}
 
@@ -721,7 +721,6 @@ Il computer di volo è composto da 4 elementi principali:
 dati raccolti dai sensori, applicando un \ac{EKF} e algoritmi di \emph{sensor
     fusion} per la stime dell'altitudine e della velocità verticale, che sono
 utilizzate per il rilevamento dell'apogeo e la gestione della sequenza di recupero.
-\sidenote{Inserire immagine del diagramma di flusso dell'algoritmo di elaborazione dati.}
 
 \newpage
 \paragraph{\textbf{Modulo di telemetria:}}Si occupa della serializzazione, segmentazione
@@ -815,9 +814,9 @@ verificare la perdita di segnale in caso di disallineamento completo.
 \end{figure}
 \newpage
 \subsubsection{Disallineamento angolare dell'antenna omnidirezionale}
-In seguito si \'e proceduto a eseguire lo stesso test, ma variando l'angolo di
-disallineamento dell'antenna omnidirezionale, sul piano verticale tra 0° e 30°,
-e un ulteriore test a 90°, per verificare l'effetto della variazione di assetto
+In seguito \'e stato eseguito lo stesso test, stavolta variando l'angolo di
+disallineamento dell'antenna omnidirezionale sul piano verticale tra 0° e 30°,
+e un ulteriore test a 90°, per simulare l'effetto della variazione di assetto
 del razzo durante il volo.
 
 \begin{figure}[H]
