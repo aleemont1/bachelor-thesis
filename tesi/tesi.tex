@@ -171,7 +171,22 @@
 \newpage~\newpage
 \pagenumbering{gobble}
 \chapter*{Abstract}
-Abstract qui (ti consiglio di farlo alla fine)
+I razzi sperimentali rappresentano strumenti chiave per la ricerca aerospaziale,
+meteorologica e per la validazione di nuove tecnologie in ambienti estremi.
+In questo contesto, la disponibilità di sistemi di telemetria affidabili, a bassa
+latenza e basso costo risulta fondamentale per il monitoraggio in tempo reale e
+l’analisi post-missione.
+Questa tesi presenta lo sviluppo di un sistema di telemetria embedded per il
+tracciamento dei dati di volo di un razzo sonda sperimentale. Il sistema si basa
+su un microcontrollore ESP32-S3 e utilizza la modulazione LoRa\textsuperscript{\textcopyright}
+per la trasmissione dei dati verso una ground station, garantendo comunicazioni
+stabili anche su lunghe distanze.
+Per assicurare la robustezza e l’efficienza della trasmissione in assenza di
+meccanismi di ritrasmissione, è stato progettato un protocollo di comunicazione
+personalizzato, con segmentazione del payload, header identificativi, codice CRC
+e gestione dei timeout per la ricostruzione dati.
+I test in campo aperto hanno evidenziato una portata effettiva superiore ai 2 km. \sidenote{Inserire dati sul throughput effettivo}
+Tali prestazioni risultano compatibili con i requisiti di missioni suborbitali a bassa quota.
 
 \topmargin=-1cm
 \tableofcontents
@@ -822,28 +837,32 @@ di rumore e interferenze.
 \ifdefined\HCode
     \begin{table}[H]
         \centering
-        \begin{tabular}{|c|c|c|}
-            \hline
-            \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
-            10m               & +17 dBm                      & Dimensione del payload          \\ \hline
-            50m               &                              &                                 \\ \hline
-            100m              &                              &                                 \\ \hline
-            500m              &                              &                                 \\ \hline
-        \end{tabular}
+        \resizebox{\textwidth}{!}{
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                \textbf{Distanza} & \textbf{Frequenza di trasmissione} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
+                10m               & 873.125 MHz                        & +17 dBm                      & Dimensione del payload          \\ \hline
+                50m               &                                    &                              &                                 \\ \hline
+                100m              &                                    &                              &                                 \\ \hline
+                500m              &                                    &                              &                                 \\ \hline
+            \end{tabular}
+        }
         \caption{Condizioni del test del throughput (HTML).}
         \label{tab:T1-conditions-html}
     \end{table}
 \else
     \begin{table}[H]
         \centering
-        \begin{tabular}{|c|c|c|}
-            \hline
-            \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}         \\ \hline
-            10m               & \multirow{4}{*}{+17 dBm}     & \multirow{4}{*}{Dimensione del payload} \\ \cline{1-1}
-            50m               &                              &                                         \\ \cline{1-1}
-            100m              &                              &                                         \\ \cline{1-1}
-            500m              &                              &                                         \\ \hline
-        \end{tabular}
+        \resizebox{\textwidth}{!}{
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                \textbf{Distanza} & \textbf{Frequenza di trasmissione} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}         \\ \hline
+                10m               & \multirow{4}{*}{873.125 MHz}       & \multirow{4}{*}{+17 dBm}     & \multirow{4}{*}{Dimensione del payload} \\ \cline{1-1}
+                50m               &                                    &                              &                                         \\ \cline{1-1}
+                100m              &                                    &                              &                                         \\ \cline{1-1}
+                500m              &                                    &                              &                                         \\ \hline
+            \end{tabular}
+        }
         \caption{Condizioni del test del throughput (PDF).}
         \label{tab:T1-conditions-pdf}
     \end{table}
@@ -852,11 +871,13 @@ di rumore e interferenze.
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
 \begin{table}[H]
     \centering
-    \begin{tabular}{|c|c|c|}
-        \hline
-        \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
-        5m                & +17 dBm                      & Dimensione del payload          \\ \hline
-    \end{tabular}
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Distanza} & \textbf{Frequenza di trasmissione} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
+            5m                & 873.125 MHz                        & +17 dBm                      & Dimensione del payload          \\ \hline
+        \end{tabular}
+    }
     \caption{Condizioni del test di segmentazione e ricostruzione dei dati.}
     \label{tab:T2-conditions}
 \end{table}
@@ -870,76 +891,102 @@ Il test è stato eseguito considerando \emph{payload} di dimensioni crescenti, s
 L’obiettivo era analizzare l’evoluzione del tempo medio di ricostruzione al variare del numero di
 \emph{chunk}, al fine di valutare l’efficienza e la scalabilità del protocollo nella fase di riassemblaggio.
 
-Questa analisi permette di stimare la robustezza del sistema in scenari di trasmissione con pacchetti
+Questa analisi permette di valutare le prestazioni del sistema in scenari di trasmissione con pacchetti
 di lunghezza variabile e di evidenziare eventuali criticità legate alla latenza introdotta dalla segmentazione.
+
+Il tempo di ricostruzione di un pacchetto è calcolato come:
+
+\begin{equation}
+    \delta_{r} = (t_{UltimoChunk} - t_{PrimoChunk})
+    \label{formula:reconstruction-time}
+\end{equation}
+
 
 \subsubsection{Test del meccanismo di \emph{drop}}
 \begin{table}[H]
     \centering
-    \begin{tabular}{|c|c|c|}
-        \hline
-        \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}                      \\ \hline
-        5m                & +17 dBm                      & Frequenza di mancata trasmissione di un \emph{chunk} \\ \hline
-    \end{tabular}
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Distanza} & \textbf{Frequenza di trasmissione} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}                      \\ \hline
+            5m                & 873.125 MHz                        & +17 dBm                      & Frequenza di mancata trasmissione di un \emph{chunk} \\ \hline
+        \end{tabular}
+    }
     \caption{Condizioni del test del meccanismo di \emph{drop}.}
     \label{tab:T3-conditions}
 \end{table}
 La valutazione del meccanismo di \emph{drop} dei pacchetti è stata effettuata
 per verificare la capacità del sistema di gestire situazioni in cui i pacchetti
 ricevuti non sono completi o presentano errori di trasmissione.
-Il test ha simulato la mancata trasmissione di alcuni \emph{chunk}, consentendo di
+Per eseguire il test, è stata simulata la mancata trasmissione di alcuni \emph{chunk}, consentendo di
 verificare che il sistema identificasse e scartasse correttamente i pacchetti incompleti.
 
 \subsubsection{Test del riordinamento dei pacchetti}
 \begin{table}[H]
     \centering
-    \begin{tabular}{|c|c|c|}
-        \hline
-        \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}                 \\ \hline
-        5m                & +17 dBm                      & Frequenza di invio di \emph{chunk} fuori ordine \\ \hline
-    \end{tabular}
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Distanza} & \textbf{Frequenza di trasmissione} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}                 \\ \hline
+            5m                & 873.125 MHz                        & +17 dBm                      & Frequenza di invio di \emph{chunk} fuori ordine \\ \hline
+        \end{tabular}
+    }
     \caption{Condizioni del test del meccanismo di riordinamento.}
     \label{tab:T4-conditions}
 \end{table}
 Per garantire l'integrit\'a dei dati, il protocollo mantiene i \emph{chunk} ricevuti
 in una struttura dati ordinata.
-Il test ha confermato la capacità del sistema di riconoscere e riordinare
-correttamente sequenze di \emph{chunk} non ordinate.
+Per verificare l'efficacia del meccanismo di riordinamento, sono stati inviati
+alcuni \emph{chunk} in ordine invertito, consentendo di valutare la capacità del sistema
+di riconoscere le sequenze fuori ordine, e riordinare i pacchetti prima della ricostruzione
+del \emph{payload} originale.
 
 \subsubsection{Test di robustezza e affidabilità}
 \ifdefined\HCode
     \begin{table}[H]
         \centering
-        \begin{tabular}{|c|c|c|}
-            \hline
-            \textbf{Distanza} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
-            5m                & +17 dBm                      & Durata di trasmissione          \\ \hline
-                              &                              & Dimensione del \emph{payload}   \\ \hline
-        \end{tabular}
+        \resizebox{\textwidth}{!}{
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                \textbf{Distanza} & \textbf{Frequenza di trasmissione} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}                 \\ \hline
+                5m                & 873.125 MHz                        & +17 dBm                      & Durata di trasmissione                          \\ \hline
+                                  &                                    &                              & Dimensione del \emph{payload}                   \\ \hline
+                                  &                                    &                              & Frequenza di trasmissione della seconda antenna \\ \hline
+            \end{tabular}
+        }
         \caption{Condizioni del test di robustezza e affidabilità.}
         \label{tab:T5-conditions-html}
     \end{table}
 \else
     \begin{table}[H]
         \centering
-        \begin{tabular}{|c|c|c|}
-            \hline
-            \textbf{Distanza}   & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo} \\ \hline
-            \multirow{2}{*}{5m} & \multirow{2}{*}{+17 dBm}     & Durata di trasmissione          \\ \cline{3-3}
-                                &                              & Dimensione del \emph{payload}   \\ \hline
-        \end{tabular}
+        \resizebox{\textwidth}{!}{
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                \textbf{Distanza}   & \textbf{Frequenza di trasmissione} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}                 \\ \hline
+                \multirow{3}{*}{5m} & \multirow{3}{*}{873.125 MHz}       & \multirow{3}{*}{+17 dBm}     & Durata di trasmissione                          \\ \cline{4-4}
+                                    &                                    &                              & Dimensione del \emph{payload}                   \\ \cline{4-4}
+                                    &                                    &                              & Frequenza di trasmissione della seconda antenna \\ \hline
+            \end{tabular}
+        }
         \caption{Condizioni del test di robustezza e affidabilità.}
         \label{tab:T5-conditions-pdf}
     \end{table}
 \fi
-Per valutare la robustezza del sistema, si \'e eseguita una trasmissione di dati
-prolungata, monitorando la stabilit\'a della comunicazione e del tempo di ricostruzione
-del \emph{payload} originale.
-Il test ha confermato la capacità del sistema di gestire un flusso continuo di dati
-senza perdita di pacchetti né degrado delle prestazioni.
-\sidenote{Da aggiungere il test di robustezza in condizioni di rumore e interferenze, con un grafico che mostra l'andamento del \ac{RSSI} durante la trasmissione.}
-\section{Confronto tra simulazioni e risultati sul campo}
-\sidenote{Forse da rimuovere}
+Per valutare la robustezza del sistema, sono stati condotti due test sperimentali.
+Il primo ha riguardato la trasmissione di pacchetti in condizioni ottimali, a distanza
+ravvicinata, con un \emph{payload} di dimensioni fisse, per verificare la stabilità
+della comunicazione e studiare eventuali degradazioni delle prestazioni nel tempo.
+Il test ha previsto l'invio di pacchetti frammentati per un periodo di 15 minuti,
+monitorando la regolarità della trasmissione e il tempo di ricostruzione del \emph{payload} originale.
+
+Il secondo test ha previsto l'attivazione di un secondo nodo trasmittente,
+operante sulla stessa frequenza della prima antenna, per verificare eventuali effetti
+di interferenze co-canalari. Il test è stato condotto nelle stesse condizioni del primo,
+aggiungendo l'invio continuo di pacchetti da parte della seconda antenna.
+I risultati dei due test sono stati successivamente confrontati per valutare l'effettivo impatto
+delle interferenze sulla qualità del segnale e sulla stabilità della trasmissione.
+
 \section{Ottimizzazioni apportate durante lo sviluppo}
 \subsection{Compressione dei dati}
 Considerando le limitazioni intrinseche dei moduli \ac{LoRa} utilizzati,
@@ -1196,53 +1243,159 @@ con lo scambio dell'ordine di arrivo di due \emph{chunk} ogni 3 pacchetti.
 \end{table}
 \newpage
 \subsubsection{Test di robustezza e affidabilità}
-Il test di robustezza ha dimostrato che il sistema \'e in grado di mantenere una comunicazione
-stabile e affidabile per periodi prolungati, senza cali di prestazioni o perdite di pacchetti.
-Il test ha previsto l'invio di pacchetti frammentati per un periodo di 15 minuti,
-monitorando la stabilità della comunicazione e il tempo di ricostruzione del \emph{payload} originale.
-I risultati mostrano che il sistema ha mantenuto il livello di prestazioni costante durante
-l'intero periodo di test, vista la crescita lineare del numero di pacchetti ricevuti,
-e la stabilità del tempo di ricostruzione del \emph{payload} originale, come
-mostrato nella figura~\ref{fig:telemetry-robustness-test}.
+Il primo test di robustezza ha permesso di verificare che il sistema è in grado 
+di mantenere una comunicazione stabile e affidabile anche per periodi prolungati, 
+senza cali di prestazioni né perdite di pacchetti.
+
+I risultati mostrano che il sistema ha mantenuto un livello di prestazioni costante 
+per tutta la durata dell'esperimento, evidenziato dalla crescita lineare del 
+numero di pacchetti ricevuti e dalla stabilità del tempo di ricostruzione del 
+\emph{payload} originale, come illustrato nella figura~\ref{fig:telemetry-robustness-test}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{img/tests/T5/T5.png}
-    \caption{Stabilità della comunicazione.}
+    \caption{Stabilità della comunicazione in assenza di interferenza diretta.}
     \label{fig:telemetry-robustness-test}
 \end{figure}
 \newpage
+
+Anche nel secondo test, nonostante la presenza di una seconda antenna trasmittente 
+attiva sulla stessa frequenza, il sistema ha mantenuto una buona stabilità della 
+comunicazione, con un numero di pacchetti ricevuti in linea con le attese e senza 
+cali significativi di prestazioni, come mostrato nella figura~\ref{fig:telemetry-robustness-test-2}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/tests/T6/T6.png}
+    \caption{Stabilità della comunicazione in presenza di interferenza diretta.}
+    \label{fig:telemetry-robustness-test-2}
+\end{figure}
+\newpage
+
+Confrontando i risultati dei due test, si osserva che l'introduzione della seconda 
+antenna non ha avuto un impatto significativo sulla stabilità della comunicazione 
+né sulle prestazioni del sistema. Come illustrato nella figura~\ref{fig:telemetry-robustness-test-comparison}, 
+i dati raccolti nei due scenari risultano sovrapponibili.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/tests/T5-6/T5-6.png}
+    \caption{Confronto tra i due test di robustezza.}
+    \label{fig:telemetry-robustness-test-comparison}
+\end{figure}
+
+L'analisi numerica conferma che le differenze tra i due test sono trascurabili, 
+sebbene rilevabili. Come riportato nella tabella~\ref{tab:robustness-test-comparison}, 
+la deviazione standard e la varianza dei tempi di ricostruzione sono leggermente 
+superiori nel test con interferenze, indicando una maggiore variabilità della 
+latenza di ricostruzione del \emph{payload}, imputabile alla presenza di 
+trasmissioni concorrenti.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Metrica}                            & \textbf{Senza interferenze} & \textbf{Con interferenze} \\
+        \hline
+        Tempo di ricostruzione medio ($\delta_{r}$) & 1550.99                     & 1550.99                   \\ \hline
+        Deviazione standard $\delta_{r}$            & 0.49                        & 0.62                      \\ \hline
+        Varianza $\delta_{r}$                       & 0.24                        & 0.38                      \\ \hline
+        Numero di pacchetti ricevuti                & 588                         & 588                       \\ \hline
+        Numero di misure                            & 589                         & 589                       \\
+        \hline
+    \end{tabular}
+    \caption{Confronto delle metriche statistiche tra test senza interferenze e con interferenze}
+
+    \label{tab:robustness-test-comparison}
+\end{table}
+
+\newpage
+
 \section{Limiti e possibili miglioramenti futuri}
-Il sistema di telemetria sviluppato ha dimostrato buone prestazioni e affidabilità, ma presenta
-alcuni limiti che potrebbero essere migliorati in futuro.
-Tra questi, la necessità di migliorare la gestione della latenza nella ricostruzione dei \emph{payload} segmentati,
-e il basso \emph{throughput} dei moduli \ac{LoRa} utilizzati, che limita la quantità di dati trasmessi in un dato intervallo di tempo.
+Il sistema di telemetria sviluppato ha dimostrato buone prestazioni e un'elevata 
+affidabilità, ma presenta alcuni limiti che potrebbero essere oggetto di 
+miglioramento in sviluppi futuri.
+
+Tra le criticità principali si segnala la necessità di ottimizzare la gestione 
+della latenza nella ricostruzione dei \emph{payload} segmentati, nonché il basso 
+\emph{throughput} dei moduli \ac{LoRa} impiegati, che limita la quantità di dati 
+trasmissibili nell’unità di tempo. Tali vincoli derivano dalle caratteristiche 
+intrinseche del protocollo LoRa e dall’architettura a pacchetti frammentati adottata.
+
+Un ulteriore limite significativo riguarda la difficoltà di testare il sistema 
+in condizioni operative reali: il lancio di razzi sperimentali comporta infatti 
+complesse problematiche di natura legale, logistica, organizzativa ed economica,
+ che rendono difficile la pianificazione e l’esecuzione di prove realistiche in volo.
 
 \section{Implicazioni del sistema sviluppato per progetti simili}
-Il sistema di telemetria sviluppato per Borealis rappresenta un progetto economico,
-affidabile e facilmente replicabile, che può essere adattato a una vasta gamma di applicazioni
-nel campo della ricerca e dello sviluppo di razzi sperimentali e non solo.
-La modularità del design e l'uso di tecnologie open-source permettono una facile
-personalizzazione e integrazione con altri sistemi, rendendo il progetto un
-ottimo punto di partenza per futuri sviluppi.
-Il protocollo di comunicazione implementato, con le sue caratteristiche di segmentazione,
-offre un'espansione delle capacit\'a di trasmissione dei dati tramite \ac{LoRa},
-rendendolo adatto anche ad applicazioni che richiedono l'invio di pacchetti di dati
-di medie dimensioni.
+Il sistema di telemetria sviluppato per il progetto \emph{Borealis} rappresenta 
+una soluzione economica, affidabile e facilmente replicabile, potenzialmente 
+applicabile a un'ampia varietà di scenari nel campo della ricerca e dello sviluppo 
+di razzi sperimentali, ma non solo.
+
+La modularità dell'architettura e l’impiego di tecnologie open-source consentono 
+una facile personalizzazione e integrazione con altri sottosistemi, rendendo il 
+progetto un solido punto di partenza per ulteriori sviluppi o adattamenti.
+
+Il protocollo di comunicazione implementato, basato su segmentazione e 
+ricostruzione di \emph{payload}, estende le capacità di trasmissione offerte dai 
+moduli \ac{LoRa}, rendendolo adatto anche ad applicazioni che richiedono l’invio 
+affidabile di pacchetti di dati di medie dimensioni, pur operando in ambienti a 
+banda stretta e bassa latenza.
 
 \chapter{Conclusioni} \label{chap:conclusion}
 \section{Riepilogo dei risultati ottenuti}
-Il progetto di telemetria per il razzo Borealis ha raggiunto gli obiettivi operativi prefissati.
-Tutti i test condotti hanno confermato la robustezza e l'affidabilità del sistema,
-con una compertura adeguata, una gestione efficace della segmentazione dei dati
-e una buona stabilità della comunicazione anche in condizioni di disallineamento angolare
-delle antenne.
+
+Il progetto di telemetria sviluppato per il razzo \emph{Borealis} ha raggiunto 
+tutti gli obiettivi operativi prefissati.  
+I test sperimentali condotti hanno confermato la solidità del sistema in termini 
+di affidabilità, stabilità e resilienza operativa, evidenziando una copertura 
+adeguata, una gestione efficace della segmentazione dei dati e una comunicazione 
+stabile anche in condizioni avverse, quali disallineamento angolare tra le antenne 
+e presenza di interferenze co-canalari.
+
+Il sistema ha dimostrato di essere tecnicamente valido, adattabile e compatibile 
+con i vincoli imposti da contesti aerospaziali a basso budget, confermando la bontà 
+delle scelte progettuali sia hardware che software.
 
 \section{Riflessioni sull'impatto del progetto nell'ambito della ricerca e dello sviluppo di razzi sperimentali}
+In letteratura sono documentati pochi progetti di telemetria per razzi sperimentali 
+basati su tecnologia \ac{LoRa}, la maggior parte dei quali si trova ancora a 
+livello di \emph{proof-of-concept} \cite{Andrade2022}, oppure non risulta adeguata 
+alle esigenze operative reali. 
+Ad esempio, il sistema presentato in \cite{Misbahuddin2022}, pur completo dal punto 
+di vista funzionale, si è dimostrato sottodimensionato sul piano prestazionale, 
+con un raggio operativo limitato a meno di 500 metri, un valore non compatibile con 
+scenari di volo suborbitale o a lungo raggio.  
+
+Altri lavori più recenti, come \cite{Brzynska2023,inproceedings}, mostrano dati sperimentali 
+promettenti, ma non approfondiscono lo sviluppo di protocolli di comunicazione 
+né la gestione strutturata dei dati come affrontato nel presente progetto.
+
+A confronto con altri approcci documentati in letteratura, basati su tecnologie 
+differenti come WiFi \cite{muchiri2024implementation}, XBee \cite{10150/626955} con trasmettitori radio 
+ad alta potenza \cite{lombardozzo2017development,10150/666950}, il sistema 
+sviluppato per \emph{Borealis} offre un equilibrio ottimale tra portata, consumo 
+energetico e semplicità di implementazione. 
+
+L’uso efficiente dei moduli \ac{LoRa}, abbinato a un protocollo 
+personalizzato di segmentazione e ricostruzione, consente di ottenere distanze 
+operative di diversi chilometri con requisiti hardware minimi e consumi contenuti, 
+rendendo il sistema preferibile in molte applicazioni embedded in ambito aerospaziale 
+sperimentale.
+
+In questo contesto, il sistema sviluppato per il progetto \emph{Borealis} si 
+distingue per l’approccio metodico, la modularità dell’architettura e la scalabilità, 
+oltre che per l’implementazione di un protocollo di comunicazione flessibile, 
+progettato per estendere in modo efficiente le capacità dei moduli \ac{LoRa} 
+anche in condizioni operative critiche.
+Queste caratteristiche rendono il sistema adattabile e riutilizzabile in una 
+varietà di contesti, contribuendo in modo significativo all’avanzamento dello stato 
+dell’arte nei sistemi di telemetria embedded a basso consumo.
 
 \section{Prospettive di sviluppo futuro}
 \subsection{Miglioramenti al sistema di telemetria}
-\subsubsection{Utilizzo di antennte \emph{patch}}
+\subsubsection{Utilizzo di antenne \emph{patch}}
 L'utilizzo di un'antenna elicoidale omnidirezionale si \'e rivelato efficace, tuttavia,
 per migliorare la copertura e la direzionalit\'a, e per ridurre le dimensioni del sistema,
 si potrebbe considerare l'uso di antenne \emph{patch}, da applicare sulla fusoliera del razzo,
