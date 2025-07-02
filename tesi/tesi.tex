@@ -535,11 +535,9 @@ di strumenti avanzati d'inseguimento automatico.
 
 \begin{figure}[H]
     \centering
-    % Se metti solo una delle due dimensioni, l'altra scala in automatico
     \includegraphics[width=\textwidth]{img/omnidirezionale-rad-plot.png}
     \caption[Grafici di radiazione antenna omnidirezionale]%
     {Grafici di radiazione dell'antenna omnidirezionale. \tiny{Immagine adattata da \dsref{ds:omni}}}%
-    % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
     \label{fig:omni-rad-plot}
 \end{figure}
 
@@ -1163,7 +1161,7 @@ I risultati del test di \emph{throughput} indicano che il sistema di telemetria
 mantiene prestazioni adeguate anche in condizioni operative complesse, con buona
 robustezza alla variazione della distanza e alla presenza di ostacoli naturali.
 
-Come riportato nella Tabella~\ref{tab:T1-throughput_stats}, il throughput si è
+Come riportato nella Tabella \ref{tab:T1-throughput_stats-pdf}, il throughput si è
 mantenuto stabile (3.30 pkt/s e 646 B/s medi) per tutte le distanze testate, con
 una leggera riduzione nello scenario a 250~m in presenza di ostacoli (vegetazione
 e rilievi). In quel caso, la variabilità del throughput risulta più elevata
@@ -1171,32 +1169,53 @@ e rilievi). In quel caso, la variabilità del throughput risulta più elevata
 stabilità del collegamento. Al contrario, lo stesso scenario a 250~m con linea
 di vista libera ha mostrato prestazioni sovrapponibili a quelle rilevate a 50–100–500~m.
 
-\begin{table}[H]
-    \centering
-    \renewcommand{\arraystretch}{1.2}
-    \resizebox{0.9\textwidth}{!}{
-        \begin{tabular}{|c|cccc|cccc|cc|}
+\ifdefined HCode
+    \begin{table}[H]
+        \centering
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
             \hline
-            \textbf{Distanza} & \multicolumn{4}{c|}{\textbf{RSSI [\%]}} & \multicolumn{4}{c|}{\textbf{Throughput [Byte/s]}} & \multicolumn{2}{c|}{\textbf{Pkt/s}}                                                                 \\
-            \cline{2-11}
-                              & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
-                              & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
-                              & \textbf{Mean}                           & \textbf{Std}                                                                                                                                            \\
+            \textbf{Distanza} & \textbf{RSSI [\%] Mean} & \textbf{RSSI [\%] Std} & \textbf{RSSI [\%] Min} & \textbf{RSSI [\%] Max} & \textbf{Throughput [Byte/s] Mean} & \textbf{Throughput [Byte/s] Std} & \textbf{Throughput [Byte/s] Min} & \textbf{Throughput [Byte/s] Max} & \textbf{Pkt/s Mean} & \textbf{Pkt/s Std} \\
             \hline
-            10 m              & 86.25                                   & 0.54                                              & 84.31                               & 87.84        & 646.46 & 0.19  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
-            50 m              & 73.43                                   & 0.78                                              & 69.41                               & 75.29        & 646.44 & 0.16  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
-            100 m             & 70.18                                   & 0.86                                              & 69.02                               & 71.76        & 646.49 & 0.09  & 646.15 & 646.86 & 3.30 & 0.00 \\ \hline
-            150 m             & 65.79                                   & 1.73                                              & 60.78                               & 69.02        & 646.45 & 0.15  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
-            200 m             & 71.17                                   & 1.15                                              & 67.06                               & 72.94        & 646.45 & 0.07  & 645.80 & 646.86 & 3.30 & 0.00 \\ \hline
-            250 m (ostacoli)  & 64.90                                   & 1.37                                              & 60.39                               & 67.06        & 634.54 & 10.85 & 587.71 & 646.51 & 3.24 & 0.06 \\ \hline
-            250 m (libero)    & 65.21                                   & 1.33                                              & 59.61                               & 67.84        & 646.49 & 0.09  & 646.44 & 646.86 & 3.30 & 0.00 \\ \hline
-            500 m             & 73.64                                   & 0.67                                              & 71.76                               & 75.29        & 646.42 & 0.12  & 644.74 & 646.51 & 3.30 & 0.00 \\ \hline
+            10 m              & 86.25                   & 0.54                   & 84.31                  & 87.84                  & 646.46                            & 0.19                             & 644.74                           & 646.86                           & 3.30                & 0.00               \\ \hline
+            50 m              & 73.43                   & 0.78                   & 69.41                  & 75.29                  & 646.44                            & 0.16                             & 644.74                           & 646.86                           & 3.30                & 0.00               \\ \hline
+            100 m             & 70.18                   & 0.86                   & 69.02                  & 71.76                  & 646.49                            & 0.09                             & 646.15                           & 646.86                           & 3.30                & 0.00               \\ \hline
+            150 m             & 65.79                   & 1.73                   & 60.78                  & 69.02                  & 646.45                            & 0.15                             & 644.74                           & 646.86                           & 3.30                & 0.00               \\ \hline
+            200 m             & 71.17                   & 1.15                   & 67.06                  & 72.94                  & 646.45                            & 0.07                             & 645.80                           & 646.86                           & 3.30                & 0.00               \\ \hline
+            250 m (ostacoli)  & 64.90                   & 1.37                   & 60.39                  & 67.06                  & 634.54                            & 10.85                            & 587.71                           & 646.51                           & 3.24                & 0.06               \\ \hline
+            250 m (libero)    & 65.21                   & 1.33                   & 59.61                  & 67.84                  & 646.49                            & 0.09                             & 646.44                           & 646.86                           & 3.30                & 0.00               \\ \hline
+            500 m             & 73.64                   & 0.67                   & 71.76                  & 75.29                  & 646.42                            & 0.12                             & 644.74                           & 646.51                           & 3.30                & 0.00               \\ \hline
         \end{tabular}
-    }
-    \caption{Statistiche sperimentali del throughput in funzione della distanza}
-    \label{tab:T1-throughput_stats}
-\end{table}
-
+        \caption{Statistiche sperimentali del throughput in funzione della distanza}
+        \label{tab:T1-throughput_stats-html}
+    \end{table}
+\else
+    \begin{table}[H]
+        \centering
+        \renewcommand{\arraystretch}{1.2}
+        \resizebox{0.9\textwidth}{!}{
+            \begin{tabular}{|c|cccc|cccc|cc|}
+                \hline
+                \textbf{Distanza} & \multicolumn{4}{c|}{\textbf{RSSI [\%]}} & \multicolumn{4}{c|}{\textbf{Throughput [Byte/s]}} & \multicolumn{2}{c|}{\textbf{Pkt/s}}                                                                 \\
+                \cline{2-11}
+                                  & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
+                                  & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
+                                  & \textbf{Mean}                           & \textbf{Std}                                                                                                                                            \\
+                \hline
+                10 m              & 86.25                                   & 0.54                                              & 84.31                               & 87.84        & 646.46 & 0.19  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
+                50 m              & 73.43                                   & 0.78                                              & 69.41                               & 75.29        & 646.44 & 0.16  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
+                100 m             & 70.18                                   & 0.86                                              & 69.02                               & 71.76        & 646.49 & 0.09  & 646.15 & 646.86 & 3.30 & 0.00 \\ \hline
+                150 m             & 65.79                                   & 1.73                                              & 60.78                               & 69.02        & 646.45 & 0.15  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
+                200 m             & 71.17                                   & 1.15                                              & 67.06                               & 72.94        & 646.45 & 0.07  & 645.80 & 646.86 & 3.30 & 0.00 \\ \hline
+                250 m (ostacoli)  & 64.90                                   & 1.37                                              & 60.39                               & 67.06        & 634.54 & 10.85 & 587.71 & 646.51 & 3.24 & 0.06 \\ \hline
+                250 m (libero)    & 65.21                                   & 1.33                                              & 59.61                               & 67.84        & 646.49 & 0.09  & 646.44 & 646.86 & 3.30 & 0.00 \\ \hline
+                500 m             & 73.64                                   & 0.67                                              & 71.76                               & 75.29        & 646.42 & 0.12  & 644.74 & 646.51 & 3.30 & 0.00 \\ \hline
+            \end{tabular}
+        }
+        \caption{Statistiche sperimentali del throughput in funzione della distanza}
+        \label{tab:T1-throughput_stats-pdf}
+    \end{table}
+\fi
 La qualità del segnale, rappresentata dal valore di \ac{RSSI}, è risultata elevata
 in tutti i test, con valori medi sempre superiori al 65\%, ad eccezione della
 configurazione 250~m con ostacoli. La Figura~\ref{fig:throughput-rssi-dist-regression}
