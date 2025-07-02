@@ -158,17 +158,6 @@
 % \end{tikzpicture}
 % \newpage
 
-\ifdefined\HCode
-\else
-    \topmargin=5.5cm
-    \begin{flushright}
-        \emph{
-            \LARGE{La dedica}\\\vspace{3mm}
-            \LARGE{anche quella se vuoi}\\\vspace{3mm}
-            \LARGE{su più righe}
-        }
-    \end{flushright}
-\fi
 \newpage~\newpage
 \pagenumbering{gobble}
 \chapter*{Abstract}
@@ -1181,16 +1170,15 @@ di vista libera ha mostrato prestazioni sovrapponibili a quelle rilevate a 50–
         \renewcommand{\arraystretch}{1.2}
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
             \hline
-            \textbf{Distanza} & \textbf{RSSI [\%] Mean} & \textbf{RSSI [\%] Std} & \textbf{RSSI [\%] Min} & \textbf{RSSI [\%] Max} & \textbf{Throughput [Byte/s] Mean} & \textbf{Throughput [Byte/s] Std} & \textbf{Throughput [Byte/s] Min} & \textbf{Throughput [Byte/s] Max} & \textbf{Pkt/s Mean} & \textbf{Pkt/s Std} \\
-            \hline
-            10 m              & 86.25                   & 0.54                   & 84.31                  & 87.84                  & 646.46                            & 0.19                             & 644.74                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            50 m              & 73.43                   & 0.78                   & 69.41                  & 75.29                  & 646.44                            & 0.16                             & 644.74                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            100 m             & 70.18                   & 0.86                   & 69.02                  & 71.76                  & 646.49                            & 0.09                             & 646.15                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            150 m             & 65.79                   & 1.73                   & 60.78                  & 69.02                  & 646.45                            & 0.15                             & 644.74                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            200 m             & 71.17                   & 1.15                   & 67.06                  & 72.94                  & 646.45                            & 0.07                             & 645.80                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            250 m (ostacoli)  & 64.90                   & 1.37                   & 60.39                  & 67.06                  & 634.54                            & 10.85                            & 587.71                           & 646.51                           & 3.24                & 0.06               \\ \hline
-            250 m (libero)    & 65.21                   & 1.33                   & 59.61                  & 67.84                  & 646.49                            & 0.09                             & 646.44                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            500 m             & 73.64                   & 0.67                   & 71.76                  & 75.29                  & 646.42                            & 0.12                             & 644.74                           & 646.51                           & 3.30                & 0.00               \\ \hline
+            \textbf{Distanza} & \textbf{RSSI [\%] Media} & \textbf{RSSI [\%] $\sigma$} & \textbf{RSSI [\%] Min} & \textbf{RSSI [\%] Max} & \textbf{Throughput [Byte/s] Media} & \textbf{Throughput [Byte/s] $\sigma$} & \textbf{Throughput [Byte/s] Min} & \textbf{Throughput [Byte/s] Max} & \textbf{Pkt/s Media} & \textbf{Pkt/s $\sigma$} \\        \hline
+            10 m              & 86.25                    & 0.54                        & 84.31                  & 87.84                  & 646.46                             & 0.19                                  & 644.74                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            50 m              & 73.43                    & 0.78                        & 69.41                  & 75.29                  & 646.44                             & 0.16                                  & 644.74                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            100 m             & 70.18                    & 0.86                        & 69.02                  & 71.76                  & 646.49                             & 0.09                                  & 646.15                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            150 m             & 65.79                    & 1.73                        & 60.78                  & 69.02                  & 646.45                             & 0.15                                  & 644.74                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            200 m             & 71.17                    & 1.15                        & 67.06                  & 72.94                  & 646.45                             & 0.07                                  & 645.80                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            250 m (ostacoli)  & 64.90                    & 1.37                        & 60.39                  & 67.06                  & 634.54                             & 10.85                                 & 587.71                           & 646.51                           & 3.24                 & 0.06                    \\ \hline
+            250 m (libero)    & 65.21                    & 1.33                        & 59.61                  & 67.84                  & 646.49                             & 0.09                                  & 646.44                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            500 m             & 73.64                    & 0.67                        & 71.76                  & 75.29                  & 646.42                             & 0.12                                  & 644.74                           & 646.51                           & 3.30                 & 0.00                    \\ \hline
         \end{tabular}
         \caption{Statistiche sperimentali del throughput in funzione della distanza}
         \label{tab:T1-throughput_stats-html}
@@ -1204,9 +1192,9 @@ di vista libera ha mostrato prestazioni sovrapponibili a quelle rilevate a 50–
                 \hline
                 \textbf{Distanza} & \multicolumn{4}{c|}{\textbf{RSSI [\%]}} & \multicolumn{4}{c|}{\textbf{Throughput [Byte/s]}} & \multicolumn{2}{c|}{\textbf{Pkt/s}}                                                                 \\
                 \cline{2-11}
-                                  & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
-                                  & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
-                                  & \textbf{Mean}                           & \textbf{Std}                                                                                                                                            \\
+                                  & \textbf{Media}                          & \textbf{$\sigma$}                                 & \textbf{Min}                        & \textbf{Max}
+                                  & \textbf{Media}                          & \textbf{$\sigma$}                                 & \textbf{Min}                        & \textbf{Max}
+                                  & \textbf{Media}                          & \textbf{$\sigma$}                                                                                                                                       \\
                 \hline
                 10 m              & 86.25                                   & 0.54                                              & 84.31                               & 87.84        & 646.46 & 0.19  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
                 50 m              & 73.43                                   & 0.78                                              & 69.41                               & 75.29        & 646.44 & 0.16  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
@@ -1903,8 +1891,4 @@ che permetterebbe di visualizzare i dati raccolti in tempo reale tramite un'inte
 \chapter*{Riferimenti bibliografici}
 \bibliography{refs}
 \newpage
-
-\newpage~\newpage
-\chapter*{Ringraziamenti}
-Grazie a tutti!
 \end{document}
