@@ -171,22 +171,25 @@
 \newpage~\newpage
 \pagenumbering{gobble}
 \chapter*{Abstract}
-I razzi sperimentali rappresentano strumenti chiave per la ricerca aerospaziale,
-meteorologica e per la validazione di nuove tecnologie in ambienti estremi.
-In questo contesto, la disponibilità di sistemi di telemetria affidabili, a bassa
-latenza e basso costo risulta fondamentale per il monitoraggio in tempo reale e
-l’analisi post-missione.
-Questa tesi presenta lo sviluppo di un sistema di telemetria embedded per il
-tracciamento dei dati di volo di un razzo sonda sperimentale. Il sistema si basa
-su un microcontrollore ESP32-S3 e utilizza la modulazione LoRa\textsuperscript{\textcopyright}
-per la trasmissione dei dati verso una ground station, garantendo comunicazioni
-stabili anche su lunghe distanze.
-Per assicurare la robustezza e l’efficienza della trasmissione in assenza di
-meccanismi di ritrasmissione, è stato progettato un protocollo di comunicazione
-personalizzato, con segmentazione del payload, header identificativi, codice CRC
-e gestione dei timeout per la ricostruzione dati.
-I test in campo aperto hanno evidenziato una portata effettiva superiore ai 2 km. \sidenote{Inserire dati sul throughput effettivo}
-Tali prestazioni risultano compatibili con i requisiti di missioni suborbitali a bassa quota.
+I razzi sperimentali sono essenziali per la ricerca aerospaziale e meteorologica, 
+nonché per la validazione di nuove tecnologie in ambienti estremi. 
+Per garantire il monitoraggio in tempo reale e l'analisi post-missione in tale 
+contesto, la disponibilità di sistemi di telemetria affidabili, a bassa latenza 
+e basso costo è di fondamentale importanza.
+
+Questa tesi descrive lo sviluppo di un innovativo sistema di telemetria embedded, 
+basato su un microcontrollore ESP32-S3 e sulla modulazione LoRa\textsuperscript{\textcopyright}, 
+per il tracciamento dei dati di volo di un razzo sonda sperimentale. Tale sistema 
+garantisce comunicazioni stabili anche su lunghe distanze verso una ground station. 
+Per ovviare all'assenza di meccanismi di ritrasmissione e assicurare robustezza 
+ed efficienza della trasmissione, è stato progettato un protocollo di comunicazione 
+personalizzato, che include segmentazione del payload, header identificativi, 
+codice CRC e gestione dei timeout per la ricostruzione dei dati.
+
+I test in campo aperto hanno convalidato l'efficacia del sistema, evidenziando una 
+portata effettiva superiore ai 2 km e un throughput medio di 640 b/s. Queste 
+prestazioni, in linea con i requisiti di missioni suborbitali a bassa quota, 
+dimostrano la validità della soluzione proposta per applicazioni reali.
 
 \topmargin=-1cm
 \tableofcontents
@@ -520,12 +523,10 @@ di strumenti avanzati d'inseguimento automatico.
             Tipo                & Omnidirezionale elicoidale       & Direzionale Yagi        \\ \hline
             Frequenza di lavoro & 433 MHz - 5.9 GHz                & 850 MHz - 930 MHz       \\ \hline
             Guadagno            & 3 dBi                            & 10.55 dBi               \\ \hline
-            %Direzionalità       & Bassa                            & Alta                    \\ \hline
             Angolo di copertura & 360\textdegree                   & 60\textdegree           \\ \hline
             Impedenza           & 50 \textohm                      & 50 \textohm             \\ \hline
             Polarizzazione      & Verticale                        & Verticale               \\ \hline
             Tipo di connettore  & SMA maschio                      & FME maschio             \\ \hline
-            % Peso                & 28 g                             & 210 g                   \\ \hline
         \end{tabular}
     }
     \caption{Specifiche tecniche dell'antenna omnidirezionale e dell'antenna Yagi.}
@@ -665,8 +666,8 @@ Considerando la dimensione del \emph{header} logico, il \emph{payload} massimo t
 è di 189 byte usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte per pacchetto.
 
 \section{Implementazione software e algoritmi di gestione della trasmissione}
-Il software è stato implementato in C++17. Nei seguenti paragrafi verrà illustrata 
-l'architettura dei principali moduli software: il computer di volo, 
+Il software è stato implementato in C++17. Nei seguenti paragrafi verrà illustrata
+l'architettura dei principali moduli software: il computer di volo,
 il modulo trasmettitore e il modulo ricevitore.
 
 \subsection{Architettura software}
@@ -843,6 +844,9 @@ di rumore e interferenze.
                 10m               & 873.125 MHz                        & +17 dBm                      & Dimensione del payload          \\ \hline
                 50m               &                                    &                              &                                 \\ \hline
                 100m              &                                    &                              &                                 \\ \hline
+                150m              &                                    &                              &                                 \\ \hline
+                200m              &                                    &                              &                                 \\ \hline
+                250m              &                                    &                              &                                 \\ \hline
                 500m              &                                    &                              &                                 \\ \hline
             \end{tabular}
         }
@@ -856,9 +860,12 @@ di rumore e interferenze.
             \begin{tabular}{|c|c|c|c|}
                 \hline
                 \textbf{Distanza} & \textbf{Frequenza di trasmissione} & \textbf{Potenza trasmissiva} & \textbf{Variabili di controllo}         \\ \hline
-                10m               & \multirow{4}{*}{873.125 MHz}       & \multirow{4}{*}{+17 dBm}     & \multirow{4}{*}{Dimensione del payload} \\ \cline{1-1}
+                10m               & \multirow{7}{*}{873.125 MHz}       & \multirow{7}{*}{+17 dBm}     & \multirow{7}{*}{Dimensione del payload} \\ \cline{1-1}
                 50m               &                                    &                              &                                         \\ \cline{1-1}
                 100m              &                                    &                              &                                         \\ \cline{1-1}
+                150m              &                                    &                              &                                         \\ \cline{1-1}
+                200m              &                                    &                              &                                         \\ \cline{1-1}
+                250m              &                                    &                              &                                         \\ \cline{1-1}
                 500m              &                                    &                              &                                         \\ \hline
             \end{tabular}
         }
@@ -866,6 +873,55 @@ di rumore e interferenze.
         \label{tab:T1-conditions-pdf}
     \end{table}
 \fi
+
+\subsubsection{Test del \emph{throughput}}
+
+Il test ha avuto l’obiettivo di misurare il \emph{throughput} effettivo del
+sistema di telemetria, valutando la quantità di dati ricevuti correttamente al
+variare della distanza tra le antenne, in condizioni ambientali reali.
+
+Per ciascuna prova è stato trasmesso un \emph{payload} di dimensione fissa,
+suddiviso in 5 \emph{chunk}, secondo il criterio di frammentazione descritto nel
+Capitolo~\ref{chap:telemetry}.
+
+\paragraph{Dettagli operativi del setup sperimentale}
+
+Il test è stato eseguito in configurazione punto-punto, con l'antenna ricevente
+mantenuta in posizione fissa (indicata come posizione 0), mentre l'antenna trasmittente
+è stata progressivamente allontanata lungo una direttrice lineare, posizionandola
+alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf}.
+
+Per la distanza di 250~m sono state effettuate due misurazioni distinte:
+\begin{itemize}
+    \item \textbf{Scenario con ostacoli:} la trasmittente era posizionata dietro
+          un leggero rilievo e fitta vegetazione, in assenza di linea di vista diretta (non-LoS);
+
+    \item \textbf{Scenario parzialmente libero:} la trasmittente è stata spostata
+          lateralmente di alcuni metri, ottenendo una visibilità migliorata, con la presenza
+          di pochi alberi isolati lungo la traiettoria.
+\end{itemize}
+
+Il test alla distanza di 200~m è stato effettuato sulla cima di un piccolo rilievo naturale.
+
+Il test alla distanza di 500~m è stato invece eseguito in una seconda location,
+scelta per garantire una condizione di \emph{line of sight} (LoS) più favorevole:
+la trasmissione è avvenuta tra due ponti stradali separati da un fiume, con l’antenna
+ricevente posizionata su un ponte e la trasmittente sull'altro. Nonostante la presenza
+di vegetazione lungo gli argini, la visibilità tra le antenne è rimasta sostanzialmente diretta.
+
+Queste configurazioni hanno permesso di analizzare l'impatto reale degli ostacoli naturali
+sulla qualità del collegamento radio e sul throughput risultante, mantenendo il
+più possibile costanti le condizioni operative (altezza delle antenne, orientamento,
+parametri di trasmissione).
+
+Per ogni distanza, sono state misurate le seguenti metriche:
+\begin{itemize}
+    \item \ac{RSSI} medio rilevato;
+    \item Numero di pacchetti ricevuti;
+    \item Pacchetti al secondo (\emph{pkt/s});
+    \item Byte al secondo (\emph{bps}) ricevuti correttamente.
+\end{itemize}
+
 \newpage
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
 \begin{table}[H]
@@ -886,7 +942,7 @@ Per valutare le prestazioni del protocollo di trasmissione nella gestione di pac
 del \emph{payload} originale a partire dai \emph{chunk} ricevuti.
 
 Il test è stato eseguito considerando \emph{payload} di dimensioni crescenti, suddivisi in 2, 3, 4 e 5
-\emph{chunk}, secondo il criterio di frammentazione descritto nel capitolo~\ref{chap:telemetry}.
+\emph{chunk}.
 L’obiettivo era analizzare l’evoluzione del tempo medio di ricostruzione al variare del numero di
 \emph{chunk}, al fine di valutare l’efficienza e la scalabilità del protocollo nella fase di riassemblaggio.
 
@@ -899,7 +955,6 @@ Il tempo di ricostruzione di un pacchetto è calcolato come:
     \delta_{r} = (t_{UltimoChunk} - t_{PrimoChunk})
     \label{formula:reconstruction-time}
 \end{equation}
-
 
 \subsubsection{Test del meccanismo di \emph{drop}}
 \begin{table}[H]
@@ -1069,15 +1124,101 @@ copertura anche in scenari \emph{outdoor} complessi.
     \caption{Intensità del segnale in funzione della distanza e dell'angolo di disallineamento delle antenne.}
     \label{fig:telemetry-misalignement}
 \end{figure}
-
+\newpage
+\subsection{Risultati dei test sul protocollo di comunicazione}
 \subsubsection{Test del \emph{throughput}}
+I risultati del test di \emph{throughput} indicano che il sistema di telemetria
+mantiene prestazioni adeguate anche in condizioni operative complesse, con buona
+robustezza alla variazione della distanza e alla presenza di ostacoli naturali.
+
+Come riportato nella Tabella~\ref{tab:T1-throughput_stats}, il throughput si è
+mantenuto stabile (3.30 pkt/s e 646 B/s medi) per tutte le distanze testate, con
+una leggera riduzione nello scenario a 250~m in presenza di ostacoli (vegetazione
+e rilievi). In quel caso, la variabilità del throughput risulta più elevata
+(deviazione standard: 10.85 B/s), confermando l'impatto degli ostacoli sulla
+stabilità del collegamento. Al contrario, lo stesso scenario a 250~m con linea
+di vista libera ha mostrato prestazioni sovrapponibili a quelle rilevate a 50–100–500~m.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \resizebox{0.9\textwidth}{!}{
+        \begin{tabular}{|c|cccc|cccc|cc|}
+            \hline
+            \textbf{Distanza} & \multicolumn{4}{c|}{\textbf{RSSI [\%]}} & \multicolumn{4}{c|}{\textbf{Throughput [Byte/s]}} & \multicolumn{2}{c|}{\textbf{Pkt/s}}                                                                 \\
+            \cline{2-11}
+                              & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
+                              & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
+                              & \textbf{Mean}                           & \textbf{Std}                                                                                                                                            \\
+            \hline
+            10 m              & 86.25                                   & 0.54                                              & 84.31                               & 87.84        & 646.46 & 0.19  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
+            50 m              & 73.43                                   & 0.78                                              & 69.41                               & 75.29        & 646.44 & 0.16  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
+            100 m             & 70.18                                   & 0.86                                              & 69.02                               & 71.76        & 646.49 & 0.09  & 646.15 & 646.86 & 3.30 & 0.00 \\ \hline
+            150 m             & 65.79                                   & 1.73                                              & 60.78                               & 69.02        & 646.45 & 0.15  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
+            200 m             & 71.17                                   & 1.15                                              & 67.06                               & 72.94        & 646.45 & 0.07  & 645.80 & 646.86 & 3.30 & 0.00 \\ \hline
+            250 m (ostacoli)  & 64.90                                   & 1.37                                              & 60.39                               & 67.06        & 634.54 & 10.85 & 587.71 & 646.51 & 3.24 & 0.06 \\ \hline
+            250 m (libero)    & 65.21                                   & 1.33                                              & 59.61                               & 67.84        & 646.49 & 0.09  & 646.44 & 646.86 & 3.30 & 0.00 \\ \hline
+            500 m             & 73.64                                   & 0.67                                              & 71.76                               & 75.29        & 646.42 & 0.12  & 644.74 & 646.51 & 3.30 & 0.00 \\ \hline
+        \end{tabular}
+    }
+    \caption{Statistiche sperimentali del throughput in funzione della distanza}
+    \label{tab:T1-throughput_stats}
+\end{table}
+
+La qualità del segnale, rappresentata dal valore di \ac{RSSI}, è risultata elevata
+in tutti i test, con valori medi sempre superiori al 65\%, ad eccezione della
+configurazione 250~m con ostacoli. La Figura~\ref{fig:throughput-rssi-dist-regression}
+mostra l’andamento dell’RSSI medio in funzione della distanza, con una regressione
+logaritmica che evidenzia un lieve decadimento complessivo all’aumentare della distanza.
+Il boxplot in Figura~\ref{fig:throughput-rssi-dist-box} evidenzia inoltre un’anomala
+crescita del valore medio dell’RSSI a 200~m, attribuibile alla posizione sopraelevata
+della trasmittente in quel punto, causata dalla conformazione naturale del terreno.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/tests/T1/T1-rssi_dist_regression.png}
+    \caption{Andamento dell'RSSI in funzione della distanza (regressione logaritmica).}
+    \label{fig:throughput-rssi-dist-regression}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/tests/T1/T1-rssi_dist_box.png}
+    \caption{Distribuzione (boxplot) dell'RSSI per ciascuna distanza testata.}
+    \label{fig:throughput-rssi-dist-box}
+\end{figure}
+\newpage
+L’impatto degli ostacoli naturali è ancora più evidente osservando il comportamento
+del throughput. La Figura~\ref{fig:rssi-throughput-scat} mostra la dispersione dei
+valori di throughput in funzione della distanza: nello scenario con ostacoli a 250~m
+si osserva una maggiore variabilità e una riduzione rispetto alla configurazione
+equivalente con linea di vista. La Figura~\ref{fig:RSSI-throughput-dist} mette a
+confronto l’RSSI e il throughput medi per ciascuna distanza, evidenziando la coerenza
+tra decadimento del segnale e leggera riduzione delle prestazioni.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/tests/T1/T1-rssi_throughput_scat.png}
+    \caption{Throughput in funzione della distanza (distribuzione puntuale).}
+    \label{fig:rssi-throughput-scat}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/tests/T1/T1-rssi_throughput_col.png}
+    \caption{RSSI e throughput medi in funzione della distanza.}
+    \label{fig:RSSI-throughput-dist}
+\end{figure}
+
+In conclusione, anche nello scenario con ostacoli a 250~m, il degrado delle prestazioni
+è risultato contenuto e non critico: il throughput medio si è mantenuto sopra i
+3.2 pkt/s, dimostrando una buona resilienza del sistema alla degradazione del canale radio.
 
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
-I risultati dei test condotti sulla segmentazione e successiva ricostruzione dei dati
-sono riportati in appendice~\ref{test:segmentation}. I risultati confermano che il
-sistema gestisce correttamente il riassemblaggio dei \emph{payload} segmentati, con
-un tempo medio di ricostruzione che cresce in maniera approssimativamente lineare con
-il numero di \emph{chunk}, come mostrato in figura~\ref{fig:segmentation-reconstruction-avg-time}.
+I risultati dei test confermano che il sistema gestisce correttamente il riassemblaggio
+dei \emph{payload} segmentati, con un tempo medio di ricostruzione che cresce in
+maniera approssimativamente lineare con il numero di \emph{chunk}, come mostrato
+in figura~\ref{fig:segmentation-reconstruction-avg-time}.
 
 Come evidenziato in figura~\ref{fig:segmentation-reconstruction-sd}, la deviazione standard
 dei tempi di ricostruzione si mantiene relativamente stabile al variare del numero di \emph{chunk},
@@ -1086,7 +1227,7 @@ indicando una buona prevedibilità temporale del processo di riassemblaggio.
 Le distribuzioni dei tempi di ricostruzione (figure~\ref{fig:segmentation-test-2chunks}–\ref{fig:segmentation-test-5chunks})
 mostrano che i tempi di ricostruzione sono concentrati attorno a valori medi, con una
 leggera variabilità, ma senza picchi significativi.
-\newpage
+
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.47\textwidth}
@@ -1242,13 +1383,13 @@ con lo scambio dell'ordine di arrivo di due \emph{chunk} ogni 3 pacchetti.
 \end{table}
 \newpage
 \subsubsection{Test di robustezza e affidabilità}
-Il primo test di robustezza ha permesso di verificare che il sistema è in grado 
-di mantenere una comunicazione stabile e affidabile anche per periodi prolungati, 
+Il primo test di robustezza ha permesso di verificare che il sistema è in grado
+di mantenere una comunicazione stabile e affidabile anche per periodi prolungati,
 senza cali di prestazioni né perdite di pacchetti.
 
-I risultati mostrano che il sistema ha mantenuto un livello di prestazioni costante 
-per tutta la durata dell'esperimento, evidenziato dalla crescita lineare del 
-numero di pacchetti ricevuti e dalla stabilità del tempo di ricostruzione del 
+I risultati mostrano che il sistema ha mantenuto un livello di prestazioni costante
+per tutta la durata dell'esperimento, evidenziato dalla crescita lineare del
+numero di pacchetti ricevuti e dalla stabilità del tempo di ricostruzione del
 \emph{payload} originale, come illustrato nella figura~\ref{fig:telemetry-robustness-test}.
 
 \begin{figure}[H]
@@ -1259,9 +1400,9 @@ numero di pacchetti ricevuti e dalla stabilità del tempo di ricostruzione del
 \end{figure}
 \newpage
 
-Anche nel secondo test, nonostante la presenza di una seconda antenna trasmittente 
-attiva sulla stessa frequenza, il sistema ha mantenuto una buona stabilità della 
-comunicazione, con un numero di pacchetti ricevuti in linea con le attese e senza 
+Anche nel secondo test, nonostante la presenza di una seconda antenna trasmittente
+attiva sulla stessa frequenza, il sistema ha mantenuto una buona stabilità della
+comunicazione, con un numero di pacchetti ricevuti in linea con le attese e senza
 cali significativi di prestazioni, come mostrato nella figura~\ref{fig:telemetry-robustness-test-2}.
 
 \begin{figure}[H]
@@ -1270,11 +1411,10 @@ cali significativi di prestazioni, come mostrato nella figura~\ref{fig:telemetry
     \caption{Stabilità della comunicazione in presenza di interferenza diretta.}
     \label{fig:telemetry-robustness-test-2}
 \end{figure}
-\newpage
 
-Confrontando i risultati dei due test, si osserva che l'introduzione della seconda 
-antenna non ha avuto un impatto significativo sulla stabilità della comunicazione 
-né sulle prestazioni del sistema. Come illustrato nella figura~\ref{fig:telemetry-robustness-test-comparison}, 
+Confrontando i risultati dei due test, si osserva che l'introduzione della seconda
+antenna non ha avuto un impatto significativo sulla stabilità della comunicazione
+né sulle prestazioni del sistema. Come illustrato nella figura~\ref{fig:telemetry-robustness-test-comparison},
 i dati raccolti nei due scenari risultano sovrapponibili.
 
 \begin{figure}[H]
@@ -1284,11 +1424,11 @@ i dati raccolti nei due scenari risultano sovrapponibili.
     \label{fig:telemetry-robustness-test-comparison}
 \end{figure}
 
-L'analisi numerica conferma che le differenze tra i due test sono trascurabili, 
-sebbene rilevabili. Come riportato nella tabella~\ref{tab:robustness-test-comparison}, 
-la deviazione standard e la varianza dei tempi di ricostruzione sono leggermente 
-superiori nel test con interferenze, indicando una maggiore variabilità della 
-latenza di ricostruzione del \emph{payload}, imputabile alla presenza di 
+L'analisi numerica conferma che le differenze tra i due test sono trascurabili,
+sebbene rilevabili. Come riportato nella tabella~\ref{tab:robustness-test-comparison},
+la deviazione standard e la varianza dei tempi di ricostruzione sono leggermente
+superiori nel test con interferenze, indicando una maggiore variabilità della
+latenza di ricostruzione del \emph{payload}, imputabile alla presenza di
 trasmissioni concorrenti.
 \begin{table}[H]
     \centering
@@ -1311,85 +1451,85 @@ trasmissioni concorrenti.
 \newpage
 
 \section{Limiti e possibili miglioramenti futuri}
-Il sistema di telemetria sviluppato ha dimostrato buone prestazioni e un'elevata 
-affidabilità, ma presenta alcuni limiti che potrebbero essere oggetto di 
+Il sistema di telemetria sviluppato ha dimostrato buone prestazioni e un'elevata
+affidabilità, ma presenta alcuni limiti che potrebbero essere oggetto di
 miglioramento in sviluppi futuri.
 
-Tra le criticità principali si segnala la necessità di ottimizzare la gestione 
-della latenza nella ricostruzione dei \emph{payload} segmentati, nonché il basso 
-\emph{throughput} dei moduli \ac{LoRa} impiegati, che limita la quantità di dati 
-trasmissibili nell’unità di tempo. Tali vincoli derivano dalle caratteristiche 
+Tra le criticità principali si segnala la necessità di ottimizzare la gestione
+della latenza nella ricostruzione dei \emph{payload} segmentati, nonché il basso
+\emph{throughput} dei moduli \ac{LoRa} impiegati, che limita la quantità di dati
+trasmissibili nell’unità di tempo. Tali vincoli derivano dalle caratteristiche
 intrinseche del protocollo LoRa e dall’architettura a pacchetti frammentati adottata.
 
-Un ulteriore limite significativo riguarda la difficoltà di testare il sistema 
-in condizioni operative reali: il lancio di razzi sperimentali comporta infatti 
+Un ulteriore limite significativo riguarda la difficoltà di testare il sistema
+in condizioni operative reali: il lancio di razzi sperimentali comporta infatti
 complesse problematiche di natura legale, logistica, organizzativa ed economica,
- che rendono difficile la pianificazione e l’esecuzione di prove realistiche in volo.
+che rendono difficile la pianificazione e l’esecuzione di prove realistiche in volo.
 
 \section{Implicazioni del sistema sviluppato per progetti simili}
-Il sistema di telemetria sviluppato per il progetto \emph{Borealis} rappresenta 
-una soluzione economica, affidabile e facilmente replicabile, potenzialmente 
-applicabile a un'ampia varietà di scenari nel campo della ricerca e dello sviluppo 
+Il sistema di telemetria sviluppato per il progetto \emph{Borealis} rappresenta
+una soluzione economica, affidabile e facilmente replicabile, potenzialmente
+applicabile a un'ampia varietà di scenari nel campo della ricerca e dello sviluppo
 di razzi sperimentali, ma non solo.
 
-La modularità dell'architettura e l’impiego di tecnologie open-source consentono 
-una facile personalizzazione e integrazione con altri sottosistemi, rendendo il 
+La modularità dell'architettura e l’impiego di tecnologie open-source consentono
+una facile personalizzazione e integrazione con altri sottosistemi, rendendo il
 progetto un solido punto di partenza per ulteriori sviluppi o adattamenti.
 
-Il protocollo di comunicazione implementato, basato su segmentazione e 
-ricostruzione di \emph{payload}, estende le capacità di trasmissione offerte dai 
-moduli \ac{LoRa}, rendendolo adatto anche ad applicazioni che richiedono l’invio 
-affidabile di pacchetti di dati di medie dimensioni, pur operando in ambienti a 
+Il protocollo di comunicazione implementato, basato su segmentazione e
+ricostruzione di \emph{payload}, estende le capacità di trasmissione offerte dai
+moduli \ac{LoRa}, rendendolo adatto anche ad applicazioni che richiedono l’invio
+affidabile di pacchetti di dati di medie dimensioni, pur operando in ambienti a
 banda stretta e bassa latenza.
 
 \chapter{Conclusioni} \label{chap:conclusion}
 \section{Riepilogo dei risultati ottenuti}
 
-Il progetto di telemetria sviluppato per il razzo \emph{Borealis} ha raggiunto 
-tutti gli obiettivi operativi prefissati.  
-I test sperimentali condotti hanno confermato la solidità del sistema in termini 
-di affidabilità, stabilità e resilienza operativa, evidenziando una copertura 
-adeguata, una gestione efficace della segmentazione dei dati e una comunicazione 
-stabile anche in condizioni avverse, quali disallineamento angolare tra le antenne 
+Il progetto di telemetria sviluppato per il razzo \emph{Borealis} ha raggiunto
+tutti gli obiettivi operativi prefissati.
+I test sperimentali condotti hanno confermato la solidità del sistema in termini
+di affidabilità, stabilità e resilienza operativa, evidenziando una copertura
+adeguata, una gestione efficace della segmentazione dei dati e una comunicazione
+stabile anche in condizioni avverse, quali disallineamento angolare tra le antenne
 e presenza di interferenze co-canalari.
 
-Il sistema ha dimostrato di essere tecnicamente valido, adattabile e compatibile 
-con i vincoli imposti da contesti aerospaziali a basso budget, confermando la bontà 
+Il sistema ha dimostrato di essere tecnicamente valido, adattabile e compatibile
+con i vincoli imposti da contesti aerospaziali a basso budget, confermando la bontà
 delle scelte progettuali sia hardware che software.
 
 \section{Riflessioni sull'impatto del progetto nell'ambito della ricerca e dello sviluppo di razzi sperimentali}
-In letteratura sono documentati pochi progetti di telemetria per razzi sperimentali 
-basati su tecnologia \ac{LoRa}, la maggior parte dei quali si trova ancora a 
-livello di \emph{proof-of-concept} \cite{Andrade2022}, oppure non risulta adeguata 
-alle esigenze operative reali. 
-Ad esempio, il sistema presentato in \cite{Misbahuddin2022}, pur completo dal punto 
-di vista funzionale, si è dimostrato sottodimensionato sul piano prestazionale, 
-con un raggio operativo limitato a meno di 500 metri, un valore non compatibile con 
-scenari di volo suborbitale o a lungo raggio.  
+In letteratura sono documentati pochi progetti di telemetria per razzi sperimentali
+basati su tecnologia \ac{LoRa}, la maggior parte dei quali si trova ancora a
+livello di \emph{proof-of-concept} \cite{Andrade2022}, oppure non risulta adeguata
+alle esigenze operative reali.
+Ad esempio, il sistema presentato in \cite{Misbahuddin2022}, pur completo dal punto
+di vista funzionale, si è dimostrato sottodimensionato sul piano prestazionale,
+con un raggio operativo limitato a meno di 500 metri, un valore non compatibile con
+scenari di volo suborbitale o a lungo raggio.
 
-Altri lavori più recenti, come \cite{Brzynska2023,inproceedings}, mostrano dati sperimentali 
-promettenti, ma non approfondiscono lo sviluppo di protocolli di comunicazione 
+Altri lavori più recenti, come \cite{Brzynska2023,inproceedings}, mostrano dati sperimentali
+promettenti, ma non approfondiscono lo sviluppo di protocolli di comunicazione
 né la gestione strutturata dei dati come affrontato nel presente progetto.
 
-A confronto con altri approcci documentati in letteratura, basati su tecnologie 
-differenti come WiFi \cite{muchiri2024implementation}, XBee \cite{10150/626955} con trasmettitori radio 
-ad alta potenza \cite{lombardozzo2017development,10150/666950}, il sistema 
-sviluppato per \emph{Borealis} offre un equilibrio ottimale tra portata, consumo 
-energetico e semplicità di implementazione. 
+A confronto con altri approcci documentati in letteratura, basati su tecnologie
+differenti come WiFi \cite{muchiri2024implementation}, XBee \cite{10150/626955} con trasmettitori radio
+ad alta potenza \cite{lombardozzo2017development,10150/666950}, il sistema
+sviluppato per \emph{Borealis} offre un equilibrio ottimale tra portata, consumo
+energetico e semplicità di implementazione.
 
-L’uso efficiente dei moduli \ac{LoRa}, abbinato a un protocollo 
-personalizzato di segmentazione e ricostruzione, consente di ottenere distanze 
-operative di diversi chilometri con requisiti hardware minimi e consumi contenuti, 
-rendendo il sistema preferibile in molte applicazioni embedded in ambito aerospaziale 
+L’uso efficiente dei moduli \ac{LoRa}, abbinato a un protocollo
+personalizzato di segmentazione e ricostruzione, consente di ottenere distanze
+operative di diversi chilometri con requisiti hardware minimi e consumi contenuti,
+rendendo il sistema preferibile in molte applicazioni embedded in ambito aerospaziale
 sperimentale.
 
-In questo contesto, il sistema sviluppato per il progetto \emph{Borealis} si 
-distingue per l’approccio metodico, la modularità dell’architettura e la scalabilità, 
-oltre che per l’implementazione di un protocollo di comunicazione flessibile, 
-progettato per estendere in modo efficiente le capacità dei moduli \ac{LoRa} 
+In questo contesto, il sistema sviluppato per il progetto \emph{Borealis} si
+distingue per l’approccio metodico, la modularità dell’architettura e la scalabilità,
+oltre che per l’implementazione di un protocollo di comunicazione flessibile,
+progettato per estendere in modo efficiente le capacità dei moduli \ac{LoRa}
 anche in condizioni operative critiche.
-Queste caratteristiche rendono il sistema adattabile e riutilizzabile in una 
-varietà di contesti, contribuendo in modo significativo all’avanzamento dello stato 
+Queste caratteristiche rendono il sistema adattabile e riutilizzabile in una
+varietà di contesti, contribuendo in modo significativo all’avanzamento dello stato
 dell’arte nei sistemi di telemetria embedded a basso consumo.
 
 \section{Prospettive di sviluppo futuro}
@@ -1482,7 +1622,7 @@ che permetterebbe di visualizzare i dati raccolti in tempo reale tramite un'inte
         \library{https://docs.google.com/spreadsheets/d/18jeeM74zrUXYElvqgezdn9tdanWeXri5lLqX9B6a6Do/edit?usp=sharing}%
         {Disallineamento delle antenne}%
         {Dati raccolti durante i test di disallineamento delle antenne.}{test:misalignement}
-        \library{https://docs.google.com/spreadsheets/}%
+        \library{https://docs.google.com/spreadsheets/d/1uNnyeW3Q8s5x24YAA0kJOUTOkH-Pz_z4T3AYBhDrex0/edit?usp=sharing}%
         {Test del \emph{throughput}}%
         {Dati raccolti durante i test di throughput del protocollo di comunicazione.}{test:throughput}
         \library{https://docs.google.com/spreadsheets/d/1S1JPVLed6u9Xg_fJpRhLmknomVhyZoRTk6BMkn2IwYY/edit?usp=sharing}%
