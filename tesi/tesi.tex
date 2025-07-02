@@ -887,9 +887,34 @@ Capitolo~\ref{chap:telemetry}.
 \paragraph{Dettagli operativi del setup sperimentale}
 
 Il test è stato eseguito in configurazione punto-punto, con l'antenna ricevente
-mantenuta in posizione fissa (indicata come posizione 0), mentre l'antenna trasmittente
+mantenuta in posizione fissa, mentre l'antenna trasmittente
 è stata progressivamente allontanata lungo una direttrice lineare, posizionandola
-alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf}.
+alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf} e visibili nelle figure 
+\ref{fig:throughput-test-10-250m-direct}-\ref{fig:throughput-test-500m}.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T1/sat/10-250-full.jpeg}
+        \caption{Posizioni di test da 10m a 250m con ostacoli.}
+        \label{fig:throughput-test-10-250m-full}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T1/sat/10-250-direct.jpeg}
+        \caption{Posizione di test a 250m senza ostacoli.}
+        \label{fig:throughput-test-10-250m-direct}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T1/sat/500-full.jpeg}
+        \caption{Posizione di test a 500m.}
+        \label{fig:throughput-test-500m}
+    \end{minipage}
+\end{figure}
 
 Per la distanza di 250~m sono state effettuate due misurazioni distinte:
 \begin{itemize}
@@ -1083,7 +1108,7 @@ copertura anche in scenari \emph{outdoor} complessi.
 \subsubsection{Disallineamento angolare dell'antenna direzionale}
 \begin{table}[H]
     \centering
-    \resizebox{0.9\textwidth}{!}{
+    \resizebox{0.8\textwidth}{!}{
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
             \hline    \textbf{Distanza (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
             \hline    \textbf{100}          & 83.92       & 83.92       & 83.14        & 83.14        & 83.14        & 83.14        & 83.14        & 78.43        \\
@@ -1102,7 +1127,7 @@ copertura anche in scenari \emph{outdoor} complessi.
 \subsubsection{Disallineamento angolare dell'antenna omnidirezionale}
 \begin{table}[H]
     \centering
-    \resizebox{0.9\textwidth}{!}{
+    \resizebox{0.8\textwidth}{!}{
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
             \hline    \textbf{Distanza (m)} & \textbf{0°} & \textbf{5°} & \textbf{10°} & \textbf{15°} & \textbf{20°} & \textbf{25°} & \textbf{30°} & \textbf{90°} \\
             \hline    \textbf{100}          & 80.00       & 78.43       & 77.65        & 78.43        & 80.39        & 82.35        & 82.35        & 84.31        \\
@@ -1120,7 +1145,7 @@ copertura anche in scenari \emph{outdoor} complessi.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/tests/antenna-misalignement.png}
+    \includegraphics[width=0.95\textwidth]{img/tests/antenna-misalignement.png}
     \caption{Intensità del segnale in funzione della distanza e dell'angolo di disallineamento delle antenne.}
     \label{fig:telemetry-misalignement}
 \end{figure}
