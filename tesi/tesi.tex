@@ -190,7 +190,8 @@ codice CRC e gestione dei timeout per la ricostruzione dei dati.
 I test in campo aperto hanno convalidato l'efficacia del sistema, evidenziando una
 portata effettiva superiore ai 2 km e un throughput medio di 640 b/s. Queste
 prestazioni, in linea con i requisiti di missioni suborbitali a bassa quota,
-dimostrano la validità della soluzione proposta per applicazioni reali.
+dimostrano la validità della soluzione proposta per applicazioni reali non limitate
+all'ambito aerospaziale, ma estendibili anche ad altri settori.
 
 \topmargin=-1cm
 \tableofcontents
@@ -643,10 +644,11 @@ Il pacchetto generato dal nodo trasmittente è composto dalle seguenti sezioni:
               \item Byte basso dell’indirizzo del destinatario
               \item Identificativo del canale di trasmissione
           \end{itemize}
-    \item \textbf{\emph{Payload}} (196 o 197 byte): contiene i dati applicativi da trasmettere.
+    \item \textbf{\emph{Payload}} (194 byte): contiene i dati applicativi da trasmettere.
 
-    \item \textbf{\emph{Footer} opzionale} (1 byte): include il valore del \ac{RSSI},
-          utilizzato per la diagnostica della qualità del link.
+    \item \textbf{\emph{Footer}} (3 byte): include il valore del \ac{RSSI},
+          utilizzato per la diagnostica della qualità del segnale e il \ac{CRC} per
+          garantire l'integrità dei dati.
 \end{itemize}
 
 Considerando le limitazioni fisiche del modulo \ac{LoRa} impiegato (in particolare,
@@ -667,8 +669,16 @@ aggiuntivo di 11 byte in testa al \emph{payload}, che include le seguenti inform
     \item \textbf{\emph{Protocol Version}}: campo riservato per la gestione di versioni successive del protocollo, utile in ottica di retrocompatibilità.
 \end{itemize}
 
-Considerando la dimensione del \emph{header} logico, il \emph{payload} massimo trasportabile in un singolo pacchetto
-è di 185 byte usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte per pacchetto.
+Considerando la dimensione del \emph{header} logico e del \emph{footer}, il \emph{payload} massimo trasportabile in un singolo pacchetto
+è di 183 byte usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte per pacchetto.
+
+Uno schema del pacchetto è riportato nella Figura \ref{fig:packet-schema}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/protocol-packet.png}
+    \caption{Schema del pacchetto di dati trasmesso dal nodo trasmittente.}
+    \label{fig:packet-schema}
+\end{figure}
 \newpage
 \section{Implementazione software e algoritmi di gestione della trasmissione}
 Il software è stato implementato in C++17. Nei seguenti paragrafi verrà illustrata
@@ -948,7 +958,7 @@ Per ogni distanza, sono state misurate le seguenti metriche:
     \item \ac{RSSI} medio rilevato;
     \item Numero di pacchetti ricevuti;
     \item Pacchetti al secondo (\emph{pkt/s});
-    \item Byte al secondo (\emph{bps}) ricevuti correttamente.
+    \item Byte al secondo (\emph{Byte/s}) ricevuti correttamente.
 \end{itemize}
 
 \newpage

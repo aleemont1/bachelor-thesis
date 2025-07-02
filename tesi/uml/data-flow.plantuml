@@ -1,0 +1,33 @@
+@startuml data-flow
+skinparam dpi 300
+skinparam RectangleStyle round
+skinparam DefaultFontName "Open Sans"
+skinparam DefaultFontStyle bold
+skinparam BackgroundColor #ffffff
+skinparam Shadowing false
+skinparam ArrowColor #1b3651
+skinparam FontColor #1b3651
+skinparam Rectangle {
+    BackgroundColor #E0F2F7
+    BorderColor #5B9BD5
+    FontColor #1b3651
+    RoundCorner 15
+}
+
+rectangle "Lettura dei sensori" as SENS
+rectangle "Elaborazione con EKF" as EKF
+rectangle "Serializzazione JSON" as SER
+rectangle "Segmentazione dei dati" as SEG
+rectangle "Trasmissione LoRa (TX)" as TX
+rectangle "Ricezione LoRa (RX)" as RX
+rectangle "Ricostruzione dei dati" as RECV
+rectangle "Salvataggio e analisi" as PC
+
+SENS --> EKF
+EKF --> SER
+SER --> SEG
+SEG --> TX
+TX --> RX
+RX --> RECV
+RECV --> PC
+@enduml
