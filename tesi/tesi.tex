@@ -620,15 +620,16 @@ variazioni continue di assetto e orientamento, condizioni atmosferiche variabili
 e possibili interferenze elettromagnetiche, sono stati valutati
 gli impatti che questi fattori possono avere sulla trasmissione dei dati e sulla
 loro integrità. \\
-Abbiamo calcolato che la banda di frequenza di 868 MHz, utilizzata dai moduli
+Secondo i calcoli la banda di frequenza di 868 MHz, utilizzata dai moduli
 \ac{LoRa} impiegati, non è soggetta a interferenze significative da parte di altri
-dispositivi e che la modulazione \ac{CSS} impiegata garantisce una robustezza
+dispositivi e la modulazione \ac{CSS} impiegata garantisce una robustezza
 adeguata contro le interferenze, il rumore ambientale e l'effetto Doppler,
 permettendo una trasmissione affidabile anche in condizioni difficili.
 Bisogna inoltre tenere conto che nella \emph{ground station} non \'e previsto
 alcun sistema di inseguimento, quindi l'antenna direzionale Yagi deve essere puntata manualmente
 verso il razzo durante il volo, per garantire una ricezione ottimale del segnale.
 
+\newpage
 \section{Protocollo di comunicazione e gestione dati}
 
 Il protocollo di comunicazione è stato progettato per garantire efficienza e
@@ -679,7 +680,6 @@ Uno schema del pacchetto è riportato nella Figura \ref{fig:packet-schema}.
     \caption{Schema del pacchetto di dati trasmesso dal nodo trasmittente.}
     \label{fig:packet-schema}
 \end{figure}
-\newpage
 \section{Implementazione software e algoritmi di gestione della trasmissione}
 Il software è stato implementato in C++17. Nei seguenti paragrafi verrà illustrata
 l'architettura dei principali moduli software: il computer di volo,
@@ -718,12 +718,11 @@ Il computer di volo è composto da 4 elementi principali:
 \paragraph{\textbf{Modulo di raccolta dati:}} Gestisce la lettura dei sensori.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{img/uml/sensor.png}
+    \includegraphics[width=0.33\textwidth]{img/uml/sensor.png}
     \caption{Interfaccia per la raccolta dati da un sensore.}
     \label{fig:flight-computer-data-collection}
 \end{figure}
 
-\newpage
 \paragraph{\textbf{Modulo di logging:}}Si occupa della serializzazione dei dati in formato JSON.
 \begin{figure}[H]
     \centering
@@ -887,25 +886,6 @@ di rumore e interferenze.
         \label{tab:T1-conditions-pdf}
     \end{table}
 \fi
-
-\subsubsection{Test del \emph{throughput}}
-
-Il test ha avuto l’obiettivo di misurare il \emph{throughput} effettivo del
-sistema di telemetria, valutando la quantità di dati ricevuti correttamente al
-variare della distanza tra le antenne, in condizioni ambientali reali.
-
-Per ciascuna prova è stato trasmesso un \emph{payload} di dimensione fissa,
-suddiviso in 5 \emph{chunk}, secondo il criterio di frammentazione descritto nel
-Capitolo~\ref{chap:telemetry}.
-
-\paragraph{Dettagli operativi del setup sperimentale}
-
-Il test è stato eseguito in configurazione punto-punto, con l'antenna ricevente
-mantenuta in posizione fissa, mentre l'antenna trasmittente
-è stata progressivamente allontanata lungo una direttrice lineare, posizionandola
-alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf} e visibili nelle figure
-\ref{fig:throughput-test-10-250m-full}-\ref{fig:throughput-test-500m}.
-
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.32\textwidth}
@@ -929,6 +909,24 @@ alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf} e visibili nell
         \label{fig:throughput-test-500m}
     \end{minipage}
 \end{figure}
+
+\subsubsection{Test del \emph{throughput}}
+
+Il test ha avuto l’obiettivo di misurare il \emph{throughput} effettivo del
+sistema di telemetria, valutando la quantità di dati ricevuti correttamente al
+variare della distanza tra le antenne, in condizioni ambientali reali.
+
+Per ciascuna prova è stato trasmesso un \emph{payload} di dimensione fissa,
+suddiviso in 5 \emph{chunk}, secondo il criterio di frammentazione descritto nel
+Capitolo~\ref{chap:telemetry}.
+
+\paragraph{Dettagli operativi del setup sperimentale}
+
+Il test è stato eseguito in configurazione punto-punto, con l'antenna ricevente
+mantenuta in posizione fissa, mentre l'antenna trasmittente
+è stata progressivamente allontanata lungo una direttrice lineare, posizionandola
+alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf} e visibili nelle figure
+\ref{fig:throughput-test-10-250m-full}-\ref{fig:throughput-test-500m}.
 
 Per la distanza di 250~m sono state effettuate due misurazioni distinte:
 \begin{itemize}
@@ -961,7 +959,6 @@ Per ogni distanza, sono state misurate le seguenti metriche:
     \item Byte al secondo (\emph{Byte/s}) ricevuti correttamente.
 \end{itemize}
 
-\newpage
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
 \begin{table}[H]
     \centering
@@ -1287,24 +1284,22 @@ indicando una buona prevedibilità temporale del processo di riassemblaggio.
 Le distribuzioni dei tempi di ricostruzione (figure~\ref{fig:segmentation-test-2chunks}–\ref{fig:segmentation-test-5chunks})
 mostrano che i tempi di ricostruzione sono concentrati attorno a valori medi, con una
 leggera variabilità, ma senza picchi significativi.
-
+\vspace{1cm}
 \begin{figure}[H]
     \centering
-    \begin{minipage}{0.47\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{img/tests/T2/T2-avg-time.png}
-        \caption{Tempo medio di ricostruzione per numero di chunk.}
-        \label{fig:segmentation-reconstruction-avg-time}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.47\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{img/tests/T2/T2-sd.png}
-        \caption{Deviazione standard dei tempi di ricostruzione per numero di chunk.}
-        \label{fig:segmentation-reconstruction-sd}
-    \end{minipage}
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/tests/T2/T2-avg-time.png}
+    \caption{Tempo medio di ricostruzione per numero di chunk.}
+    \label{fig:segmentation-reconstruction-avg-time}
 \end{figure}
 
+\begin{figure}[H]
+
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/tests/T2/T2-sd.png}
+    \caption{Deviazione standard dei tempi di ricostruzione per numero di chunk.}
+    \label{fig:segmentation-reconstruction-sd}
+\end{figure}
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.47\textwidth}
