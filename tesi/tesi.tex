@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage[italian]{babel}
 \usepackage{tikz}
+\usetikzlibrary{positioning}
 \usepackage{parskip}
 \usepackage{acronym}
 \usepackage{notes}
@@ -171,24 +172,24 @@
 \newpage~\newpage
 \pagenumbering{gobble}
 \chapter*{Abstract}
-I razzi sperimentali sono essenziali per la ricerca aerospaziale e meteorologica, 
-nonché per la validazione di nuove tecnologie in ambienti estremi. 
-Per garantire il monitoraggio in tempo reale e l'analisi post-missione in tale 
-contesto, la disponibilità di sistemi di telemetria affidabili, a bassa latenza 
+I razzi sperimentali sono essenziali per la ricerca aerospaziale e meteorologica,
+nonché per la validazione di nuove tecnologie in ambienti estremi.
+Per garantire il monitoraggio in tempo reale e l'analisi post-missione in tale
+contesto, la disponibilità di sistemi di telemetria affidabili, a bassa latenza
 e basso costo è di fondamentale importanza.
 
-Questa tesi descrive lo sviluppo di un innovativo sistema di telemetria embedded, 
-basato su un microcontrollore ESP32-S3 e sulla modulazione LoRa\textsuperscript{\textcopyright}, 
-per il tracciamento dei dati di volo di un razzo sonda sperimentale. Tale sistema 
-garantisce comunicazioni stabili anche su lunghe distanze verso una ground station. 
-Per ovviare all'assenza di meccanismi di ritrasmissione e assicurare robustezza 
-ed efficienza della trasmissione, è stato progettato un protocollo di comunicazione 
-personalizzato, che include segmentazione del payload, header identificativi, 
+Questa tesi descrive lo sviluppo di un innovativo sistema di telemetria embedded,
+basato su un microcontrollore ESP32-S3 e sulla modulazione LoRa\textsuperscript{\textcopyright},
+per il tracciamento dei dati di volo di un razzo sonda sperimentale. Tale sistema
+garantisce comunicazioni stabili anche su lunghe distanze verso una ground station.
+Per ovviare all'assenza di meccanismi di ritrasmissione e assicurare robustezza
+ed efficienza della trasmissione, è stato progettato un protocollo di comunicazione
+personalizzato, che include segmentazione del payload, header identificativi,
 codice CRC e gestione dei timeout per la ricostruzione dei dati.
 
-I test in campo aperto hanno convalidato l'efficacia del sistema, evidenziando una 
-portata effettiva superiore ai 2 km e un throughput medio di 640 b/s. Queste 
-prestazioni, in linea con i requisiti di missioni suborbitali a bassa quota, 
+I test in campo aperto hanno convalidato l'efficacia del sistema, evidenziando una
+portata effettiva superiore ai 2 km e un throughput medio di 640 b/s. Queste
+prestazioni, in linea con i requisiti di missioni suborbitali a bassa quota,
 dimostrano la validità della soluzione proposta per applicazioni reali.
 
 \topmargin=-1cm
@@ -329,7 +330,6 @@ Il computer di volo di Borealis è basato su un microcontrollore ESP32-S3, monta
 su una scheda di sviluppo Arduino Nano ESP32, un modulo di raccolta dati contenente
 i sensori, e un modulo di attuatori responsabile dell'attivazione di cariche
 pirotecniche tramite un circuito di innesco controllato dal microcontrollore.%
-\sidenote{Inserire schema dell'architettura del computer di volo.}
 
 I sensori utilizzati sono:
 \begin{itemize}
@@ -366,7 +366,7 @@ fornendo un'interfaccia di comunicazione tra il razzo e la \emph{ground station}
 Il sistema di telemetria è stato progettato per garantire l'affidabilità della
 trasmissione dati, la precisione delle misurazioni e l'ottimizzazione del consumo
 energetico.%
-\sidenote{Inserire schema della comunicazione tra il computer di volo e la ground station.}
+
 Il software di gestione della telemetria è stato sviluppato in C++17 utilizzando
 una libreria open-source\libref{lib:lora} per l'interfaccia con il modulo \ac{LoRa}
 e un protocollo di comunicazione personalizzato per la trasmissione e la
@@ -596,6 +596,14 @@ Come discusso nel capitolo \ref{chap:lora} il sistema è composto dai seguenti c
 \end{itemize}
 
 Il flusso dei dati nel sistema è il seguente:
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.25\textwidth]{img/uml/data-flow.png}
+%     \caption{Schema di flusso dei dati del sistema di telemetria.}
+%     \label{fig:telemetry-flowchart}
+% \end{figure}
+% \newpage
 \begin{enumerate}
     \item I dati di volo vengono raccolti dai sensori a bordo del razzo e inviati al computer di volo.
     \item Il computer di volo elabora i dati attraverso un \ac{EKF} che permette di derivare l'altitudine e la velocità verticale del razzo.
@@ -607,8 +615,7 @@ Il flusso dei dati nel sistema è il seguente:
     \item Il modulo \ac{LoRa} ricevitore riceve i dati trasmessi.
     \item I dati ricevuti vengono deserializzati, ricomponendo il \emph{payload} originale.
     \item Il \emph{payload} viene inviato al PC per essere salvati e in seguito analizzati.
-\end{enumerate} \sidenote{Usa uno schema a blocchi per rappresentarlo}
-
+\end{enumerate}
 Vista la presenza di forti vibrazioni, accelerazioni estreme,
 variazioni continue di assetto e orientamento, condizioni atmosferiche variabili
 e possibili interferenze elettromagnetiche, sono stati valutati
@@ -638,7 +645,7 @@ Il pacchetto generato dal nodo trasmittente è composto dalle seguenti sezioni:
               \item Byte basso dell’indirizzo del destinatario
               \item Identificativo del canale di trasmissione
           \end{itemize}
-    \item \textbf{\emph{Payload}} (200 byte): contiene i dati applicativi da trasmettere.
+    \item \textbf{\emph{Payload}} (196 o 197 byte): contiene i dati applicativi da trasmettere.
 
     \item \textbf{\emph{Footer} opzionale} (1 byte): include il valore del \ac{RSSI},
           utilizzato per la diagnostica della qualità del link.
@@ -651,7 +658,7 @@ massima consentita, esso viene suddiviso in sotto-segmenti detti \emph{chunk},
 ciascuno trasmesso come pacchetto indipendente.
 
 Per supportare questa funzionalità è stato introdotto un \textbf{header logico}
-aggiuntivo di 11 byte, che include le seguenti informazioni di controllo:
+aggiuntivo di 11 byte in testa al \emph{payload}, che include le seguenti informazioni di controllo:
 
 \begin{itemize}
     \item \textbf{\emph{Packet Number}}: identificatore univoco della sequenza di pacchetti riferita a una singola lettura.
@@ -660,10 +667,10 @@ aggiuntivo di 11 byte, che include le seguenti informazioni di controllo:
     \item \textbf{\emph{Payload Size}}: dimensione effettiva del \emph{payload} trasportato nel chunk, espressa in byte.
     \item \textbf{\emph{Timestamp}}: riferimento temporale associato all’invio del pacchetto, utile per analisi temporali e sincronizzazione.
     \item \textbf{\emph{Protocol Version}}: campo riservato per la gestione di versioni successive del protocollo, utile in ottica di retrocompatibilità.
-\end{itemize} \sidenote{Inserire immagine schematica del pacchetto esteso}
+\end{itemize}
 
 Considerando la dimensione del \emph{header} logico, il \emph{payload} massimo trasportabile in un singolo pacchetto
-è di 189 byte usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte per pacchetto.
+è di 185 byte usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte per pacchetto.
 
 \section{Implementazione software e algoritmi di gestione della trasmissione}
 Il software è stato implementato in C++17. Nei seguenti paragrafi verrà illustrata
@@ -763,7 +770,7 @@ temporizzato per le sequenze incomplete, prevenendo cos\'i l'accumulo di dati pa
 sfruttando la tolleranza del sistema alla perdita occasionale di letture dei dati
 dei sensori e la garanzia di disponibilità dei dati grazie al sistema di logging secondario a
 bordo del computer di volo.
-\sidenote{Inserire immagine del diagramma di flusso dell'algoritmo di ricostruzione dei dati.}
+
 \chapter{Valutazione delle Prestazioni} \label{chap:performance}
 \vspace{-0.5cm}
 \section{Metodologia di test e criteri di valutazione}
@@ -889,7 +896,7 @@ Capitolo~\ref{chap:telemetry}.
 Il test è stato eseguito in configurazione punto-punto, con l'antenna ricevente
 mantenuta in posizione fissa, mentre l'antenna trasmittente
 è stata progressivamente allontanata lungo una direttrice lineare, posizionandola
-alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf} e visibili nelle figure 
+alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf} e visibili nelle figure
 \ref{fig:throughput-test-10-250m-direct}-\ref{fig:throughput-test-500m}.
 
 \begin{figure}[H]
