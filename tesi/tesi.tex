@@ -159,19 +159,6 @@
 % }
 % \end{tikzpicture}
 % \newpage
-
-\ifdefined\HCode
-\else
-    \topmargin=5.5cm
-    \begin{flushright}
-        \emph{
-            \LARGE{La dedica}\\\vspace{3mm}
-            \LARGE{anche quella se vuoi}\\\vspace{3mm}
-            \LARGE{su più righe}
-        }
-    \end{flushright}
-\fi
-\newpage~\newpage
 \pagenumbering{gobble}
 \chapter*{Abstract}
 I razzi sperimentali sono essenziali per la ricerca aerospaziale e meteorologica,
@@ -236,7 +223,7 @@ in alluminio divisa in tre \emph{bays}:
     \item \textbf{\emph{Payload bay}}: contenente un carico pagante sperimentale,
     \item \textbf{\emph{Parachute tube}}: contenente i due paracadute.
 \end{itemize}
-infine un \emph{nose cone} apribile per permettere l'espulsione del paracadute.\\
+Infine un \emph{nose cone} apribile per permettere l'espulsione del paracadute.\\
 
 La \emph{Electronics bay} \'e inserita in una finestra in polimetilmetacrilato,
 per permettere la trasmissione del segnale radio della telemetria, che sarebbe
@@ -258,7 +245,7 @@ del volo da terra.
 \end{figure}
 
 \section{Contesto storico della creazione e dell'impiego di razzi sperimentali}
-II razzi sperimentali svolgono un ruolo cruciale nella ricerca e nello sviluppo
+I razzi sperimentali svolgono un ruolo cruciale nella ricerca e nello sviluppo
 tecnologico sin dalla fine del XIX secolo.
 Sebbene siano stati impiegati per scopi militari sin dal XIII secolo, fu tra il
 1926 e il 1929 che il fisico americano Robert H. Goddard, ispirato dagli studi
@@ -294,7 +281,7 @@ post missione e per l’ottimizzazione del design del razzo.
 Infine, la telemetria \`e essenziale per poter analizzare il volo in caso di
 problemi o incidenti, al fine d'identificarne le cause se il sistema di
 \emph{logging} a bordo dovesse andare perso.
-
+\newpage
 Ciò pone delle sfide tecniche significative tra cui:
 \begin{itemize}
     \item L'affidabilità della trasmissione dati, che deve essere mantenuta
@@ -338,9 +325,9 @@ controllato dal microcontrollore.%
 
 I sensori utilizzati sono:
 \begin{itemize}
-    \item Una \ac{IMU} \emph{Bosch BNO055} \libref{lib:bno055}
+    \item Una \ac{IMU} \emph{Bosch BNO055}\libref{lib:bno055}
           (Giroscopio, Accelerometro e Magnetometro).
-    \item Due barometri \emph{Adafruit MPRLS} con presa statica \libref{lib:mprls}.
+    \item Due barometri \emph{Adafruit MPRLS} con presa statica\libref{lib:mprls}.
 \end{itemize}
 \section{Funzioni principali e componenti chiave}
 Il computer di volo si occupa del monitoraggio del volo. Riceve i dati dal modulo
@@ -348,7 +335,7 @@ dei sensori, tramite algoritmi di \emph{sensor fusion} li elabora e
 contemporaneamente li trasmette alla \emph{ground station}.
 In particolare, fa uso di un Extended Kalman Filter per filtrare e combinare i
 dati ottenuti dalla \ac{IMU} e dei due barometri, ottenendo una stima
-affidabile dell'orientamento, della velocità e dell'altitudine del razzo.
+affidabile dell'orientamento, della velocità verticale e dell'altitudine del razzo.
 Il filtro mitiga gli errori dei sensori, corregge la deriva della \ac{IMU} e riduce
 le incertezze delle misurazioni barometriche, combinando i dati di accelerazione,
 orientamento e pressione atmosferica.
@@ -440,7 +427,7 @@ interferenze e attenuazione multipath\cite{10609524}.
 Il sistema di telemetria di Borealis impiega due moduli \ac{LoRa}
 \emph{EByte E220-900T22D}, uno in trasmissione a bordo del razzo e uno in
 ricezione nella \emph{Ground Station}.
-Il modulo impiega la ricetrasmittente \ac{LoRa} \emph{Smart Home LLCC68} e
+Il modulo impiega la ricetrasmittente \ac{LoRa} \emph{Semtech LLCC68} e
 opera nella banda di frequenza compresa tra 850.15 MHz e 930.15 MHz.
 
 Le specifiche tecniche principali del modulo utilizzato sono riportate nella
@@ -474,7 +461,7 @@ efficiente delle risorse in missioni di lunga durata.
     \caption{Caratteristiche tecniche del modulo \ac{LoRa} EByte E220-900T22D.}
     \label{tab:LoRa-E220-specs}
 \end{table}
-
+\newpage
 \section{Specifiche delle antenne utilizzate} \label{sec:antennas}
 La scelta delle antenne per il sistema telemetrico del razzo è stata guidata da
 esigenze tecniche specifiche, nonostante le opzioni disponibili fossero limitate.
@@ -509,7 +496,7 @@ ristretto, aumentando il guadagno e riducendo il rumore di fondo.
 Tuttavia, l'eccessiva direzionalità della Log-Periodica avrebbe introdotto
 delle complicazioni operative. Poiché il tracciamento del razzo durante il volo
 sarà eseguito manualmente, una direzionalità troppo elevata avrebbe richiesto
-una precisione di puntamento molto elevata, difficile da mantenere senza
+un'alta precisione di puntamento, difficile da mantenere senza
 strumenti automatizzati, aumentando il rischio di perdita temporanea del segnale.
 
 L'antenna Yagi, con la sua direzionalità moderata, si è rivelata una scelta più
@@ -796,7 +783,7 @@ bordo del computer di volo.
         \hline
         Affidabilit\'a della trasmissione & Verificare la capacit\'a del sistema di trasmettere e ricevere pacchetti su distanze variabili, in condizioni ambientali diverse, con ostacoli, rumore e disallineamento tra le antenne. & \ac{RSSI}, angolo di disallineamento tra le antenne           \\
         \hline
-        Throughput                        & Valutare la velocità effettiva di trasmissione su diversi scenari di distanza e ambiente                                                                                                 & Pacchetti/s, bit/s, percentuale di pacchetti persi, \ac{RSSI} \\
+        Throughput                        & Valutare la velocità effettiva di trasmissione su diversi scenari di distanza e ambiente                                                                                                 & Pacchetti/s, bit/s, \ac{RSSI} \\
         \hline
         Segmentazione e ricostruzione     & Verificare l'efficienza e la scalabilità del protocollo nel ricostruire correttamente i payload segmentati                                                                               & Tempo medio di ricostruzione                                  \\
         \hline
@@ -919,7 +906,7 @@ di rumore e interferenze.
     \end{minipage}
 \end{figure}
 
-\subsubsection{Test del \emph{throughput}} \label{test:throughput}
+\subsubsection{Test del \emph{throughput}} \label{test:throughput-sec}
 
 Il test ha avuto l’obiettivo di misurare il \emph{throughput} effettivo del
 sistema di telemetria, valutando la quantità di dati ricevuti correttamente al
@@ -2007,8 +1994,4 @@ che permetterebbe di visualizzare i dati raccolti in tempo reale tramite un'inte
 \chapter*{Riferimenti bibliografici}
 \bibliography{refs}
 \newpage
-
-\newpage~\newpage
-\chapter*{Ringraziamenti}
-Grazie a tutti!
 \end{document}
