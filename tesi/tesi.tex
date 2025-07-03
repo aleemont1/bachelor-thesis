@@ -236,12 +236,11 @@ in alluminio divisa in tre \emph{bays}:
 \end{itemize}
 infine un \emph{nose cone} apribile per permettere l'espulsione del paracadute.\\
 
-La \emph{Electronics bay} \'e inserita in una finestra in plexiglass, per permettere
-la trasmissione del segnale radio della telemetria, che sarebbe altrimenti schermato
-dal corpo in alluminio del razzo. \\
+La \emph{Electronics bay} \'e inserita in una finestra in polimetilmetacrilato, 
+per permettere la trasmissione del segnale radio della telemetria, che sarebbe 
+altrimenti schermato dal corpo in alluminio del razzo. \\
 
-Nella \emph{Electronics bay}
-è presente il computer di volo, che si occupa di
+Nella \emph{Electronics bay} è presente il computer di volo, che si occupa di
 gestire il lancio e il recupero del razzo e di raccogliere dati durante il volo. \\
 Il computer di volo è dotato di un sistema di telemetria che trasmette in tempo
 reale i dati raccolti a una \emph{ground station}, permettendo il monitoraggio
@@ -255,6 +254,7 @@ del volo da terra.
     % La label ci vuole sempre e te la inventi tu: serve per riferirsi alle immagini successivamente
     \label{fig:electronics-bay}
 \end{figure}
+
 \section{Contesto storico della creazione e dell'impiego di razzi sperimentali}
 II razzi sperimentali svolgono un ruolo cruciale nella ricerca e nello sviluppo
 tecnologico sin dalla fine del XIX secolo.
@@ -329,9 +329,10 @@ risultati ottenuti.
 \pagestyle{plain}
 
 Il computer di volo di Borealis è basato su un microcontrollore ESP32-S3, montato
-su una scheda di sviluppo Arduino Nano ESP32, un modulo di raccolta dati contenente
-i sensori, e un modulo di attuatori responsabile dell'attivazione di cariche
-pirotecniche tramite un circuito di innesco controllato dal microcontrollore.%
+su una scheda di sviluppo Arduino Nano ESP32, a cui sono collegati un modulo di 
+raccolta dati, contenente i sensori, e un modulo di attuatori responsabile 
+dell'attivazione di cariche pirotecniche tramite un circuito di innesco 
+controllato dal microcontrollore.%
 
 I sensori utilizzati sono:
 \begin{itemize}
@@ -343,9 +344,9 @@ I sensori utilizzati sono:
 Il computer di volo si occupa del monitoraggio del volo. Riceve i dati dal modulo
 dei sensori, tramite algoritmi di \emph{sensor fusion} li elabora e
 contemporaneamente li trasmette alla \emph{ground station}.
-In particolare fa uso di un Extended Kalman Filter per filtrare e combinare i
+In particolare, fa uso di un Extended Kalman Filter per filtrare e combinare i
 dati ottenuti dalla \ac{IMU} e dei due barometri, ottenendo una stima
-affidabile dell'orientamento, della velocità e dell'altitudine.
+affidabile dell'orientamento, della velocità e dell'altitudine del razzo.
 Il filtro mitiga gli errori dei sensori, corregge la deriva della \ac{IMU} e riduce
 le incertezze delle misurazioni barometriche, combinando i dati di accelerazione,
 orientamento e pressione atmosferica.
@@ -354,13 +355,14 @@ L'algoritmo di rilevamento dell'apogeo monitora l'altitudine e la velocità vert
 del razzo.
 Quando la velocità verticale si annulla e il razzo inizia la discesa, il
 computer di volo rileva l'apogeo e attiva la sequenza di recupero,
-espellendo prima il paracadute \emph{drogue} per stabilizzare il razzo, e poi
-il paracadute principale per garantire una discesa controllata.
+espellendo prima il paracadute \emph{drogue} per stabilizzare il razzo, e, una volta 
+raggiunta la quota di sicurezza minima di 450 m, il paracadute principale per 
+garantire una discesa controllata.
 
 \section{Integrazione e ruolo del sistema di telemetria}
 Per la telemetria è stato impiegato un modulo \ac{LoRa} \emph{EByte E220-900T22D}
 a 868MHz collegato al microcontrollore tramite un'interfaccia \ac{UART}
-trasmettendo in tempo reale i dati di volo alla ground station.
+per trasmettere i dati di volo alla \emph{ground station}.
 
 Il sistema di telemetria è stato integrato nel computer di volo per permettere il
 monitoraggio del volo in tempo reale e la raccolta dati durante la missione,
@@ -671,8 +673,10 @@ aggiuntivo di 11 byte in testa al \emph{payload}, che include le seguenti inform
     \item \textbf{\emph{Protocol Version}}: campo riservato per la gestione di versioni successive del protocollo, utile in ottica di retrocompatibilità.
 \end{itemize}
 
-Considerando la dimensione del \emph{header} logico e del \emph{footer}, il \emph{payload} massimo trasportabile in un singolo pacchetto
-è di 183 byte usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte per pacchetto.
+Considerando la dimensione del \emph{header} logico e del \emph{footer}, il 
+\emph{payload} massimo trasportabile in un singolo pacchetto è di 183 byte 
+usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte 
+per pacchetto.
 
 Uno schema del pacchetto è riportato nella Figura \ref{fig:packet-schema}.
 \begin{figure}[H]
