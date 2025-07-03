@@ -44,7 +44,7 @@
 \setcitestyle{super, open={[}, close={]}}
 
 \newcommand{\rom}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
-\newcommand{\libref}[1]{\textsuperscript{(Libreria \ref{#1})}}
+\newcommand{\libref}[1]{\textsuperscript{(\ref{#1})}}
 \newcommand{\dsref}[1]{\textsuperscript{(Datasheet \ref{#1})}}
 \usepackage{pdfpages}
 
@@ -131,8 +131,10 @@
 \acrodef{SPI}{Serial Peripheral Interface}
 \acrodef{ISM}{Industrial, Scientific and Medical}
 \acrodef{RSSI}{\emph{Received Signal Strength Indicator}}
-\acrodef{EKF}{Extended Kalman Filter}
+\acrodef{EKF}{\emph{Extended Kalman Filter}}
 \acrodef{CRC}{Controllo di Ridondanza Ciclica}
+\acrodef{LoS}{\emph{Line of Sight}}
+\acrodef{ADR}{\emph{Air Data Rate}}
 \restoregeometry
 \newpage
 % \begin{center}
@@ -188,10 +190,10 @@ personalizzato, che include segmentazione del payload, header identificativi,
 codice CRC e gestione dei timeout per la ricostruzione dei dati.
 
 I test in campo aperto hanno convalidato l'efficacia del sistema, evidenziando una
-portata effettiva superiore ai 2 km, un'alta stabilità del segnale con valori di 
-\emph{RSSI} non inferiori al 60\% in campo aperto, e un throughput medio di 640 Byte/s. 
-Queste prestazioni, in linea con i requisiti di missioni suborbitali a bassa 
-quota, dimostrano la validità della soluzione proposta per applicazioni reali non 
+portata effettiva superiore ai 2 km, un'alta stabilità del segnale con valori di
+\emph{RSSI} non inferiori al 60\% in campo aperto, e un throughput medio di 640 Byte/s.
+Queste prestazioni, in linea con i requisiti di missioni suborbitali a bassa
+quota, dimostrano la validità della soluzione proposta per applicazioni reali non
 limitate all'ambito aerospaziale, ma estendibili anche ad altri settori.
 
 \topmargin=-1cm
@@ -236,8 +238,8 @@ in alluminio divisa in tre \emph{bays}:
 \end{itemize}
 infine un \emph{nose cone} apribile per permettere l'espulsione del paracadute.\\
 
-La \emph{Electronics bay} \'e inserita in una finestra in polimetilmetacrilato, 
-per permettere la trasmissione del segnale radio della telemetria, che sarebbe 
+La \emph{Electronics bay} \'e inserita in una finestra in polimetilmetacrilato,
+per permettere la trasmissione del segnale radio della telemetria, che sarebbe
 altrimenti schermato dal corpo in alluminio del razzo. \\
 
 Nella \emph{Electronics bay} è presente il computer di volo, che si occupa di
@@ -329,14 +331,14 @@ risultati ottenuti.
 \pagestyle{plain}
 
 Il computer di volo di Borealis è basato su un microcontrollore ESP32-S3, montato
-su una scheda di sviluppo Arduino Nano ESP32, a cui sono collegati un modulo di 
-raccolta dati, contenente i sensori, e un modulo di attuatori responsabile 
-dell'attivazione di cariche pirotecniche tramite un circuito di innesco 
+su una scheda di sviluppo Arduino Nano ESP32, a cui sono collegati un modulo di
+raccolta dati, contenente i sensori, e un modulo di attuatori responsabile
+dell'attivazione di cariche pirotecniche tramite un circuito di innesco
 controllato dal microcontrollore.%
 
 I sensori utilizzati sono:
 \begin{itemize}
-    \item Una \ac{IMU} \emph{Bosch BNO055}\libref{lib:bno055}
+    \item Una \ac{IMU} \emph{Bosch BNO055} \libref{lib:bno055}
           (Giroscopio, Accelerometro e Magnetometro).
     \item Due barometri \emph{Adafruit MPRLS} con presa statica \libref{lib:mprls}.
 \end{itemize}
@@ -355,8 +357,8 @@ L'algoritmo di rilevamento dell'apogeo monitora l'altitudine e la velocità vert
 del razzo.
 Quando la velocità verticale si annulla e il razzo inizia la discesa, il
 computer di volo rileva l'apogeo e attiva la sequenza di recupero,
-espellendo prima il paracadute \emph{drogue} per stabilizzare il razzo, e, una volta 
-raggiunta la quota di sicurezza minima di 450 m, il paracadute principale per 
+espellendo prima il paracadute \emph{drogue} per stabilizzare il razzo, e, una volta
+raggiunta la quota di sicurezza minima di 450 m, il paracadute principale per
 garantire una discesa controllata.
 
 \section{Integrazione e ruolo del sistema di telemetria}
@@ -584,15 +586,15 @@ una scelta conveniente e accessibile per il progetto.
 Il sistema di trasmissione dati impiegato su Borealis è basato su un'architettura
 punto-punto monodirezionale.
 
-Come discusso nel capitolo \ref{chap:lora} il sistema è composto dai seguenti componenti principali:
+Come discusso nel Capitolo \ref{chap:lora} il sistema è composto dai seguenti componenti principali:
 \begin{itemize}
     \item \textbf{Modulo \ac{LoRa} trasmettitore (Razzo)}: EByte E220-900T22D per
           la trasmissione della telemetria alla \emph{ground station} con antenna
-          omnidirezionale (Sez. \ref{sec:antennas}).
+          omnidirezionale (vedi Sezione \ref{sec:antennas}).
           Collegato tramite interfaccia \ac{UART} al computer di volo.
     \item \textbf{Modulo \ac{LoRa} ricevitore (Ground Station)}: EByte E220-900T22D,
           identico al ricevente, impiegato nella \emph{ground station} per
-          ricevere i dati con antenna direzionale Yagi (Sez. \ref{sec:antennas}).
+          ricevere i dati con antenna direzionale Yagi (vedi Sezione \ref{sec:antennas}).
           Collegato a un microcontrollore ESP32-S3 tramite interfaccia \ac{UART}
           che si occupa di inviare i dati ricevuti a un PC tramite connessione seriale.
 \end{itemize}
@@ -673,9 +675,9 @@ aggiuntivo di 11 byte in testa al \emph{payload}, che include le seguenti inform
     \item \textbf{\emph{Protocol Version}}: campo riservato per la gestione di versioni successive del protocollo, utile in ottica di retrocompatibilità.
 \end{itemize}
 
-Considerando la dimensione del \emph{header} logico e del \emph{footer}, il 
-\emph{payload} massimo trasportabile in un singolo pacchetto è di 183 byte 
-usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte 
+Considerando la dimensione del \emph{header} logico e del \emph{footer}, il
+\emph{payload} massimo trasportabile in un singolo pacchetto è di 183 byte
+usando i moduli \ac{LoRa} EByte E220-900T22D, che hanno un limite di 200 byte
 per pacchetto.
 
 Uno schema del pacchetto è riportato nella Figura \ref{fig:packet-schema}.
@@ -814,11 +816,13 @@ bordo del computer di volo.
 La valutazione delle prestazioni del sistema è stata preceduta da una serie di test
 preliminari, condotti per determinare le capacità effettive dei moduli prima
 dell'implementazione del protocollo di comunicazione.
-Utilizzando una configurazione punto-punto, sono state effettuate misurazioni dell'\ac{RSSI}
+Utilizzando una configurazione punto-punto, sono state effettuate misurazioni del \ac{RSSI}
 in diverse condizioni ambientali.
 I risultati di questi test sono stati favorevoli, dimostrando una comunicazione
 efficace anche in presenza di ostacoli come alberi, edifici e rilievi, fornendo
 una base solida per lo sviluppo successivo.
+
+I moduli sono stati configurati con i parametri di default descritti in \dsref{ds:lora}.
 
 \subsubsection{Disallineamento angolare dell'antenna direzionale}
 Per ogni distanza si sono effettuate 8 misurazioni, con angoli di disallineamento
@@ -915,7 +919,7 @@ di rumore e interferenze.
     \end{minipage}
 \end{figure}
 
-\subsubsection{Test del \emph{throughput}}
+\subsubsection{Test del \emph{throughput}} \label{test:throughput}
 
 Il test ha avuto l’obiettivo di misurare il \emph{throughput} effettivo del
 sistema di telemetria, valutando la quantità di dati ricevuti correttamente al
@@ -925,18 +929,23 @@ Per ciascuna prova è stato trasmesso un \emph{payload} di dimensione fissa,
 suddiviso in 5 \emph{chunk}, secondo il criterio di frammentazione descritto nel
 Capitolo~\ref{chap:telemetry}.
 
-\paragraph{Dettagli operativi del setup sperimentale}
+\paragraph{Dettagli operativi del setup sperimentale:} \label{test:throughput-setup}
+Visti i risultati dei test preliminari, discussi nel Capitolo \ref{chap:results},
+i moduli \ac{LoRa} sono stati riconfigurati aumentando l'\ac{ADR} a 9.2~kbps, e
+impostando il \emph{baud rate} a 115200bps sulla linea \ac{UART} dedicata.
+Questo ha permesso di aumentare il \emph{throughput} effettivo, diminuendo la
+portata della trasmissione.
 
 Il test è stato eseguito in configurazione punto-punto, con l'antenna ricevente
 mantenuta in posizione fissa, mentre l'antenna trasmittente
 è stata progressivamente allontanata lungo una direttrice lineare, posizionandola
-alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf} e visibili nelle figure
+alle distanze indicate nella Tabella~\ref{tab:T1-conditions-pdf} e visibili nelle Figure
 \ref{fig:throughput-test-10-250m-full}-\ref{fig:throughput-test-500m}.
 
 Per la distanza di 250~m sono state effettuate due misurazioni distinte:
 \begin{itemize}
     \item \textbf{Scenario con ostacoli:} la trasmittente era posizionata dietro
-          un leggero rilievo e fitta vegetazione, in assenza di linea di vista diretta (non-LoS);
+          un leggero rilievo e fitta vegetazione, in assenza di linea di vista diretta (non-\ac{LoS});
 
     \item \textbf{Scenario parzialmente libero:} la trasmittente è stata spostata
           lateralmente di alcuni metri, ottenendo una visibilità migliorata, con la presenza
@@ -946,7 +955,7 @@ Per la distanza di 250~m sono state effettuate due misurazioni distinte:
 Il test alla distanza di 200~m è stato effettuato sulla cima di un piccolo rilievo naturale.
 
 Il test alla distanza di 500~m è stato invece eseguito in una seconda location,
-scelta per garantire una condizione di \emph{line of sight} (LoS) più favorevole:
+scelta per garantire una condizione di \ac{LoS} più favorevole:
 la trasmissione è avvenuta tra due ponti stradali separati da un fiume, con l’antenna
 ricevente posizionata su un ponte e la trasmittente sull'altro. Nonostante la presenza
 di vegetazione lungo gli argini, la visibilità tra le antenne è rimasta sostanzialmente diretta.
@@ -996,6 +1005,9 @@ Il tempo di ricostruzione di un pacchetto è calcolato come:
     \delta_{r} = (t_{UltimoChunk} - t_{PrimoChunk})
     \label{formula:reconstruction-time}
 \end{equation}
+
+Il test è stato effettuato sia con la configurazione di default che con la configurazione
+descritta nella Sezione \ref{test:throughput-setup}.
 
 \subsubsection{Test del meccanismo di \emph{drop}}
 \begin{table}[H]
@@ -1083,13 +1095,19 @@ I risultati dei due test sono stati successivamente confrontati per valutare l'e
 delle interferenze sulla qualità del segnale e sulla stabilità della trasmissione.
 
 \section{Ottimizzazioni apportate durante lo sviluppo}
+\subsection{Configurazione personalizzata dei moduli radio}
+Come descritto nella Sezione \ref{test:throughput-setup}, in seguito ai test
+preliminari svolti, i parametri di configurazione dei moduli sono stati modificati
+per aumentare l'\ac{ADR} e il \emph{baud rate} dell'interfaccia \ac{UART} del modulo.
+Questo ha permesso di migliorare il \emph{throughput}, con i risultati descritti nella
+Sezione \ref{test:segmentation}.
 \subsection{Compressione dei dati}
 Considerando le limitazioni intrinseche dei moduli \ac{LoRa} utilizzati,
 i tempi di ricostruzione osservati risultano comunque compatibili con i requisiti applicativi.
 Per ridurre ulteriormente il carico trasmissivo, è stata implementata una compressione
 delta per ridurre la dimensione complessiva dei \emph{payload} mantenendo inalterato il contenuto informativo.
 \subsection{Gestione dei pacchetti}
-Come discusso nella sezione \ref{sec:reconstruction-algorithm}, \'e stato implementato
+Come discusso nella Sezione \ref{sec:reconstruction-algorithm}, \'e stato implementato
 un meccanismo di \emph{drop} dei pacchetti, che consente di scartare i pacchetti
 incompleti o corrotti, evitando di accumulare dati parziali che potrebbero compromettere
 le prestazioni e l'affidabilità del sistema.
@@ -1105,14 +1123,14 @@ in ordine non sequenziale.
 
 \section{Analisi dei dati raccolti durante le prove sperimentali}
 
-\subsection{Risultati dei test preliminari}
+\subsection{Test preliminari}
 I test preliminari hanno dimostrato che i moduli \ac{LoRa} EByte E220-900T22D
 sono in grado di mantenere una comunicazione stabile anche in presenza di ostacoli naturali
 (rilievi collinari, vegetazione) e artificiali, fino a distanze dell’ordine dei 2000 metri.
 Questi risultati evidenziano la solidità della modulazione \ac{CSS}, in grado di garantire
 una buona resilienza al rumore ambientale e alle interferenze radio locali.
 
-Come mostrato in figura~\ref{fig:telemetry-misalignement}, anche con un disallineamento angolare
+Come mostrato in Figura~\ref{fig:telemetry-misalignement}, anche con un disallineamento angolare
 tra le antenne, l’intensità del segnale ricevuto è rimasta superiore al 60\% in tutti i casi testati,
 con assenza di errori di decodifica o perdite significative di pacchetti.
 
@@ -1186,16 +1204,16 @@ di vista libera ha mostrato prestazioni sovrapponibili a quelle rilevate a 50–
         \renewcommand{\arraystretch}{1.2}
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
             \hline
-            \textbf{Distanza} & \textbf{RSSI [\%] Mean} & \textbf{RSSI [\%] Std} & \textbf{RSSI [\%] Min} & \textbf{RSSI [\%] Max} & \textbf{Throughput [Byte/s] Mean} & \textbf{Throughput [Byte/s] Std} & \textbf{Throughput [Byte/s] Min} & \textbf{Throughput [Byte/s] Max} & \textbf{Pkt/s Mean} & \textbf{Pkt/s Std} \\
+            \textbf{Distanza} & \textbf{\ac{RSSI} [\%] Medio} & \textbf{\ac{RSSI} [\%] $\sigma$} & \textbf{\ac{RSSI} [\%] Min} & \textbf{\ac{RSSI} [\%] Max} & \textbf{Throughput [Byte/s] Medio} & \textbf{Throughput [Byte/s] $\sigma$} & \textbf{Throughput [Byte/s] Min} & \textbf{Throughput [Byte/s] Max} & \textbf{Pkt/s Medio} & \textbf{Pkt/s $\sigma$} \\
             \hline
-            10 m              & 86.25                   & 0.54                   & 84.31                  & 87.84                  & 646.46                            & 0.19                             & 644.74                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            50 m              & 73.43                   & 0.78                   & 69.41                  & 75.29                  & 646.44                            & 0.16                             & 644.74                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            100 m             & 70.18                   & 0.86                   & 69.02                  & 71.76                  & 646.49                            & 0.09                             & 646.15                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            150 m             & 65.79                   & 1.73                   & 60.78                  & 69.02                  & 646.45                            & 0.15                             & 644.74                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            200 m             & 71.17                   & 1.15                   & 67.06                  & 72.94                  & 646.45                            & 0.07                             & 645.80                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            250 m (ostacoli)  & 64.90                   & 1.37                   & 60.39                  & 67.06                  & 634.54                            & 10.85                            & 587.71                           & 646.51                           & 3.24                & 0.06               \\ \hline
-            250 m (libero)    & 65.21                   & 1.33                   & 59.61                  & 67.84                  & 646.49                            & 0.09                             & 646.44                           & 646.86                           & 3.30                & 0.00               \\ \hline
-            500 m             & 73.64                   & 0.67                   & 71.76                  & 75.29                  & 646.42                            & 0.12                             & 644.74                           & 646.51                           & 3.30                & 0.00               \\ \hline
+            10 m              & 86.25                         & 0.54                             & 84.31                       & 87.84                       & 646.46                             & 0.19                                  & 644.74                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            50 m              & 73.43                         & 0.78                             & 69.41                       & 75.29                       & 646.44                             & 0.16                                  & 644.74                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            100 m             & 70.18                         & 0.86                             & 69.02                       & 71.76                       & 646.49                             & 0.09                                  & 646.15                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            150 m             & 65.79                         & 1.73                             & 60.78                       & 69.02                       & 646.45                             & 0.15                                  & 644.74                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            200 m             & 71.17                         & 1.15                             & 67.06                       & 72.94                       & 646.45                             & 0.07                                  & 645.80                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            250 m (ostacoli)  & 64.90                         & 1.37                             & 60.39                       & 67.06                       & 634.54                             & 10.85                                 & 587.71                           & 646.51                           & 3.24                 & 0.06                    \\ \hline
+            250 m (libero)    & 65.21                         & 1.33                             & 59.61                       & 67.84                       & 646.49                             & 0.09                                  & 646.44                           & 646.86                           & 3.30                 & 0.00                    \\ \hline
+            500 m             & 73.64                         & 0.67                             & 71.76                       & 75.29                       & 646.42                             & 0.12                                  & 644.74                           & 646.51                           & 3.30                 & 0.00                    \\ \hline
         \end{tabular}
         \caption{Statistiche sperimentali del throughput in funzione della distanza}
         \label{tab:T1-throughput_stats-html}
@@ -1209,9 +1227,9 @@ di vista libera ha mostrato prestazioni sovrapponibili a quelle rilevate a 50–
                 \hline
                 \textbf{Distanza} & \multicolumn{4}{c|}{\textbf{RSSI [\%]}} & \multicolumn{4}{c|}{\textbf{Throughput [Byte/s]}} & \multicolumn{2}{c|}{\textbf{Pkt/s}}                                                                 \\
                 \cline{2-11}
-                                  & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
-                                  & \textbf{Mean}                           & \textbf{Std}                                      & \textbf{Min}                        & \textbf{Max}
-                                  & \textbf{Mean}                           & \textbf{Std}                                                                                                                                            \\
+                                  & \textbf{Media}                          & \textbf{$\sigma$}                                 & \textbf{Min}                        & \textbf{Max}
+                                  & \textbf{Media}                          & \textbf{$\sigma$}                                 & \textbf{Min}                        & \textbf{Max}
+                                  & \textbf{Media}                          & \textbf{$\sigma$}                                                                                                                                       \\
                 \hline
                 10 m              & 86.25                                   & 0.54                                              & 84.31                               & 87.84        & 646.46 & 0.19  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
                 50 m              & 73.43                                   & 0.78                                              & 69.41                               & 75.29        & 646.44 & 0.16  & 644.74 & 646.86 & 3.30 & 0.00 \\ \hline
@@ -1230,23 +1248,23 @@ di vista libera ha mostrato prestazioni sovrapponibili a quelle rilevate a 50–
 La qualità del segnale, rappresentata dal valore di \ac{RSSI}, è risultata elevata
 in tutti i test, con valori medi sempre superiori al 65\%, ad eccezione della
 configurazione 250~m con ostacoli. La Figura~\ref{fig:throughput-rssi-dist-regression}
-mostra l’andamento dell’RSSI medio in funzione della distanza, con una regressione
+mostra l’andamento del \ac{RSSI} medio in funzione della distanza, con una regressione
 logaritmica che evidenzia un lieve decadimento complessivo all’aumentare della distanza.
 Il boxplot in Figura~\ref{fig:throughput-rssi-dist-box} evidenzia inoltre un’anomala
-crescita del valore medio dell’RSSI a 200~m, attribuibile alla posizione sopraelevata
+crescita del valore medio del \ac{RSSI} a 200~m, attribuibile alla posizione sopraelevata
 della trasmittente in quel punto, causata dalla conformazione naturale del terreno.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{img/tests/T1/T1-rssi_dist_regression.png}
-    \caption{Andamento dell'RSSI in funzione della distanza (regressione logaritmica).}
+    \caption{Andamento del \ac{RSSI} in funzione della distanza (regressione logaritmica).}
     \label{fig:throughput-rssi-dist-regression}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{img/tests/T1/T1-rssi_dist_box.png}
-    \caption{Distribuzione (boxplot) dell'RSSI per ciascuna distanza testata.}
+    \caption{Distribuzione del \ac{RSSI} per ciascuna distanza testata.}
     \label{fig:throughput-rssi-dist-box}
 \end{figure}
 \newpage
@@ -1278,31 +1296,31 @@ In conclusione, anche nello scenario con ostacoli a 250~m, il degrado delle pres
 
 \subsubsection{Test sulla segmentazione e ricostruzione dei dati}
 I risultati dei test confermano che il sistema gestisce correttamente il riassemblaggio
-dei \emph{payload} segmentati, con un tempo medio di ricostruzione che cresce in
-maniera approssimativamente lineare con il numero di \emph{chunk}, come mostrato
-in figura~\ref{fig:segmentation-reconstruction-avg-time}.
+dei \emph{payload} segmentati.
 
-Come evidenziato in figura~\ref{fig:segmentation-reconstruction-sd}, la deviazione standard
+\paragraph*{Configurazione di default:}
+Il tempo medio di ricostruzione cresce in maniera approssimativamente lineare
+con il numero di \emph{chunk}, come mostrato in Figura~\ref{fig:segmentation-reconstruction-avg-time}.
+
+Come evidenziato in Figura~\ref{fig:segmentation-reconstruction-sd}, la deviazione standard
 dei tempi di ricostruzione si mantiene relativamente stabile al variare del numero di \emph{chunk},
 indicando una buona prevedibilità temporale del processo di riassemblaggio.
 
-Le distribuzioni dei tempi di ricostruzione (figure~\ref{fig:segmentation-test-2chunks}–\ref{fig:segmentation-test-5chunks})
+Le distribuzioni dei tempi di ricostruzione (Figure~\ref{fig:segmentation-test-2chunks}–\ref{fig:segmentation-test-5chunks})
 mostrano che i tempi di ricostruzione sono concentrati attorno a valori medi, con una
 leggera variabilità, ma senza picchi significativi.
 \vspace{1cm}
 \begin{figure}[H]
     \centering
-    \centering
     \includegraphics[width=0.8\textwidth]{img/tests/T2/T2-avg-time.png}
-    \caption{Tempo medio di ricostruzione per numero di chunk.}
+    \caption{Tempo medio di ricostruzione per numero di \emph{chunk}.}
     \label{fig:segmentation-reconstruction-avg-time}
 \end{figure}
 
 \begin{figure}[H]
-
     \centering
     \includegraphics[width=0.75\textwidth]{img/tests/T2/T2-sd.png}
-    \caption{Deviazione standard dei tempi di ricostruzione per numero di chunk.}
+    \caption{Deviazione standard dei tempi di ricostruzione per numero di \emph{chunk}.}
     \label{fig:segmentation-reconstruction-sd}
 \end{figure}
 \begin{figure}[H]
@@ -1310,14 +1328,14 @@ leggera variabilità, ma senza picchi significativi.
     \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-2chunks.png}
-        \caption{Distribuzione dei tempi di ricostruzione per 2 chunk}
+        \caption{Distribuzione dei tempi di ricostruzione per 2 \emph{chunk}}
         \label{fig:segmentation-test-2chunks}
     \end{minipage}
     \hfill
     \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-3chunks.png}
-        \caption{Distribuzione dei tempi di ricostruzione per 3 chunk}
+        \caption{Distribuzione dei tempi di ricostruzione per 3 \emph{chunk}}
         \label{fig:segmentation-test-3chunks}
     \end{minipage}
 
@@ -1326,17 +1344,91 @@ leggera variabilità, ma senza picchi significativi.
     \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-4chunks.png}
-        \caption{Distribuzione dei tempi di ricostruzione per 4 chunk}
+        \caption{Distribuzione dei tempi di ricostruzione per 4 \emph{chunk}}
         \label{fig:segmentation-test-4chunks}
     \end{minipage}
     \hfill
     \begin{minipage}{0.47\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-5chunks.png}
-        \caption{Distribuzione dei tempi di ricostruzione per 5 chunk}
+        \caption{Distribuzione dei tempi di ricostruzione per 5 \emph{chunk}}
         \label{fig:segmentation-test-5chunks}
     \end{minipage}
 \end{figure}
+
+\paragraph*{Configurazione personalizzata:}
+La configurazione personalizzata ha permesso di migliorare i risultati del test,
+con una riduzione dei tempi di ricostruzione pari all'8.7\%  per \emph{payload}
+segmentati in 4 e 5 \emph{chunk}, mentre le prestazioni per i \emph{payload} da 1 a 3 \emph{chunk}
+sono calate in maniera misurabile ma non significativa (l'aumento dei tempi di ricostruzione è inferiore 1\%),
+come viene mostrato nelle Figure \ref{fig:segmentation-reconstruction-avg-time-comparison}-\ref{fig:segmentation-dist-comparison}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/tests/T2/T2-avg-comparison.png}
+    \caption{Confronto del tempo medio di ricostruzione del payload per numero di \emph{chunk}}
+    \label{fig:segmentation-reconstruction-avg-time-comparison}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/tests/T2/T2-diff-comparison.png}
+    \caption{Differenza percentuale tra i tempi di ricostruzione del payload, configurazione di default vs configurazione personalizzata}
+    \label{fig:segmentation-diff-comparison}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-comparison.png}
+    \caption{Confronto delle distribuzioni dei tempi di ricostruzione del payload, configurazione di default vs configurazione personalizzata}
+    \label{fig:segmentation-dist-comparison}
+\end{figure}
+
+La variabilità dei dati è rimasta contenuta, come si vede nelle Figure
+\ref{fig:segmentation-reconstruction-sd-new}-\ref{fig:segmentation-test-5chunks-new},
+dimostrando quindi una buona stabilità nei tempi di ricostruzione dei \emph{payload}
+segmentati.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/tests/T2/T2-sd-new.png}
+    \caption{Deviazione standard dei tempi di ricostruzione per numero di \emph{chunk}.}
+    \label{fig:segmentation-reconstruction-sd-new}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-2chunks-new.png}
+        \caption{Distribuzione dei tempi di ricostruzione per 2 \emph{chunk}}
+        \label{fig:segmentation-test-2chunks-new}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-3chunks-new.png}
+        \caption{Distribuzione dei tempi di ricostruzione per 3 \emph{chunk}}
+        \label{fig:segmentation-test-3chunks-new}
+    \end{minipage}
+
+    \vspace{1cm}
+
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-4chunks-new.png}
+        \caption{Distribuzione dei tempi di ricostruzione per 4 \emph{chunk}}
+        \label{fig:segmentation-test-4chunks-new}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-5chunks-new.png}
+        \caption{Distribuzione dei tempi di ricostruzione per 5 \emph{chunk}}
+        \label{fig:segmentation-test-5chunks-new}
+    \end{minipage}
+\end{figure}
+
 \newpage
 \subsubsection{Test del meccanismo di \emph{drop}}
 Il meccanismo di \emph{drop} si \'e dimostrato efficace nel gestire l'arrivo di pacchetti
@@ -1344,7 +1436,7 @@ non validi o incompleti, evitando l'accumulo di dati parziali, garantendo un'eff
 gestione della memoria e delle risorse.
 La simulazione prevedeva l'invio di pacchetti frammentati, con la perdita di un \emph{chunk}
 ogni 3 pacchetti, con una percentuale di perdita prevista del 33\%.
-I risultati ottenuti sono riportati nella tabella~\ref{tab:loss_rate}, che conferma la
+I risultati ottenuti sono riportati nella Tabella~\ref{tab:loss_rate}, che conferma la
 percentuale di perdita dei pacchetti attesa.
 
 \begin{table}[H]
@@ -1393,7 +1485,7 @@ percentuale di perdita dei pacchetti attesa.
 Il test di riordinamento dei pacchetti ha dimostrato che il sistema è in grado di
 riconoscere e gestire correttamente i \emph{chunk} ricevuti in ordine sparso,
 riordinandoli in base al loro \emph{Chunk Number} prima della ricostruzione del \emph{payload} originale.
-I risultati sono riportati nella tabella~\ref{tab:chunk_order}, che mostra l'ordine
+I risultati sono riportati nella Tabella~\ref{tab:chunk_order}, che mostra l'ordine
 di arrivo dei pacchetti, e lo stato di ordinamento per ogni sequenza di \emph{chunk}.
 Come nel test precedente, la simulazione prevedeva l'invio di pacchetti frammentati,
 con lo scambio dell'ordine di arrivo di due \emph{chunk} ogni 3 pacchetti.
@@ -1450,11 +1542,11 @@ senza cali di prestazioni né perdite di pacchetti.
 I risultati mostrano che il sistema ha mantenuto un livello di prestazioni costante
 per tutta la durata dell'esperimento, evidenziato dalla crescita lineare del
 numero di pacchetti ricevuti e dalla stabilità del tempo di ricostruzione del
-\emph{payload} originale, come illustrato nella figura~\ref{fig:telemetry-robustness-test}.
+\emph{payload} originale, come illustrato nella Figura~\ref{fig:telemetry-robustness-test}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/tests/T5/T5.png}
+    \includegraphics[width=0.9\textwidth]{img/tests/T5/T5.png}
     \caption{Stabilità della comunicazione in assenza di interferenza diretta.}
     \label{fig:telemetry-robustness-test}
 \end{figure}
@@ -1463,29 +1555,29 @@ numero di pacchetti ricevuti e dalla stabilità del tempo di ricostruzione del
 Anche nel secondo test, nonostante la presenza di una seconda antenna trasmittente
 attiva sulla stessa frequenza, il sistema ha mantenuto una buona stabilità della
 comunicazione, con un numero di pacchetti ricevuti in linea con le attese e senza
-cali significativi di prestazioni, come mostrato nella figura~\ref{fig:telemetry-robustness-test-2}.
+cali significativi di prestazioni, come mostrato nella Figura~\ref{fig:telemetry-robustness-test-2}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/tests/T6/T6.png}
+    \includegraphics[width=0.9\textwidth]{img/tests/T6/T6.png}
     \caption{Stabilità della comunicazione in presenza di interferenza diretta.}
     \label{fig:telemetry-robustness-test-2}
 \end{figure}
 
 Confrontando i risultati dei due test, si osserva che l'introduzione della seconda
 antenna non ha avuto un impatto significativo sulla stabilità della comunicazione
-né sulle prestazioni del sistema. Come illustrato nella figura~\ref{fig:telemetry-robustness-test-comparison},
+né sulle prestazioni del sistema. Come illustrato nella Figura~\ref{fig:telemetry-robustness-test-comparison},
 i dati raccolti nei due scenari risultano sovrapponibili.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/tests/T5-6/T5-6.png}
+    \includegraphics[width=0.9\textwidth]{img/tests/T5-6/T5-6.png}
     \caption{Confronto tra i due test di robustezza.}
     \label{fig:telemetry-robustness-test-comparison}
 \end{figure}
 
 L'analisi numerica conferma che le differenze tra i due test sono trascurabili,
-sebbene rilevabili. Come riportato nella tabella~\ref{tab:robustness-test-comparison},
+sebbene rilevabili. Come riportato nella Tabella~\ref{tab:robustness-test-comparison},
 la deviazione standard e la varianza dei tempi di ricostruzione sono leggermente
 superiori nel test con interferenze, indicando una maggiore variabilità della
 latenza di ricostruzione del \emph{payload}, imputabile alla presenza di
