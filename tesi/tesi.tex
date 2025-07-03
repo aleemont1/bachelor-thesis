@@ -930,11 +930,11 @@ suddiviso in 5 \emph{chunk}, secondo il criterio di frammentazione descritto nel
 Capitolo~\ref{chap:telemetry}.
 
 \paragraph{Dettagli operativi del setup sperimentale:} \label{test:throughput-setup}
-Visti i risultati dei test preliminari, discussi nel Capitolo \ref{chap:results},
-i moduli \ac{LoRa} sono stati riconfigurati aumentando l'\ac{ADR} a 9.2~kbps, e
-impostando il \emph{baud rate} a 115200bps sulla linea \ac{UART} dedicata.
-Questo ha permesso di aumentare il \emph{throughput} effettivo, diminuendo la
-portata della trasmissione.
+Sulla base dei risultati dei test preliminari, discussi nel Capitolo~\ref{chap:results},
+i moduli \ac{LoRa} sono stati riconfigurati, impostando un \ac{ADR} di 9.2~kbps
+e configurando il \emph{baud rate} della linea \ac{UART} a 115200~bps.
+Questa configurazione ha consentito di aumentare il \emph{throughput} effettivo del sistema,
+a fronte di una riduzione della portata massima di trasmissione.
 
 Il test è stato eseguito in configurazione punto-punto, con l'antenna ricevente
 mantenuta in posizione fissa, mentre l'antenna trasmittente
@@ -1357,36 +1357,9 @@ leggera variabilità, ma senza picchi significativi.
 \end{figure}
 
 \paragraph*{Configurazione personalizzata:}
-La configurazione personalizzata ha permesso di migliorare i risultati del test,
-con una riduzione dei tempi di ricostruzione pari all'8.7\%  per \emph{payload}
-segmentati in 4 e 5 \emph{chunk}, mentre le prestazioni per i \emph{payload} da 1 a 3 \emph{chunk}
-sono calate in maniera misurabile ma non significativa (l'aumento dei tempi di ricostruzione è inferiore 1\%),
-come viene mostrato nelle Figure \ref{fig:segmentation-reconstruction-avg-time-comparison}-\ref{fig:segmentation-dist-comparison}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{img/tests/T2/T2-avg-comparison.png}
-    \caption{Confronto del tempo medio di ricostruzione del payload per numero di \emph{chunk}}
-    \label{fig:segmentation-reconstruction-avg-time-comparison}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{img/tests/T2/T2-diff-comparison.png}
-    \caption{Differenza percentuale tra i tempi di ricostruzione del payload, configurazione di default vs configurazione personalizzata}
-    \label{fig:segmentation-diff-comparison}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-comparison.png}
-    \caption{Confronto delle distribuzioni dei tempi di ricostruzione del payload, configurazione di default vs configurazione personalizzata}
-    \label{fig:segmentation-dist-comparison}
-\end{figure}
-
 La variabilità dei dati è rimasta contenuta, come si vede nelle Figure
 \ref{fig:segmentation-reconstruction-sd-new}-\ref{fig:segmentation-test-5chunks-new},
-dimostrando quindi una buona stabilità nei tempi di ricostruzione dei \emph{payload}
+confermando una buona stabilità nei tempi di ricostruzione dei \emph{payload}
 segmentati.
 
 \begin{figure}[H]
@@ -1427,6 +1400,35 @@ segmentati.
         \caption{Distribuzione dei tempi di ricostruzione per 5 \emph{chunk}}
         \label{fig:segmentation-test-5chunks-new}
     \end{minipage}
+\end{figure}
+
+\paragraph*{Confronto tra le configurazioni:}
+Dopo aver analizzato separatamente le due configurazioni, è stato eseguito un
+confronto diretto.
+La configurazione personalizzata ha mostrato una riduzione dei tempi di
+ricostruzione fino all'8.7\% per \emph{payload} segmentati in 4 e 5 \emph{chunk},
+con penalità trascurabili (inferiore all'1\%) sui payload più piccoli.
+Le Figure~\ref{fig:segmentation-reconstruction-avg-time-comparison}-\ref{fig:segmentation-dist-comparison}
+mostrano il confronto dettagliato.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/tests/T2/T2-avg-comparison.png}
+    \caption{Confronto del tempo medio di ricostruzione del payload per numero di \emph{chunk}}
+    \label{fig:segmentation-reconstruction-avg-time-comparison}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/tests/T2/T2-diff-comparison.png}
+    \caption{Differenza percentuale tra i tempi di ricostruzione del payload, configurazione di default vs configurazione personalizzata}
+    \label{fig:segmentation-diff-comparison}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/tests/T2/T2-dist-comparison.png}
+    \caption{Confronto delle distribuzioni dei tempi di ricostruzione del payload, configurazione di default vs configurazione personalizzata}
+    \label{fig:segmentation-dist-comparison}
 \end{figure}
 
 \newpage
