@@ -38,7 +38,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Compile thesis HTML
-        uses: xu-cheng/texlive-action@v2
+        uses: xu-cheng/texlive-action@v3
         with:
           scheme: full
           run: |
