@@ -71,12 +71,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Download PDF artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build-pdf
           path: site/pdf
       - name: Download HTML artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build-html
           path: site/
