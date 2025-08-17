@@ -19,7 +19,7 @@ jobs:
     name: Build PDF
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Compile thesis PDF
         uses: xu-cheng/latex-action@3.2.0
         with:
@@ -36,7 +36,7 @@ jobs:
     name: Build HTML
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Compile thesis HTML
         uses: xu-cheng/texlive-action@v2
         with:
@@ -69,7 +69,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download PDF artifact
         uses: actions/download-artifact@v4
         with:
