@@ -53,6 +53,14 @@ jobs:
           cp -r tesi/img site/
           echo "img {max-width: 100%; height: auto;}" >> site/tesi.css
           echo "table { display: block; overflow-x: auto; overflow-y: hidden; white-space: nowrap; max-width: 100%; box-sizing: border-box; }" >> site/tesi.css
+          # aleemont.dev look: shared assets from web/, then type, width, colours,
+          # favicon and a bar back to aleemont.dev and to the PDF.
+          cp -r web/. site/
+          cat web/aleemont-doc.css >> site/tesi.css
+          perl -0pi -e 's#</head>#<link rel="icon" href="favicon.svg" type="image/svg+xml">\n</head>#; s#<body\s*>#<body>\n<nav class="aleemont-bar"><a href="https://aleemont.dev/">Alessandro Monticelli</a><a href="pdf/tesi.pdf">Tesi (PDF)</a></nav>#' site/index.html
+          # perl does not fail when a pattern doesn't match: check the result.
+          grep -q 'class="aleemont-bar"' site/index.html && grep -q 'favicon.svg' site/index.html \
+            || { echo "::error::site/index.html: aleemont.dev bar or favicon not injected"; exit 1; }
       - name: Generate build artifact (HTML)
         uses: actions/upload-artifact@v4
         with:

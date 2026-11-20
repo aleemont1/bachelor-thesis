@@ -282,3 +282,6 @@ TSWLatexianTemp*
 
 # Any temporary files
 *.tmp
+
+# Shared aleemont.dev assets for the HTML build (not LaTeX output)
+!web/**
